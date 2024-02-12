@@ -10,5 +10,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 public class BotApplication {
     public static void main(String[] args) {
         SpringApplication.run(BotApplication.class, args);
+        TelegramBot bot = new TelegramBot();
+        bot.start();
+        SpringApplication.getShutdownHandlers().add(bot::close);
     }
 }
