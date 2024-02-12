@@ -3,15 +3,13 @@ package edu.java.bot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
-import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TelegramBot implements Bot {

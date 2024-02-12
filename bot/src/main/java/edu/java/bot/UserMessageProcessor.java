@@ -8,7 +8,6 @@ import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.commands.UntrackCommand;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserMessageProcessor {

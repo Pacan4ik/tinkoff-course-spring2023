@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ListCommand extends AbstractCommand {
     @Override
