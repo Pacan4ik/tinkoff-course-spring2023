@@ -2,7 +2,9 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StartCommand extends AbstractCommand {
     @Override
     public String command() {

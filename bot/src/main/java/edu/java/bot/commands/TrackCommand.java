@@ -4,7 +4,9 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TrackCommand extends AbstractCommand {
 
     private final Pattern pattern = Pattern.compile("^/track (https?://)(\\S+)");
