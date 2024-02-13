@@ -8,17 +8,26 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
+import edu.java.bot.configuration.ApplicationConfig;
+import edu.java.bot.processors.MessageProcessor;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class TelegramBot implements Bot {
+    private final com.pengrad.telegrambot.TelegramBot bot;
 
-    private final com.pengrad.telegrambot.TelegramBot bot =
-        new com.pengrad.telegrambot.TelegramBot("");
-    private final UserMessageProcessor messageProcessor = new UserMessageProcessor();
+    private final ApplicationConfig applicationConfig;
+    private final MessageProcessor messageProcessor;
 
-    TelegramBot() {
+    @Autowired TelegramBot(ApplicationConfig applicationConfig, MessageProcessor messageProcessor) {
+        this.applicationConfig = applicationConfig;
+        this.messageProcessor = messageProcessor;
+        this.bot = new com.pengrad.telegrambot.TelegramBot(applicationConfig.telegramToken());
     }
 
     @Override
@@ -43,15 +52,24 @@ public class TelegramBot implements Bot {
     @Override
     public void start() {
         bot.setUpdatesListener(this);
-        bot.execute(new SetMyCommands(
-            UserMessageProcessor.commandList.stream()
-                .map(Command::toApiCommand)
-                .toArray(BotCommand[]::new)
-        ));
     }
 
     @Override
     public void close() {
         bot.shutdown();
+    }
+
+    private void setCommands() {
+        bot.execute(new SetMyCommands(
+            messageProcessor.commands().stream()
+                .map(Command::toApiCommand)
+                .toArray(BotCommand[]::new)
+        ));
+    }
+
+    @PostConstruct
+    public void init() {
+        setCommands();
+        start();
     }
 }
