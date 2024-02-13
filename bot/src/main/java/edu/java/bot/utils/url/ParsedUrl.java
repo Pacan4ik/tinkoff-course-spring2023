@@ -5,6 +5,6 @@ public record ParsedUrl(
     String host,
     String port,
     String path,
-    String Query
+    String query
 ) {
 }

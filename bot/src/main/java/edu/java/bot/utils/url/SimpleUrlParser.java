@@ -1,10 +1,10 @@
 package edu.java.bot.utils.url;
 
-import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleUrlParser implements UrlParser {
