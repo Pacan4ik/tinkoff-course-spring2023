@@ -20,9 +20,10 @@ public class SimpleUrlParser implements UrlParser {
                 url.getPath(),
                 url.getQuery()
             );
-        } catch (URISyntaxException | MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException | IllegalArgumentException e) {
             throw new URLSyntaxException("Invalid URL", e);
         }
         return parsedUrl;
     }
+
 }
