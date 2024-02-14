@@ -42,7 +42,10 @@ public class TelegramBot implements Bot {
                 SendMessage sendMessage = messageProcessor.process(update);
                 execute(sendMessage);
             } catch (RuntimeException e) {
-                log.warn(String.format("The update id:%d was ignored", update.updateId()));
+                log.warn(
+                    String.format("The update id:%d was ignored", update.updateId())
+                        + "\n Cause: " + e
+                );
             }
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
