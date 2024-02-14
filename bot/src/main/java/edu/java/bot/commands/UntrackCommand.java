@@ -2,13 +2,16 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import edu.java.bot.dataSources.UsersTracksDB;
+import edu.java.bot.utils.commands.ParamsParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackCommand extends AbstractCommand {
-    Pattern pattern = Pattern.compile("^/track (\\S+)$");
+    private ParamsParser paramsParser;
+
+    private UsersTracksDB usersTracksDB;
 
     @Override
     public String command() {
@@ -16,22 +19,42 @@ public class UntrackCommand extends AbstractCommand {
     }
 
     @Override
+    public String usage() {
+        return command() + " {URL}";
+    }
+
+    @Override
     public String description() {
         return "Прекратить отслеживание ссылки";
+    }
+
+    @Autowired
+    private void setParamsParser(ParamsParser paramsParser) {
+        this.paramsParser = paramsParser;
+    }
+
+    @Autowired
+    private void setUsersTracksDB(UsersTracksDB usersTracksDB) {
+        this.usersTracksDB = usersTracksDB;
     }
 
     @Override
     public SendMessage handle(Update update) {
         String text = update.message().text();
         long id = update.message().chat().id();
-        Matcher matcher = pattern.matcher(text);
-        if (!matcher.matches()) {
-            return new SendMessage(id, "Введите ссылку");
+
+        String link = paramsParser.getSingleParam(text);
+        if (link == null) {
+            return new SendMessage(
+                id,
+                String.format("Неправильный формат команды.\nИспользуйте: %s", usage())
+            );
         }
 
-        String url = matcher.group(1);
-        //todo Удалить ссылку из отслеживаемых
+        if (usersTracksDB.deleteLink(id, link)) {
+            return new SendMessage(id, "Ссылка успешно удалена");
+        }
 
-        return new SendMessage(id, "Ссылка успешно удалена");
+        return new SendMessage(id, "Что-то пошло не так. Убедитесь в правильности ссылки.");
     }
 }

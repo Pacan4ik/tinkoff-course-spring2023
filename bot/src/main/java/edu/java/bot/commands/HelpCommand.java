@@ -4,17 +4,16 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HelpCommand extends AbstractCommand {
+public class HelpCommand extends AbstractCommand implements ApplicationContextAware {
 
-    private final CommandRegister commandRegister;
-
-    @Autowired HelpCommand(CommandRegister commandRegister) {
-        this.commandRegister = commandRegister;
-    }
+    private ApplicationContext applicationContext;
 
     @Override
     public String command() {
@@ -32,9 +31,14 @@ public class HelpCommand extends AbstractCommand {
     }
 
     private String getCommands() {
-        return commandRegister.commandList()
+        return applicationContext.getBean(CommandRegister.class).commandList()
             .stream()
             .map(Objects::toString)
             .collect(Collectors.joining("\n"));
+    }
+
+    @Override
+    public void setApplicationContext(final @NotNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

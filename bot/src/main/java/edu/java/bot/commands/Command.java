@@ -15,6 +15,10 @@ public interface Command {
         return true;
     }
 
+    default String usage() {
+        return command();
+    }
+
     default BotCommand toApiCommand() {
         return new BotCommand(command(), description());
     }
