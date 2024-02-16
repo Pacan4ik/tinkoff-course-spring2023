@@ -8,6 +8,7 @@ import edu.java.bot.utils.commands.ParamsParser;
 import edu.java.bot.utils.url.ParsedUrl;
 import edu.java.bot.utils.url.URLSyntaxException;
 import edu.java.bot.utils.url.UrlParser;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +49,10 @@ import org.springframework.stereotype.Component;
         String text = update.message().text();
         long id = update.message().chat().id();
 
-        String link = paramsParser.getSingleParam(text);
+        Optional<String> oplink = paramsParser.getSingleParam(text);
         String responseMessage;
-        if (link != null) {
+        if (oplink.isPresent()) {
+            String link = oplink.get();
             ParsedUrl parsedUrl = null;
             try {
                 parsedUrl = urlParser.parse(link);

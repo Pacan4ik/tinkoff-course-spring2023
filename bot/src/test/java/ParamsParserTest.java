@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class ParamsParserTest {
     @Test
@@ -39,7 +40,7 @@ public class ParamsParserTest {
         ParamsParser paramsParser = new ParamsParser();
 
         //when
-        String ans = paramsParser.getSingleParam(userCommand);
+        String ans = paramsParser.getSingleParam(userCommand).get();
 
         //then
         Assertions.assertEquals("param", ans);
@@ -52,9 +53,9 @@ public class ParamsParserTest {
         ParamsParser paramsParser = new ParamsParser();
 
         //when
-        String ans = paramsParser.getSingleParam(userCommand);
+        Optional<String> ans = paramsParser.getSingleParam(userCommand);
 
         //then
-        Assertions.assertNull(ans);
+        Assertions.assertTrue(ans.isEmpty());
     }
 }

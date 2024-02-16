@@ -3,6 +3,7 @@ package edu.java.bot.utils.commands;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
@@ -26,11 +27,11 @@ public class ParamsParser {
 
     }
 
-    public String getSingleParam(String commandMessage) {
+    public Optional<String> getSingleParam(String commandMessage) {
         List<String> params = getParams(commandMessage);
         if (params.size() == 1) {
-            return params.getFirst();
+            return Optional.of(params.getFirst());
         }
-        return null;
+        return Optional.empty();
     }
 }
