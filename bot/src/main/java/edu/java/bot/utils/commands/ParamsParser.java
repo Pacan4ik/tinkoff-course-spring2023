@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ParamsParser {
-    private final Pattern pattern = Pattern.compile("^/(\\S+) (\\S+)$");
+    private final Pattern pattern = Pattern.compile("^/(\\S+) (.+)$");
 
-    private ParamsParser() {
+    public ParamsParser() {
     }
 
     public List<String> getParams(String commandMessage) {
