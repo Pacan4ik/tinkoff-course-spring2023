@@ -23,7 +23,7 @@ public class StartCommand extends AbstractCommand {
 
         return new SendMessage(
             id,
-            "Добро пожаловать! Введите /help для просмотра списка команд"
+            "Добро пожаловать! Введите /help для просмотра списка команд."
         );
     }
 }

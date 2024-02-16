@@ -7,48 +7,35 @@ import edu.java.bot.utils.commands.ParamsParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class UntrackCommand extends AbstractCommand {
+@Component public class UntrackCommand extends AbstractCommand {
     private ParamsParser paramsParser;
 
     private UsersTracksDB usersTracksDB;
 
-    @Override
-    public String command() {
-        return "/untrack";
-    }
-
-    @Override
-    public String usage() {
-        return command() + " {URL}";
-    }
-
-    @Override
-    public String description() {
-        return "Прекратить отслеживание ссылки";
-    }
-
-    @Autowired
-    private void setParamsParser(ParamsParser paramsParser) {
+    @Autowired public UntrackCommand(ParamsParser paramsParser, UsersTracksDB usersTracksDB) {
         this.paramsParser = paramsParser;
-    }
-
-    @Autowired
-    private void setUsersTracksDB(UsersTracksDB usersTracksDB) {
         this.usersTracksDB = usersTracksDB;
     }
 
-    @Override
-    public SendMessage handle(Update update) {
+    @Override public String command() {
+        return "/untrack";
+    }
+
+    @Override public String usage() {
+        return command() + " {URL}";
+    }
+
+    @Override public String description() {
+        return "Прекратить отслеживание ссылки";
+    }
+
+    @Override public SendMessage handle(Update update) {
         String text = update.message().text();
         long id = update.message().chat().id();
 
         String link = paramsParser.getSingleParam(text);
         if (link == null) {
-            return new SendMessage(
-                id,
-                String.format("Неправильный формат команды.\nИспользуйте: %s", usage())
-            );
+            return new SendMessage(id, String.format("Неправильный формат команды.\nИспользуйте: %s", usage()));
         }
 
         if (usersTracksDB.deleteLink(id, link)) {

@@ -2,6 +2,7 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.dataSources.SupportedLinkProvider;
 import edu.java.bot.dataSources.UsersTracksDB;
 import edu.java.bot.utils.commands.ParamsParser;
 import edu.java.bot.utils.url.ParsedUrl;
@@ -10,55 +11,46 @@ import edu.java.bot.utils.url.UrlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TrackCommand extends AbstractCommand {
+@Component public class TrackCommand extends AbstractCommand {
 
-    private UrlParser urlParser;
-    private ParamsParser paramsParser;
+    private final UrlParser urlParser;
+    private final ParamsParser paramsParser;
 
-    private UsersTracksDB usersTracksDB;
+    private final UsersTracksDB usersTracksDB;
 
-    @Autowired
-    private void setUrlParser(UrlParser urlParser) {
+    private final SupportedLinkProvider supportedLinkProvider;
+
+    @Autowired public TrackCommand(
+        UrlParser urlParser,
+        ParamsParser paramsParser,
+        UsersTracksDB usersTracksDB,
+        SupportedLinkProvider supportedLinkProvider
+    ) {
         this.urlParser = urlParser;
-    }
-
-    @Autowired
-    private void setParamsParser(ParamsParser paramsParser) {
         this.paramsParser = paramsParser;
-    }
-
-    @Autowired
-    private void setUsersTracksDB(UsersTracksDB usersTracksDB) {
         this.usersTracksDB = usersTracksDB;
+        this.supportedLinkProvider = supportedLinkProvider;
     }
 
-    @Override
-    public String command() {
+    @Override public String command() {
         return "/track";
     }
 
-    @Override
-    public String usage() {
+    @Override public String usage() {
         return command() + " {URL}";
     }
 
-    @Override
-    public String description() {
+    @Override public String description() {
         return "Начать отслеживать ссылку";
     }
 
-    @Override
-    public SendMessage handle(Update update) {
+    @Override public SendMessage handle(Update update) {
         String text = update.message().text();
         long id = update.message().chat().id();
 
         String link = paramsParser.getSingleParam(text);
         if (link == null) {
-            return new SendMessage(
-                id,
-                String.format("Неправильный формат команды.\nИспользуйте: %s", usage())
-            );
+            return new SendMessage(id, String.format("Неправильный формат команды.\nИспользуйте: %s", usage()));
         }
 
         ParsedUrl parsedUrl = null;
@@ -68,10 +60,12 @@ public class TrackCommand extends AbstractCommand {
             return new SendMessage(id, "Неправильный формат ссылки.");
         }
 
-        //todo проверить список поддерживаемых ссылок
+        if (!supportedLinkProvider.getSupportedLinks().contains(parsedUrl)) {
+            return new SendMessage(id, "Ссылка не поддерживается");
+        }
 
         if (usersTracksDB.addLink(id, link)) {
-            return new SendMessage(id, "Сслыка успешно добавлена!");
+            return new SendMessage(id, "Ссылка успешно добавлена!");
         }
 
         return new SendMessage(id, "Что-то пошло не так");

@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand extends AbstractCommand {
-    private UsersTracksDB usersTracksDB;
+    private final UsersTracksDB usersTracksDB;
+
+    @Autowired
+    public ListCommand(UsersTracksDB usersTracksDB) {
+        this.usersTracksDB = usersTracksDB;
+    }
 
     @Override
     public String command() {
@@ -21,11 +26,6 @@ public class ListCommand extends AbstractCommand {
     @Override
     public String description() {
         return "Показать список отслеживаемых ссылок";
-    }
-
-    @Autowired
-    private void setUsersTracksDB(UsersTracksDB usersTracksDB) {
-        this.usersTracksDB = usersTracksDB;
     }
 
     @Override
