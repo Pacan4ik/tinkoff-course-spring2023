@@ -1,9 +1,12 @@
 package edu.java.bot.utils.url;
 
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLOutput;
+import edu.java.bot.dataSources.StubLinkProvider;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +19,8 @@ public class SimpleUrlParser implements UrlParser {
             parsedUrl = new ParsedUrl(
                 url.getProtocol(),
                 url.getHost(),
-                Integer.toString(url.getPort()),
-                url.getPath(),
+                url.getPort() == -1 ? null : Integer.toString(url.getPort()),
+                url.getPath().isEmpty() || url.getPath().equals("/") ? null : url.getPath(),
                 url.getQuery()
             );
         } catch (URISyntaxException | MalformedURLException | IllegalArgumentException e) {
@@ -25,5 +28,4 @@ public class SimpleUrlParser implements UrlParser {
         }
         return parsedUrl;
     }
-
 }
