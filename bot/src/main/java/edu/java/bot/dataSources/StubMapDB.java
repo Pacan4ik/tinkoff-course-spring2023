@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 @Component
-@Log4j2
 public class StubMapDB implements UsersTracksDB {
     Map<Long, List<String>> map = new HashMap<>();
 

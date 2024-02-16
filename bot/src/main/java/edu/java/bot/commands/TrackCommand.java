@@ -49,26 +49,24 @@ import org.springframework.stereotype.Component;
         long id = update.message().chat().id();
 
         String link = paramsParser.getSingleParam(text);
-        if (link == null) {
-            return new SendMessage(id, String.format("Неправильный формат команды.\nИспользуйте: %s", usage()));
+        String responseMessage;
+        if (link != null) {
+            ParsedUrl parsedUrl = null;
+            try {
+                parsedUrl = urlParser.parse(link);
+                if (supportedLinkProvider.getSupportedLinks().contains(parsedUrl)) {
+                    responseMessage =
+                        usersTracksDB.addLink(id, link) ? "Ссылка успешно добавлена!" : "Что-то пошло не так";
+                } else {
+                    responseMessage = "Ссылка не поддерживается";
+                }
+            } catch (URLSyntaxException e) {
+                responseMessage = "Неправильный формат ссылки.";
+            }
+        } else {
+            responseMessage = String.format("Неправильный формат команды.\nИспользуйте: %s", usage());
         }
-
-        ParsedUrl parsedUrl = null;
-        try {
-            parsedUrl = urlParser.parse(link);
-        } catch (URLSyntaxException e) {
-            return new SendMessage(id, "Неправильный формат ссылки.");
-        }
-
-        if (!supportedLinkProvider.getSupportedLinks().contains(parsedUrl)) {
-            return new SendMessage(id, "Ссылка не поддерживается");
-        }
-
-        if (usersTracksDB.addLink(id, link)) {
-            return new SendMessage(id, "Ссылка успешно добавлена!");
-        }
-
-        return new SendMessage(id, "Что-то пошло не так");
+        return new SendMessage(id, responseMessage);
     }
 
 }

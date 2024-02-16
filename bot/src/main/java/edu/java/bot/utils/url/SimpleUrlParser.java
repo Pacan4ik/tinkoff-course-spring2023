@@ -1,12 +1,9 @@
 package edu.java.bot.utils.url;
 
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.SQLOutput;
-import edu.java.bot.dataSources.StubLinkProvider;
 import org.springframework.stereotype.Component;
 
 @Component
