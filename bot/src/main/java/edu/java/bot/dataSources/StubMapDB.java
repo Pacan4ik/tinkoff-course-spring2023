@@ -19,8 +19,8 @@ public class StubMapDB implements UsersTracksDB {
 
     @Override
     public boolean addLink(long id, String link) {
-            List<String> list = map.computeIfAbsent(id, k -> new ArrayList<>());
-            return list.add(link);
+        List<String> list = map.computeIfAbsent(id, k -> new ArrayList<>());
+        return list.add(link);
     }
 
     @Override

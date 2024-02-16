@@ -13,7 +13,8 @@ public class UserMessageProcessor implements MessageProcessor {
 
     private final CommandRegister commandRegister;
 
-    @Autowired UserMessageProcessor(CommandRegister commandRegister) {
+    @Autowired
+    public UserMessageProcessor(CommandRegister commandRegister) {
         this.commandRegister = commandRegister;
     }
 
