@@ -152,11 +152,6 @@ class CommandsTest {
 
     }
 
-    public static void main(String[] args) {
-        HelpCommand helpCommand = mock(HelpCommand.class);
-
-    }
-
     static UsersTracksDB prepareDB() {
         UsersTracksDB db = new StubMapDB();
         db.addLink(123L, "https://google.com");
