@@ -6,14 +6,12 @@ import edu.java.bot.dataSources.UsersTracksDB;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand extends AbstractCommand {
     private final UsersTracksDB usersTracksDB;
 
-    @Autowired
     public ListCommand(UsersTracksDB usersTracksDB) {
         this.usersTracksDB = usersTracksDB;
     }

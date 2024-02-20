@@ -13,7 +13,6 @@ import edu.java.bot.processors.MessageProcessor;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,11 +20,9 @@ import org.springframework.stereotype.Component;
 public class TelegramBot implements Bot {
     private final com.pengrad.telegrambot.TelegramBot bot;
 
-    private final ApplicationConfig applicationConfig;
     private final MessageProcessor messageProcessor;
 
-    @Autowired TelegramBot(ApplicationConfig applicationConfig, MessageProcessor messageProcessor) {
-        this.applicationConfig = applicationConfig;
+    TelegramBot(ApplicationConfig applicationConfig, MessageProcessor messageProcessor) {
         this.messageProcessor = messageProcessor;
         this.bot = new com.pengrad.telegrambot.TelegramBot(applicationConfig.telegramToken());
     }

@@ -9,7 +9,6 @@ import edu.java.bot.utils.url.ParsedUrl;
 import edu.java.bot.utils.url.URLSyntaxException;
 import edu.java.bot.utils.url.UrlParser;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component public class TrackCommand extends AbstractCommand {
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 
     private final SupportedLinkProvider supportedLinkProvider;
 
-    @Autowired public TrackCommand(
+    public TrackCommand(
         UrlParser urlParser,
         ParamsParser paramsParser,
         UsersTracksDB usersTracksDB,

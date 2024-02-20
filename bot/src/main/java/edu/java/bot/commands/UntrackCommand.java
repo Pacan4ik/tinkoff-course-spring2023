@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dataSources.UsersTracksDB;
 import edu.java.bot.utils.commands.ParamsParser;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component public class UntrackCommand extends AbstractCommand {
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 
     private UsersTracksDB usersTracksDB;
 
-    @Autowired public UntrackCommand(ParamsParser paramsParser, UsersTracksDB usersTracksDB) {
+    public UntrackCommand(ParamsParser paramsParser, UsersTracksDB usersTracksDB) {
         this.paramsParser = paramsParser;
         this.usersTracksDB = usersTracksDB;
     }
