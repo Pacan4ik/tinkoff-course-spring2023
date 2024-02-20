@@ -16,15 +16,13 @@ public class ParamsParser {
     }
 
     public List<String> getParams(String commandMessage) {
-        List<String> params = Collections.emptyList();
         Matcher matcher = pattern.matcher(commandMessage);
         if (!matcher.matches()) {
-            return params;
+            return Collections.emptyList();
         }
         String fullParamsString = matcher.group(2);
-        params = Arrays.asList(fullParamsString.split(" "));
-        return params;
 
+        return Arrays.asList(fullParamsString.split(" "));
     }
 
     public Optional<String> getSingleParam(String commandMessage) {
