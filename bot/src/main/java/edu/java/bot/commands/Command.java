@@ -11,10 +11,6 @@ public interface Command {
 
     SendMessage handle(Update update);
 
-    default boolean supports(Update update) {
-        return true;
-    }
-
     default String usage() {
         return command();
     }
