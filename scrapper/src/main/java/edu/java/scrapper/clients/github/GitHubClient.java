@@ -1,6 +1,6 @@
-package edu.java.clients.github;
+package edu.java.scrapper.clients.github;
 
-import edu.java.clients.Client;
+import edu.java.scrapper.clients.Client;
 
 public class GitHubClient extends Client<GitHubResponse> {
     private static final String BASE_URL = "https://api.github.com/";

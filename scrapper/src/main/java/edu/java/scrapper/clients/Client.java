@@ -1,4 +1,4 @@
-package edu.java.clients;
+package edu.java.scrapper.clients;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

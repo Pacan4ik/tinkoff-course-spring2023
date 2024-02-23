@@ -1,9 +1,9 @@
 package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import edu.java.clients.Client;
-import edu.java.clients.github.GitHubClient;
-import edu.java.clients.github.GitHubResponse;
+import edu.java.scrapper.clients.Client;
+import edu.java.scrapper.clients.github.GitHubClient;
+import edu.java.scrapper.clients.github.GitHubResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
-import edu.java.clients.stackoverflow.StackOverFlowResponse;
-import edu.java.clients.stackoverflow.StackOverflowClient;
+import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
+import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
