@@ -17,10 +17,6 @@ public class StackOverflowClient extends Client<StackOverFlowResponse> {
         super(CLASS_REF, BASE_URL);
     }
 
-    public StackOverFlowResponse fetchResponse(String userId) {
-        return super.fetchResponse(userId);
-    }
-
     @Override
     protected String getUriString() {
         return URI_STRING;

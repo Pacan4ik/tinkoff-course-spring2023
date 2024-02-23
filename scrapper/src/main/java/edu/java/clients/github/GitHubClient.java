@@ -16,10 +16,6 @@ public class GitHubClient extends Client<GitHubResponse> {
         super(CLASS_REF, BASE_URL);
     }
 
-    public GitHubResponse fetchResponse(String username, String repository) {
-        return super.fetchResponse(username, repository);
-    }
-
     @Override
     protected String getUriString() {
         return URI_STRING;
