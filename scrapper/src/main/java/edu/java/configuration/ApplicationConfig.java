@@ -15,18 +15,24 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(
     @NotNull
-    Scheduler scheduler
+    @Bean
+    Scheduler scheduler,
+    @NotNull
+    BaseUrls baseUrls
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
 
-    @Bean
-    Client<GitHubResponse> gitHubClient() {
-        return new GitHubClient();
+    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi) {
     }
 
     @Bean
-    Client<StackOverFlowResponse> stackOverFlowClient() {
-        return new StackOverflowClient();
+    GitHubClient gitHubClient() {
+        return new GitHubClient(baseUrls.gitHubApi);
+    }
+
+    @Bean
+    StackOverflowClient stackOverFlowClient() {
+        return new StackOverflowClient(baseUrls.stackOverflowApi);
     }
 }
