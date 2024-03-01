@@ -1,6 +1,7 @@
 package edu.java.scrapper.clients.stackoverflow;
 
 import edu.java.scrapper.clients.Client;
+import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverflowClient extends Client<StackOverFlowResponse> {
     private static final String BASE_URL = "https://api.stackexchange.com/";
@@ -9,12 +10,12 @@ public class StackOverflowClient extends Client<StackOverFlowResponse> {
 
     private static final Class<StackOverFlowResponse> CLASS_REF = StackOverFlowResponse.class;
 
-    public StackOverflowClient(String baseUrl) {
-        super(CLASS_REF, baseUrl);
+    public StackOverflowClient(WebClient.Builder webClientBuilder, String baseUrl) {
+        super(webClientBuilder, CLASS_REF, baseUrl);
     }
 
-    public StackOverflowClient() {
-        super(CLASS_REF, BASE_URL);
+    public StackOverflowClient(WebClient.Builder webClientBuilder) {
+        super(webClientBuilder, CLASS_REF, BASE_URL);
     }
 
     public StackOverFlowResponse fetchResponse(String userId) {
