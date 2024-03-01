@@ -7,10 +7,10 @@ public abstract class Client<T> {
     protected String baseUrl;
     protected WebClient webClient;
 
-    public Client(Class<T> classRef, String baseUrl) {
+    public Client(WebClient.Builder webClientBuilder, Class<T> classRef, String baseUrl) {
         this.tClass = classRef;
         this.baseUrl = baseUrl;
-        this.webClient = configureClient();
+        this.webClient = configureClient(webClientBuilder);
     }
 
     public T fetchResponse(String... userInfo) {
@@ -21,8 +21,8 @@ public abstract class Client<T> {
             .block();
     }
 
-    private WebClient configureClient() {
-        return WebClient.builder().baseUrl(baseUrl).build();
+    private WebClient configureClient(WebClient.Builder builder) {
+        return builder.baseUrl(baseUrl).build();
     }
 
     protected abstract String getUriString();

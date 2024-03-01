@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -55,7 +56,7 @@ public class ClientTest {
                     )
                 )
         );
-        Client<GitHubResponse> client = new GitHubClient("http://localhost:8080");
+        Client<GitHubResponse> client = new GitHubClient(WebClient.builder(), "http://localhost:8080");
 
         //when
         GitHubResponse gitHubResponse = client.fetchResponse("testUser", "testRep");
@@ -91,7 +92,7 @@ public class ClientTest {
                 )
         );
 
-        Client<StackOverFlowResponse> client = new StackOverflowClient("http://localhost:8080");
+        Client<StackOverFlowResponse> client = new StackOverflowClient(WebClient.builder(), "http://localhost:8080");
 
         //when
         StackOverFlowResponse stackOverFlowResponse = client.fetchResponse("testUser");

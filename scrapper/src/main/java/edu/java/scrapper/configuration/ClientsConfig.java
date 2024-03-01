@@ -4,22 +4,26 @@ import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ClientsConfig {
     ApplicationConfig applicationConfig;
 
-    ClientsConfig(ApplicationConfig applicationConfig) {
+    WebClient.Builder webClientBuilder;
+
+    ClientsConfig(ApplicationConfig applicationConfig, WebClient.Builder webClientBuilder) {
         this.applicationConfig = applicationConfig;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @Bean
     GitHubClient gitHubClient() {
-        return new GitHubClient(applicationConfig.baseUrls().gitHubApi());
+        return new GitHubClient(webClientBuilder, applicationConfig.baseUrls().gitHubApi());
     }
 
     @Bean
     StackOverflowClient stackOverFlowClient() {
-        return new StackOverflowClient(applicationConfig.baseUrls().stackOverflowApi());
+        return new StackOverflowClient(webClientBuilder, applicationConfig.baseUrls().stackOverflowApi());
     }
 }
