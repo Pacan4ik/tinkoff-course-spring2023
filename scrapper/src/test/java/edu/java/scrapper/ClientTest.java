@@ -1,12 +1,14 @@
 package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.clients.Client;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,4 +114,30 @@ public class ClientTest {
         );
 
     }
+
+    @Test
+    void shouldGetResponseBotClient() {
+        //given
+        stubFor(
+            post(urlEqualTo(
+                "/updates"))
+                .willReturn(aResponse()
+                    .withStatus(200)
+                )
+        );
+
+        //when
+        BotClient client = new BotClient(WebClient.builder(), "http://localhost:8080");
+
+        //then
+        Assertions.assertDoesNotThrow(() -> client.sendUpdates(
+                1L,
+                URI.create("https://example.com/"),
+                "descrpiption",
+                List.of(1L, 2L)
+            )
+        );
+
+    }
+
 }
