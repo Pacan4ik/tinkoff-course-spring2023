@@ -1,5 +1,6 @@
 package edu.java.scrapper.configuration;
 
+import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import org.springframework.context.annotation.Bean;
@@ -25,5 +26,9 @@ public class ClientsConfig {
     @Bean
     StackOverflowClient stackOverFlowClient() {
         return new StackOverflowClient(webClientBuilder, applicationConfig.baseUrls().stackOverflowApi());
+    }
+
+    @Bean BotClient botClient() {
+        return new BotClient(webClientBuilder, applicationConfig.baseUrls().botApi());
     }
 }

@@ -19,7 +19,7 @@ public record ApplicationConfig(
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
 
-    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi) {
+    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
     }
 
 }
