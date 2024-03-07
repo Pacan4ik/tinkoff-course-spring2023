@@ -2,6 +2,7 @@ package edu.java.scrapper.configuration;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
@@ -10,12 +11,10 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(
     @NotNull
-    @Bean
     Scheduler scheduler,
     @NotNull
     BaseUrls baseUrls
 ) {
-
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
 
