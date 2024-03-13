@@ -19,8 +19,7 @@ public class ChatRepository {
     }
 
     public boolean deleteUser(long id) {
-        map.remove(id);
-        return true;
+        return map.remove(id) != null;
     }
 
     public List<URI> getUserLinks(long id) {
@@ -28,21 +27,20 @@ public class ChatRepository {
     }
 
     public boolean addLink(long id, URI link) {
-        map.computeIfPresent(id, (key, list) -> {
+        return map.computeIfPresent(id, (key, list) -> {
                 list.add(link);
                 return list;
             }
-        );
-        return true;
+        ) != null;
     }
 
     public boolean deleteLink(long id, URI link) {
-        map.computeIfPresent(id, (key, list) -> {
-                list.add(link);
+        return map.computeIfPresent(id, (key, list) -> {
+                list.remove(link);
                 return list;
             }
-        );
-        return true;
+        ) != null;
+
     }
 
     public boolean checkUser(long id) {
