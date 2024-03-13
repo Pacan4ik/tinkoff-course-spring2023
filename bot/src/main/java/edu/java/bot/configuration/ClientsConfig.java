@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ClientsConfig {
     private final ApplicationConfig applicationConfig;
 
-    WebClient.Builder webClientBuilder;
+    private final WebClient.Builder webClientBuilder;
 
     ClientsConfig(ApplicationConfig applicationConfig, WebClient.Builder webClientBuilder) {
         this.applicationConfig = applicationConfig;
