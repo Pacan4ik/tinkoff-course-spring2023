@@ -8,7 +8,6 @@ import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 public record ChatDto(
@@ -17,18 +16,21 @@ public record ChatDto(
 ) {
     @Component
     public static class ChatDTORowMapper implements RowMapper<ChatDto> {
+        private static final String ID_COLUMN = "id";
+        private static final String REGISTERED_AT_COLUMN = "registered_at";
+
         @Override
         public ChatDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new ChatDto(
-                rs.getLong("id"),
-                rs.getObject("registered_at", OffsetDateTime.class)
+                rs.getLong(ID_COLUMN),
+                rs.getObject(REGISTERED_AT_COLUMN, OffsetDateTime.class)
             );
         }
 
         public ChatDto map(Map<String, Object> columnObjectMap) {
-            Long generatedId = (Long) Objects.requireNonNull(columnObjectMap.get("id"));
+            Long generatedId = (Long) Objects.requireNonNull(columnObjectMap.get(ID_COLUMN));
             OffsetDateTime generatedTimestamp =
-                ((Timestamp) Objects.requireNonNull(columnObjectMap.get("registered_at")))
+                ((Timestamp) Objects.requireNonNull(columnObjectMap.get(REGISTERED_AT_COLUMN)))
                     .toInstant().atOffset(ZoneOffset.UTC);
             return new ChatDto(generatedId, generatedTimestamp);
         }

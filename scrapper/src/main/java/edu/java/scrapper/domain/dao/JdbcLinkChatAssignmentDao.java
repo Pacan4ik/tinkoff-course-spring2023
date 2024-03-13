@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("jdbcLinkChatAssignmentDao")
 public class JdbcLinkChatAssignmentDao implements LinkChatAssignmentDao {
     JdbcTemplate jdbcTemplate;
 
@@ -87,7 +87,7 @@ public class JdbcLinkChatAssignmentDao implements LinkChatAssignmentDao {
     }
 
     public Optional<LinkChatAssignmentDto> findById(Long assignmentId) {
-        var list = jdbcTemplate.query("select * from link_chat_assignment", mapper, assignmentId);
+        var list = jdbcTemplate.query("select * from link_chat_assignment where id = (?)", mapper, assignmentId);
         if (list.isEmpty()) {
             return Optional.empty();
         }

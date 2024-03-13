@@ -4,7 +4,7 @@ import edu.java.scrapper.domain.dto.ChatDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface ChatDao {
+public interface ChatsDao {
     ChatDto add(Long id);
 
     ChatDto remove(Long id);

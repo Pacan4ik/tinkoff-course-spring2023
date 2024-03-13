@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+    link-checking-frequency: 1m
   base-urls:
     git-hub-api: https://api.github.com/
     stack-overflow-api: https://api.stackexchange.com/

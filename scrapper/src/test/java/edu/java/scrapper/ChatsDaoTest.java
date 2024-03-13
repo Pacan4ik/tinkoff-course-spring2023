@@ -1,38 +1,32 @@
 package edu.java.scrapper;
 
-import edu.java.scrapper.api.repositories.JdbcChatRepository;
-import edu.java.scrapper.domain.dao.ChatDao;
+import edu.java.scrapper.domain.dao.ChatsDao;
 import edu.java.scrapper.domain.dto.ChatDto;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 
 @SpringBootTest
-public class JdbcChatTest extends IntegrationTest {
+public class ChatsDaoTest extends IntegrationTest {
     @Autowired
-    private ChatDao chatDao;
+    private ChatsDao chatsDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ChatDto.ChatDTORowMapper mapper = new ChatDto.ChatDTORowMapper();
+    @Autowired
+    private ChatDto.ChatDTORowMapper mapper;
 
     @Test
     @Transactional
     @Rollback
     void shouldAdd() {
-        var dto = chatDao.add(0L);
+        var dto = chatsDao.add(0L);
         Assertions.assertEquals(0L, dto.id());
         Assertions.assertNotNull(dto.registeredAt());
 
@@ -48,7 +42,7 @@ public class JdbcChatTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dto = chatDao.find(0L).get();
+        var dto = chatsDao.find(0L).get();
 
         //then
         var dtoQuery = jdbcTemplate.queryForObject("select * from chats where id = 0", mapper);
@@ -63,7 +57,7 @@ public class JdbcChatTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatDao.findAll();
+        var dtoList = chatsDao.findAll();
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(0L, 1L, 2L));
@@ -77,7 +71,7 @@ public class JdbcChatTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatDao.findAll(1L, 2L);
+        var dtoList = chatsDao.findAll(1L, 2L);
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(1L, 2L));
@@ -91,7 +85,7 @@ public class JdbcChatTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        chatDao.remove(1L);
+        chatsDao.remove(1L);
 
         //then
         Assertions.assertTrue(

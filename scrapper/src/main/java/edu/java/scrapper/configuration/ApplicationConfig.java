@@ -16,7 +16,10 @@ public record ApplicationConfig(
     BaseUrls baseUrls
 ) {
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    public record Scheduler(boolean enable,
+                            @NotNull Duration interval,
+                            @NotNull Duration forceCheckDelay,
+                            @NotNull Duration linkCheckingFrequency) {
     }
 
     public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {

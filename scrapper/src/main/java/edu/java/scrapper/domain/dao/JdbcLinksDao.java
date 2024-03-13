@@ -4,6 +4,8 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("jdbcLinksDao")
 public class JdbcLinksDao implements LinksDao {
     JdbcTemplate jdbcTemplate;
     LinkDto.LinkDtoRowMapper mapper;
@@ -79,11 +81,11 @@ public class JdbcLinksDao implements LinksDao {
         String sql = "select * from links where links.url in ("
             + String.join(",", Collections.nCopies(urls.length, "?"))
             + ")";
-        return jdbcTemplate.query(sql, mapper, (Object[]) urls);
+        return jdbcTemplate.query(sql, mapper, Arrays.stream(urls).map(Object::toString).toArray());
     }
 
     public Optional<LinkDto> find(URI url) {
-        var list = jdbcTemplate.query("select * from links where url=(?)", mapper, url);
+        var list = jdbcTemplate.query("select * from links where url=(?)", mapper, url.toString());
         if (list.isEmpty()) {
             return Optional.empty();
         }
@@ -103,6 +105,47 @@ public class JdbcLinksDao implements LinksDao {
             return Optional.empty();
         }
         return Optional.of(list.getFirst());
+    }
+
+    @Override
+    public List<LinkDto> findAllWhereCheckedAtBefore(OffsetDateTime offsetDateTime) {
+        return jdbcTemplate.query("select * from links where checked_at < (?)", mapper, offsetDateTime);
+    }
+
+    @Override
+    public LinkDto updateUpdatedAt(Long id, OffsetDateTime newOffsetDateTime) {
+        String sql = "update links set updated_at = (?) where id = (?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            con -> {
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, newOffsetDateTime);
+                ps.setObject(2, id);
+                return ps;
+            },
+            keyHolder
+        );
+        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
+    }
+
+    @Override
+    public LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime) {
+        String sql = "update links set checked_at = (?) where id = (?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            con -> {
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, newOffsetDateTime);
+                ps.setObject(2, id);
+                return ps;
+            },
+            keyHolder
+        );
+        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
     }
 
 }

@@ -85,10 +85,4 @@ public class ContainerTest extends IntegrationTest {
 
     }
 
-
-    @AfterAll
-    static void stop() {
-        POSTGRES.stop();
-    }
-
 }

@@ -13,12 +13,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-@Component
-public class JdbcChatDao implements ChatDao {
+@Component("jdbcChatsDao")
+public class JdbcChatsDao implements ChatsDao {
     JdbcTemplate jdbcTemplate;
     ChatDto.ChatDTORowMapper mapper;
 
-    public JdbcChatDao(JdbcTemplate jdbcTemplate, ChatDto.ChatDTORowMapper mapper) {
+    public JdbcChatsDao(JdbcTemplate jdbcTemplate, ChatDto.ChatDTORowMapper mapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
     }

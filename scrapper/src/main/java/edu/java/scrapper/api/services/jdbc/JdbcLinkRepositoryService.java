@@ -1,15 +1,17 @@
-package edu.java.scrapper.api.services;
+package edu.java.scrapper.api.services.jdbc;
 
 import edu.java.scrapper.api.repositories.LinkRepository;
+import edu.java.scrapper.api.services.LinkRepositoryService;
 import java.net.URI;
 import java.util.Collection;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JdbcLinkRepositoryService implements LinkRepositoryService {
     private final LinkRepository linkRepository;
 
-    public JdbcLinkRepositoryService(LinkRepository linkRepository) {
+    public JdbcLinkRepositoryService(@Qualifier("jdbcLinkRepository") LinkRepository linkRepository) {
         this.linkRepository = linkRepository;
     }
 
