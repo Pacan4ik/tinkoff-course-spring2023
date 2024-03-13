@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-public interface ChatController { //TODO ANNOTATIONS
+public interface ChatController {
     @PostMapping(value = "/tg-chat/{id}", produces = "application/json")
     @Operation(summary = "Зарегистрировать чат")
     @ApiResponses(value = {
@@ -41,5 +41,5 @@ public interface ChatController { //TODO ANNOTATIONS
                      content = @Content(mediaType = "application/json",
                                         schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    ResponseEntity<Void> deleteChat(@PathVariable Long id); //TODO return VOID
+    ResponseEntity<Void> deleteChat(@PathVariable Long id);
 }
