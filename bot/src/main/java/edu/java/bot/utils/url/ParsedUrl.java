@@ -7,4 +7,16 @@ public record ParsedUrl(
     String path,
     String query
 ) {
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder().append(protocol).append("://").append(host);
+        if (path != null) {
+            if (path.charAt(path.length() - 1) == '/') {
+                sb.append(path, 0, path.length() - 1);
+            } else {
+                sb.append(path);
+            }
+        }
+        return sb.toString();
+    }
 }
