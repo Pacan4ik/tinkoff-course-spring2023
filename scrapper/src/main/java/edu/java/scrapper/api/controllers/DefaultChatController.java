@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DefaultChatController implements ChatController {
-    ChatRepositoryService chatRepositoryService;
+    private final ChatRepositoryService chatRepositoryService;
 
     DefaultChatController(ChatRepositoryService chatRepositoryService) {
         this.chatRepositoryService = chatRepositoryService;
