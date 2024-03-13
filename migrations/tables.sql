@@ -1,11 +1,12 @@
 create table links
 (
     id                bigserial primary key,
-    url               text                     not null,
+    url               text unique              not null,
     event_description text                              default 'Новое событие',
 
     updated_at        timestamp with time zone not null default CURRENT_TIMESTAMP,
-    created_at        timestamp with time zone not null default CURRENT_TIMESTAMP
+    created_at        timestamp with time zone not null default CURRENT_TIMESTAMP,
+    checked_at        timestamp with time zone not null default CURRENT_TIMESTAMP
 );
 create table chats
 (
@@ -17,5 +18,6 @@ create table link_chat_assignment
 (
     id      bigserial primary key,
     link_id bigint references links (id) on delete cascade not null,
-    chat_id bigint references chats (id) on delete cascade not null
+    chat_id bigint references chats (id) on delete cascade not null,
+    CONSTRAINT unique_link_chat_assignment UNIQUE (link_id, chat_id)
 );
