@@ -40,7 +40,8 @@ public class LinkUpdateScheduler {
         this.botClient = botClient;
     }
 
-    @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
+
+    @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
         for (URI url : linkRepository.getLinksCheckedBefore(OffsetDateTime.now()
             .minus(applicationConfig.scheduler().linkCheckingFrequency()))) {
