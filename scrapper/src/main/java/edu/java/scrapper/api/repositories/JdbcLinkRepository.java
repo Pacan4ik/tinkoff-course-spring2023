@@ -88,24 +88,28 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public OffsetDateTime updateCheckedAt(URI url, OffsetDateTime newOffsetDateTime) {
         LinkDto linkDto = linksDao.find(url).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
         return linksDao.updateCheckedAt(linkDto.id(), newOffsetDateTime).updatedAt();
     }
 
     @Override
+    @Transactional
     public OffsetDateTime updateUpdatedAt(URI url, OffsetDateTime newOffsetDateTime) {
         LinkDto linkDto = linksDao.find(url).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
         return linksDao.updateUpdatedAt(linkDto.id(), newOffsetDateTime).updatedAt();
     }
 
     @Override
+    @Transactional
     public OffsetDateTime getLastUpdate(URI url) {
         LinkDto linkDto = linksDao.find(url).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
         return linkDto.updatedAt();
     }
 
     @Override
+    @Transactional
     public List<Long> getSubscribedChats(URI url) {
         LinkDto linkDto = linksDao.find(url).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
         return linkChatAssignmentDao.findByLinkId(linkDto.id()).stream()

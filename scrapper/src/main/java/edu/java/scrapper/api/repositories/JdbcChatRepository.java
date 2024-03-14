@@ -30,6 +30,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional
     public Long addChat(Long id) {
         if (findChat(id).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
