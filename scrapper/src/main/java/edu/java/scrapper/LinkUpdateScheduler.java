@@ -10,36 +10,23 @@ import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-@Log4j2
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class LinkUpdateScheduler {
     private final ApplicationConfig applicationConfig;
     private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final BotClient botClient;
-
-    public LinkUpdateScheduler(
-        ApplicationConfig applicationConfig,
-        LinkRepository linkRepository,
-        GitHubClient gitHubClient,
-        StackOverflowClient stackOverflowClient,
-        BotClient botClient
-    ) {
-        this.applicationConfig = applicationConfig;
-        this.linkRepository = linkRepository;
-
-        this.gitHubClient = gitHubClient;
-        this.stackOverflowClient = stackOverflowClient;
-        this.botClient = botClient;
-    }
-
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
