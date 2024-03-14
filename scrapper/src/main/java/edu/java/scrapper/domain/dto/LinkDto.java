@@ -3,11 +3,7 @@ package edu.java.scrapper.domain.dto;
 import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Map;
-import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -38,30 +34,6 @@ public record LinkDto(
             OffsetDateTime createdAt = rs.getObject(CREATED_AT_COLUMN, OffsetDateTime.class);
             OffsetDateTime checkedAt = rs.getObject(CHECKED_AT_COLUMN, OffsetDateTime.class);
             return new LinkDto(id, url, eventDescription, updatedAt, createdAt, checkedAt);
-        }
-
-        public LinkDto map(Map<String, Object> columnObjectMap) {
-            Long generatedId = (Long) Objects.requireNonNull(columnObjectMap.get(ID_COLUMN));
-            URI url = URI.create((String) Objects.requireNonNull(columnObjectMap.get(URL_COLUMN)));
-            String generatedDescription =
-                (String) Objects.requireNonNull(columnObjectMap.get(EVENT_DESCRIPTION_COLUMN));
-            OffsetDateTime generatedUpdatedAt =
-                ((Timestamp) Objects.requireNonNull(columnObjectMap.get(UPDATED_AT_COLUMN)))
-                    .toInstant().atOffset(ZoneOffset.UTC);
-            OffsetDateTime generatedCreatedAt =
-                ((Timestamp) Objects.requireNonNull(columnObjectMap.get(CREATED_AT_COLUMN)))
-                    .toInstant().atOffset(ZoneOffset.UTC);
-            OffsetDateTime generatedCheckedAt =
-                ((Timestamp) Objects.requireNonNull(columnObjectMap.get(CHECKED_AT_COLUMN)))
-                    .toInstant().atOffset(ZoneOffset.UTC);
-            return new LinkDto(
-                generatedId,
-                url,
-                generatedDescription,
-                generatedUpdatedAt,
-                generatedCreatedAt,
-                generatedCheckedAt
-            );
         }
     }
 }

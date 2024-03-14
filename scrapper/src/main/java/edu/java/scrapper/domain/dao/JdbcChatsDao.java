@@ -1,16 +1,10 @@
 package edu.java.scrapper.domain.dao;
 
 import edu.java.scrapper.domain.dto.ChatDto;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component("jdbcChatsDao")
@@ -24,27 +18,11 @@ public class JdbcChatsDao implements ChatsDao {
     }
 
     public ChatDto add(Long id) {
-        String sql = "insert into chats(id) values (?)";
-        return executeUpdate(id, sql);
+        return jdbcTemplate.queryForObject("insert into chats(id) values (?) returning *", mapper, id);
     }
 
     public ChatDto remove(Long id) {
-        String sql = "delete from chats where id in (?)";
-        return executeUpdate(id, sql);
-    }
-
-    @NotNull private ChatDto executeUpdate(Long id, String sql) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            con -> {
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setLong(1, id);
-                return ps;
-            },
-            keyHolder
-        );
-        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
+        return jdbcTemplate.queryForObject("delete from chats where id in (?) returning *", mapper, id);
     }
 
     public List<ChatDto> findAll() {

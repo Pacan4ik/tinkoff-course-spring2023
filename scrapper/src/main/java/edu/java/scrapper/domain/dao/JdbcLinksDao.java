@@ -2,19 +2,13 @@ package edu.java.scrapper.domain.dao;
 
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component("jdbcLinksDao")
@@ -29,48 +23,36 @@ public class JdbcLinksDao implements LinksDao {
     }
 
     public LinkDto add(URI url) {
-        String sql = "insert into links(url) values(?)";
-        return executeUpdate(url.toString(), sql);
+        return jdbcTemplate.queryForObject(
+            "insert into links(url) values (?) returning *",
+            mapper,
+            url.toString()
+        );
     }
 
     public LinkDto add(URI url, String description) {
-        String sql = "insert into links(url, event_description) values (?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            con -> {
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, url);
-                ps.setObject(2, description);
-                return ps;
-            },
-            keyHolder
+        return jdbcTemplate.queryForObject(
+            "insert into links(url, event_description) values (?, ?) returning *",
+            mapper,
+            url.toString(),
+            description
         );
-        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
     }
 
     public LinkDto remove(URI url) {
-        String sql = "delete from links where url in (?)";
-        return executeUpdate(url.toString(), sql);
+        return jdbcTemplate.queryForObject(
+            "delete from links where url in (?) returning *",
+            mapper,
+            url.toString()
+        );
     }
 
     public LinkDto remove(Long id) {
-        String sql = "delete from links where id in (?)";
-        return executeUpdate(id, sql);
-    }
-
-    @NotNull private <T> LinkDto executeUpdate(T obj, String sql) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            con -> {
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, obj);
-                return ps;
-            },
-            keyHolder
+        return jdbcTemplate.queryForObject(
+            "delete from links where id in (?) returning *",
+            mapper,
+            id
         );
-        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
     }
 
     public List<LinkDto> findAll() {
@@ -114,38 +96,22 @@ public class JdbcLinksDao implements LinksDao {
 
     @Override
     public LinkDto updateUpdatedAt(Long id, OffsetDateTime newOffsetDateTime) {
-        String sql = "update links set updated_at = (?) where id = (?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            con -> {
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, newOffsetDateTime);
-                ps.setObject(2, id);
-                return ps;
-            },
-            keyHolder
+        return jdbcTemplate.queryForObject(
+            "update links set updated_at = (?) where id = (?) returning *",
+            mapper,
+            newOffsetDateTime,
+            id
         );
-        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
     }
 
     @Override
     public LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime) {
-        String sql = "update links set checked_at = (?) where id = (?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            con -> {
-                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, newOffsetDateTime);
-                ps.setObject(2, id);
-                return ps;
-            },
-            keyHolder
+        return jdbcTemplate.queryForObject(
+            "update links set checked_at = (?) where id = (?) returning *",
+            mapper,
+            newOffsetDateTime,
+            id
         );
-        return mapper.map(Objects.requireNonNull(keyHolder.getKeys()));
     }
 
 }
