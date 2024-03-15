@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class DefaultUpdateController implements UpdateController {
-    UpdateHandlerService updateHandlerService;
+    private final UpdateHandlerService updateHandlerService;
 
     public DefaultUpdateController(UpdateHandlerService updateHandlerService) {
         this.updateHandlerService = updateHandlerService;
