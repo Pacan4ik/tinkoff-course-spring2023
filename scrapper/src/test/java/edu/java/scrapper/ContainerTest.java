@@ -36,7 +36,7 @@ public class ContainerTest extends IntegrationTest {
         ResultSet rs = metaData.getTables(
             CONNECTION.getCatalog(),
             null,
-            "chats",
+            "chat",
             new String[] {"TABLE"}
         );
 
@@ -55,7 +55,7 @@ public class ContainerTest extends IntegrationTest {
         ResultSet rs = metaData.getTables(
             CONNECTION.getCatalog(),
             null,
-            "links",
+            "link",
             new String[] {"TABLE"}
         );
 

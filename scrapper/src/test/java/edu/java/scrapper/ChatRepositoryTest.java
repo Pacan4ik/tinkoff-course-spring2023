@@ -1,6 +1,6 @@
 package edu.java.scrapper;
 
-import edu.java.scrapper.domain.dao.ChatsRepository;
+import edu.java.scrapper.domain.dao.ChatRepository;
 import edu.java.scrapper.domain.dto.ChatDto;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +12,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class ChatsRepositoryTest extends IntegrationTest {
+public class ChatRepositoryTest extends IntegrationTest {
     @Autowired
-    private ChatsRepository chatsRepository;
+    private ChatRepository chatRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,15 +22,18 @@ public class ChatsRepositoryTest extends IntegrationTest {
     @Autowired
     private ChatDto.ChatDTORowMapper mapper;
 
+    private static final String EXAMPLE_URL = "https://example.com/";
+    private static final String EXAMPLE2_URL = "https://example2.com/";
+
     @Test
     @Transactional
     @Rollback
     void shouldAdd() {
-        var dto = chatsRepository.add(0L);
+        var dto = chatRepository.add(0L);
         Assertions.assertEquals(0L, dto.id());
         Assertions.assertNotNull(dto.registeredAt());
 
-        var dtoQuery = jdbcTemplate.queryForObject("select * from chats where id = 0", mapper);
+        var dtoQuery = jdbcTemplate.queryForObject("select * from chat where id = 0", mapper);
         Assertions.assertEquals(dto, dtoQuery);
     }
 
@@ -39,13 +42,13 @@ public class ChatsRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindBySingleId() {
         //given
-        jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
+        jdbcTemplate.update("insert into chat(id) values (0), (1), (2)");
 
         //when
-        var dto = chatsRepository.find(0L).get();
+        var dto = chatRepository.find(0L).get();
 
         //then
-        var dtoQuery = jdbcTemplate.queryForObject("select * from chats where id = 0", mapper);
+        var dtoQuery = jdbcTemplate.queryForObject("select * from chat where id = 0", mapper);
         Assertions.assertEquals(dto, dtoQuery);
     }
 
@@ -54,10 +57,10 @@ public class ChatsRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindAll() {
         //given
-        jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
+        jdbcTemplate.update("insert into chat(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatsRepository.findAll();
+        var dtoList = chatRepository.findAll();
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(0L, 1L, 2L));
@@ -68,10 +71,10 @@ public class ChatsRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindAllWithSeveralIds() {
         //given
-        jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
+        jdbcTemplate.update("insert into chat(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatsRepository.findAll(1L, 2L);
+        var dtoList = chatRepository.findAll(1L, 2L);
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(1L, 2L));
@@ -82,14 +85,70 @@ public class ChatsRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldDelete() {
         //given
-        jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
+        jdbcTemplate.update("insert into chat(id) values (0), (1), (2)");
 
         //when
-        chatsRepository.remove(1L);
+        chatRepository.remove(1L);
 
         //then
         Assertions.assertTrue(
-            jdbcTemplate.query("select * from chats where id = 1", mapper)
+            jdbcTemplate.query("select * from chat where id = 1", mapper)
+                .isEmpty()
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldAddLink() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (123, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into chat(id) values (1)");
+
+        //when
+        chatRepository.addLink(1L, 123L);
+
+        //then
+        Assertions.assertEquals(
+            123L,
+            jdbcTemplate.queryForObject("select link_id from link_chat_assignment where chat_id = 1", Long.class)
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldReturnAssignedLinks() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (1, ?), (2, ?)", EXAMPLE_URL, EXAMPLE2_URL);
+        jdbcTemplate.update("insert into chat(id) values (123)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (2, 123)");
+
+        //when
+        var linkIds = chatRepository.getAllLinks(123L);
+
+        //then
+        Assertions.assertEquals(
+            List.of(1L, 2L),
+            linkIds
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldDeleteAssignedLink() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (1, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into chat(id) values (123)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123)");
+
+        //when
+        chatRepository.removeLink(123L, 1L);
+
+        //then
+        Assertions.assertTrue(
+            jdbcTemplate.queryForList("select id from link_chat_assignment where chat_id = 123", Long.class)
                 .isEmpty()
         );
     }

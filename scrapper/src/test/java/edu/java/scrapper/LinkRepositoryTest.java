@@ -1,10 +1,11 @@
 package edu.java.scrapper;
 
-import edu.java.scrapper.domain.dao.LinksRepository;
+import edu.java.scrapper.domain.dao.LinkRepository;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class LinksRepositoryTest extends IntegrationTest {
+public class LinkRepositoryTest extends IntegrationTest {
     @Autowired
-    private LinksRepository linksRepository;
+    private LinkRepository linkRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,14 +32,14 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void shouldAdd() {
-        var dto = linksRepository.add(URI.create(EXAMPLE_URL));
+        var dto = linkRepository.add(URI.create(EXAMPLE_URL));
         Assertions.assertEquals(EXAMPLE_URL, dto.url().toString());
         Assertions.assertNotNull(dto.id());
         Assertions.assertNotNull(dto.createdAt());
         Assertions.assertNotNull(dto.updatedAt());
         Assertions.assertNotNull(dto.eventDescription());
 
-        var dtoQuery = jdbcTemplate.queryForObject("select * from links where url = ?", mapper, EXAMPLE_URL);
+        var dtoQuery = jdbcTemplate.queryForObject("select * from link where url = ?", mapper, EXAMPLE_URL);
         Assertions.assertEquals(dto, dtoQuery);
     }
 
@@ -47,13 +48,13 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindById() {
         //given
-        jdbcTemplate.update("insert into links(id, url) values (10, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into link(id, url) values (10, ?)", EXAMPLE_URL);
 
         //when
-        var dto = linksRepository.find(10L).get();
+        var dto = linkRepository.find(10L).get();
 
         //then
-        var queryDto = jdbcTemplate.queryForObject("select * from links where id = 10", mapper);
+        var queryDto = jdbcTemplate.queryForObject("select * from link where id = 10", mapper);
         Assertions.assertEquals(queryDto, dto);
     }
 
@@ -63,17 +64,17 @@ public class LinksRepositoryTest extends IntegrationTest {
     void shouldFindBySeveralIds() {
         //given
         jdbcTemplate.update(
-            "insert into links(id, url) values (10, ?), (11, ?), (12, ?)",
+            "insert into link(id, url) values (10, ?), (11, ?), (12, ?)",
             EXAMPLE_URL,
             EXAMPLE2_URL,
             "https://otherurl.com"
         );
 
         //when
-        var listDto = linksRepository.findAll(10L, 11L);
+        var listDto = linkRepository.findAll(10L, 11L);
 
         //then
-        var queryDtos = jdbcTemplate.query("select * from links where id in (10, 11)", mapper);
+        var queryDtos = jdbcTemplate.query("select * from link where id in (10, 11)", mapper);
         Assertions.assertEquals(queryDtos, listDto);
     }
 
@@ -82,14 +83,14 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindByUrl() {
         //given
-        jdbcTemplate.update("insert into links(id, url) values (10, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into link(id, url) values (10, ?)", EXAMPLE_URL);
 
         //when
-        var dto = linksRepository.find(URI.create(EXAMPLE_URL)).get();
+        var dto = linkRepository.find(URI.create(EXAMPLE_URL)).get();
 
         //then
         var queryDto =
-            jdbcTemplate.queryForObject("select * from links where url = ?", mapper, EXAMPLE_URL);
+            jdbcTemplate.queryForObject("select * from link where url = ?", mapper, EXAMPLE_URL);
         Assertions.assertEquals(queryDto, dto);
     }
 
@@ -99,18 +100,18 @@ public class LinksRepositoryTest extends IntegrationTest {
     void shouldFindBySeveralUrls() {
         //given
         jdbcTemplate.update(
-            "insert into links(url) values (?), (?), ('https://otherurl.com/')",
+            "insert into link(url) values (?), (?), ('https://otherurl.com/')",
             EXAMPLE_URL,
             EXAMPLE2_URL
         );
 
         //when
-        var listDto = linksRepository.findAll(URI.create(EXAMPLE_URL), URI.create(EXAMPLE2_URL));
+        var listDto = linkRepository.findAll(URI.create(EXAMPLE_URL), URI.create(EXAMPLE2_URL));
 
         //then
         var queryDtos =
             jdbcTemplate.query(
-                "select * from links where url in (?, ?)",
+                "select * from link where url in (?, ?)",
                 mapper,
                 EXAMPLE_URL,
                 EXAMPLE2_URL
@@ -124,18 +125,18 @@ public class LinksRepositoryTest extends IntegrationTest {
     void shouldFindAll() {
         //given
         jdbcTemplate.update(
-            "insert into links(url) values (?), (?), ('https://otherurl.com/')",
+            "insert into link(url) values (?), (?), ('https://otherurl.com/')",
             EXAMPLE_URL,
             EXAMPLE2_URL
         );
 
         //when
-        var listDto = linksRepository.findAll();
+        var listDto = linkRepository.findAll();
 
         //then
         var queryDtos =
             jdbcTemplate.query(
-                "select * from links",
+                "select * from link",
                 mapper
             );
         Assertions.assertEquals(listDto, queryDtos);
@@ -147,17 +148,17 @@ public class LinksRepositoryTest extends IntegrationTest {
     void shouldDeleteById() {
         //given
         jdbcTemplate.update(
-            "insert into links(id, url) values (1, ?), (2, ?), (3, 'https://otherurl.com/')",
+            "insert into link(id, url) values (1, ?), (2, ?), (3, 'https://otherurl.com/')",
             EXAMPLE_URL,
             EXAMPLE2_URL
         );
 
         //when
-        linksRepository.remove(2L);
+        linkRepository.remove(2L);
 
         //then
         Assertions.assertTrue(
-            jdbcTemplate.query("select * from links where id = 2", mapper)
+            jdbcTemplate.query("select * from link where id = 2", mapper)
                 .isEmpty()
         );
     }
@@ -168,17 +169,17 @@ public class LinksRepositoryTest extends IntegrationTest {
     void shouldDeleteByUrl() {
         //given
         jdbcTemplate.update(
-            "insert into links(id, url) values (1, ?), (2, ?), (3, 'https://otherurl.com/')",
+            "insert into link(id, url) values (1, ?), (2, ?), (3, 'https://otherurl.com/')",
             EXAMPLE_URL,
             EXAMPLE2_URL
         );
 
         //when
-        linksRepository.remove(URI.create(EXAMPLE2_URL));
+        linkRepository.remove(2L);
 
         //then
         Assertions.assertTrue(
-            jdbcTemplate.query("select * from links where url = (?)", mapper, EXAMPLE2_URL)
+            jdbcTemplate.query("select * from link where url = (?)", mapper, EXAMPLE2_URL)
                 .isEmpty()
         );
     }
@@ -188,14 +189,14 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldFindCheckedBefore() {
         jdbcTemplate.update(
-            "insert into links (id, url, checked_at) values (1, ?, ?), (2, ?, ?)",
+            "insert into link (id, url, checked_at) values (1, ?, ?), (2, ?, ?)",
             EXAMPLE_URL,
             OffsetDateTime.parse("2024-03-12T21:30:00.0+00:00"),
             EXAMPLE2_URL,
             OffsetDateTime.parse("2024-03-10T10:45:00.0+00:00")
         );
 
-        var dtoList = linksRepository.findAllWhereCheckedAtBefore(OffsetDateTime.parse("2024-03-11T00:00:00.0+00:00"));
+        var dtoList = linkRepository.findAllWhereCheckedAtBefore(OffsetDateTime.parse("2024-03-11T00:00:00.0+00:00"));
         Assertions.assertEquals(1, dtoList.size());
         Assertions.assertEquals(EXAMPLE2_URL, dtoList.getFirst().url().toString());
     }
@@ -205,14 +206,14 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldUpdateUpdatedAtField() {
         //given
-        jdbcTemplate.update("insert into links(id, url) values (1, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into link(id, url) values (1, ?)", EXAMPLE_URL);
 
         //when
         OffsetDateTime newOffsetDateTime = OffsetDateTime.parse("2019-03-11T00:00:00.0+00:00");
-        linksRepository.updateUpdatedAt(1L, newOffsetDateTime);
+        linkRepository.updateUpdatedAt(1L, newOffsetDateTime);
 
         //then
-        var timestamp = jdbcTemplate.queryForObject("select updated_at from links", Timestamp.class);
+        var timestamp = jdbcTemplate.queryForObject("select updated_at from link", Timestamp.class);
         Assertions.assertEquals(newOffsetDateTime.toInstant(), timestamp.toInstant());
     }
 
@@ -221,14 +222,33 @@ public class LinksRepositoryTest extends IntegrationTest {
     @Rollback
     void shouldUpdateCheckedAtField() {
         //given
-        jdbcTemplate.update("insert into links(id, url) values (1, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into link(id, url) values (1, ?)", EXAMPLE_URL);
 
         //when
         OffsetDateTime newOffsetDateTime = OffsetDateTime.parse("2019-03-11T00:00:00.0+00:00");
-        linksRepository.updateCheckedAt(1L, newOffsetDateTime);
+        linkRepository.updateCheckedAt(1L, newOffsetDateTime);
 
         //then
-        var timestamp = jdbcTemplate.queryForObject("select checked_at from links", Timestamp.class);
+        var timestamp = jdbcTemplate.queryForObject("select checked_at from link", Timestamp.class);
         Assertions.assertEquals(newOffsetDateTime.toInstant(), timestamp.toInstant());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldReturnAssignedChats() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (123, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into chat(id) values (1), (2), (3)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (123, 1), (123, 2), (123, 3)");
+
+        //when
+        var chatsIds = linkRepository.getChats(123L);
+
+        //then
+        Assertions.assertEquals(
+            List.of(1L, 2L, 3L),
+            chatsIds
+        );
     }
 }
