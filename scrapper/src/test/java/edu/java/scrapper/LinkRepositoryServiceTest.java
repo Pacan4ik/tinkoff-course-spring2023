@@ -2,6 +2,7 @@ package edu.java.scrapper;
 
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
+import edu.java.scrapper.api.model.LinkResponse;
 import edu.java.scrapper.api.services.LinkRepositoryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -77,12 +78,12 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (2, 123)");
 
         //when
-        var urls = linkRepositoryService.getUserLinks(123L);
+        var listResponse = linkRepositoryService.getUserLinks(123L);
 
         //then
         Assertions.assertEquals(
-            List.of(URI.create(EXAMPLE_URL), URI.create(EXAMPLE2_URL)),
-            urls
+            List.of(new LinkResponse(1L, URI.create(EXAMPLE_URL)), new LinkResponse(2L, URI.create(EXAMPLE2_URL))),
+            listResponse
         );
     }
 

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,8 +75,12 @@ public class ControllersTest extends IntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.links[0].url").exists())
             .andExpect(jsonPath("$.links[0].url").value(EXAMPLE_URL))
+            .andExpect(jsonPath("$.links[0].id").exists())
+            .andExpect(jsonPath("$.links[0].id").value(1))
             .andExpect(jsonPath("$.links[1].url").exists())
             .andExpect(jsonPath("$.links[1].url").value(EXAMPLE2_URL))
+            .andExpect(jsonPath("$.links[1].id").exists())
+            .andExpect(jsonPath("$.links[1].id").value(2))
             .andExpect(jsonPath("$.size").value(2));
 
     }

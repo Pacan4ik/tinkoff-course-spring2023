@@ -2,12 +2,12 @@ package edu.java.scrapper.api.services.jdbc;
 
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
+import edu.java.scrapper.api.model.LinkResponse;
 import edu.java.scrapper.api.services.LinkRepositoryService;
 import edu.java.scrapper.domain.dao.ChatRepository;
 import edu.java.scrapper.domain.dao.LinkRepository;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,20 +34,20 @@ public class JdbcLinkRepositoryService implements LinkRepositoryService {
 
     @Override
     @Transactional
-    public Collection<URI> getUserLinks(Long id) {
+    public List<LinkResponse> getUserLinks(Long id) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         List<Long> linkIds = chatRepository.getAllLinks(id);
         if (linkIds.isEmpty()) {
             return Collections.emptyList();
         }
         return linkRepository.findAll(linkIds.toArray(Long[]::new)).stream()
-            .map(LinkDto::url)
+            .map((dto) -> new LinkResponse(dto.id(), dto.url()))
             .toList();
     }
 
     @Override
     @Transactional
-    public URI addLink(Long id, URI link) {
+    public LinkResponse addLink(Long id, URI link) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         LinkDto linkDto = linkRepository.find(link).orElseGet(() -> linkRepository.add(link));
 
@@ -56,12 +56,12 @@ public class JdbcLinkRepositoryService implements LinkRepositoryService {
         }
 
         chatRepository.addLink(id, linkDto.id());
-        return linkDto.url();
+        return new LinkResponse(linkDto.id(), linkDto.url());
     }
 
     @Override
     @Transactional
-    public URI removeLink(Long id, URI link) {
+    public LinkResponse removeLink(Long id, URI link) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         LinkDto linkDto = linkRepository.find(link).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
         if (chatRepository.getAllLinks(id).stream().noneMatch(linkId -> linkId.equals(linkDto.id()))) {
@@ -74,6 +74,6 @@ public class JdbcLinkRepositoryService implements LinkRepositoryService {
             linkRepository.remove(linkDto.id());
         }
 
-        return linkDto.url();
+        return new LinkResponse(linkDto.id(), linkDto.url());
     }
 }
