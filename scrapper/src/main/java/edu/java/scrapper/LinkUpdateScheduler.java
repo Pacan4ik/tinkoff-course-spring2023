@@ -1,13 +1,14 @@
 package edu.java.scrapper;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
-import edu.java.scrapper.api.repositories.LinkRepository;
 import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
@@ -29,35 +30,35 @@ public class LinkUpdateScheduler {
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
-        for (URI url : linkRepository.getLinksCheckedBefore(OffsetDateTime.now()
+        for (LinkDto linkDto : linkRepository.findAllWhereCheckedAtBefore(OffsetDateTime.now()
             .minus(applicationConfig.scheduler().linkCheckingFrequency()))) {
-            OffsetDateTime lastUpdate = linkRepository.getLastUpdate(url);
+            OffsetDateTime lastUpdate = linkDto.updatedAt();
             OffsetDateTime newUpdate;
             try {
-                newUpdate = resolve(url);
+                newUpdate = resolve(linkDto.url());
             } catch (Exception e) {
                 log.error(e.getMessage());
                 continue;
             }
-            linkRepository.updateCheckedAt(url, OffsetDateTime.now());
+            linkRepository.updateCheckedAt(linkDto.id(), OffsetDateTime.now());
             if (newUpdate.isAfter(lastUpdate)) {
-                linkRepository.findLink(url).ifPresentOrElse(
-                    (id) -> {
+                linkRepository.find(linkDto.id()).ifPresentOrElse(
+                    (dto) -> {
                         try {
                             botClient.sendUpdates(
-                                id,
-                                url,
+                                dto.id(),
+                                dto.url(),
                                 "Новое обновление",
-                                linkRepository.getSubscribedChats(url)
+                                linkRepository.getChats(dto.id())
                             );
-                            linkRepository.updateUpdatedAt(url, newUpdate);
+                            linkRepository.updateUpdatedAt(dto.id(), newUpdate);
                         } catch (ResourceNotFoundException ignored) {
                         } catch (WebClientRequestException | WebClientResponseException e) {
                             log.error("Error during sending updates to the bot");
                             log.error(e.getMessage());
                         }
                     },
-                    () -> log.warn(String.format("URL: %s was deleted during update", url))
+                    () -> log.warn(String.format("Link: %s was deleted during update", linkDto))
                 );
             }
         }
