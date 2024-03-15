@@ -1,5 +1,6 @@
 package edu.java.scrapper.domain.dao;
 
+import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -9,15 +10,15 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component("jdbcLinksDao")
-public class JdbcLinksDao implements LinksDao {
+@Repository("jdbcLinksRepository")
+public class JdbcLinksRepository implements LinksRepository {
     JdbcTemplate jdbcTemplate;
     LinkDto.LinkDtoRowMapper mapper;
 
     @Autowired
-    public JdbcLinksDao(JdbcTemplate jdbcTemplate, LinkDto.LinkDtoRowMapper mapper) {
+    public JdbcLinksRepository(JdbcTemplate jdbcTemplate, LinkDto.LinkDtoRowMapper mapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
     }
@@ -112,6 +113,11 @@ public class JdbcLinksDao implements LinksDao {
             newOffsetDateTime,
             id
         );
+    }
+
+    @Override
+    public List<ChatDto> getChats(Long linkId) {
+        return null;
     }
 
 }

@@ -4,15 +4,16 @@ import edu.java.scrapper.domain.dto.ChatDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import edu.java.scrapper.domain.dto.LinkDto;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component("jdbcChatsDao")
-public class JdbcChatsDao implements ChatsDao {
+@Repository("jdbcChatsRepository")
+public class JdbcChatsRepository implements ChatsRepository {
     JdbcTemplate jdbcTemplate;
     ChatDto.ChatDTORowMapper mapper;
 
-    public JdbcChatsDao(JdbcTemplate jdbcTemplate, ChatDto.ChatDTORowMapper mapper) {
+    public JdbcChatsRepository(JdbcTemplate jdbcTemplate, ChatDto.ChatDTORowMapper mapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
     }
@@ -42,5 +43,20 @@ public class JdbcChatsDao implements ChatsDao {
             return Optional.empty();
         }
         return Optional.of(list.getFirst());
+    }
+
+    @Override
+    public LinkDto addLink(Long chatId, Long linkId) {
+        return null;
+    }
+
+    @Override
+    public LinkDto removeLink(Long chatId, Long linkId) {
+        return null;
+    }
+
+    @Override
+    public List<LinkDto> getAllLinks(Long id) {
+        return null;
     }
 }

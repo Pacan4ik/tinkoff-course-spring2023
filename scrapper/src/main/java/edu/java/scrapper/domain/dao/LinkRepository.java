@@ -1,19 +1,20 @@
 package edu.java.scrapper.domain.dao;
 
+import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface LinksDao {
+public interface LinksRepository {
     LinkDto add(URI url);
 
     LinkDto add(URI url, String description);
 
-    LinkDto remove(URI url);
-
     LinkDto remove(Long id);
+
+    List<LinkDto> remove(Long... ids);
 
     List<LinkDto> findAll();
 
@@ -30,5 +31,7 @@ public interface LinksDao {
     LinkDto updateUpdatedAt(Long id, OffsetDateTime newOffsetDateTime);
 
     LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime);
+
+    List<ChatDto> getChats(Long linkId);
 
 }

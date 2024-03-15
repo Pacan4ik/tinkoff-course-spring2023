@@ -1,6 +1,6 @@
 package edu.java.scrapper;
 
-import edu.java.scrapper.domain.dao.LinksDao;
+import edu.java.scrapper.domain.dao.LinksRepository;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.sql.Timestamp;
@@ -14,9 +14,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class LinksDaoTest extends IntegrationTest {
+public class LinksRepositoryTest extends IntegrationTest {
     @Autowired
-    private LinksDao linksDao;
+    private LinksRepository linksRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,7 +31,7 @@ public class LinksDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     void shouldAdd() {
-        var dto = linksDao.add(URI.create(EXAMPLE_URL));
+        var dto = linksRepository.add(URI.create(EXAMPLE_URL));
         Assertions.assertEquals(EXAMPLE_URL, dto.url().toString());
         Assertions.assertNotNull(dto.id());
         Assertions.assertNotNull(dto.createdAt());
@@ -50,7 +50,7 @@ public class LinksDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into links(id, url) values (10, ?)", EXAMPLE_URL);
 
         //when
-        var dto = linksDao.find(10L).get();
+        var dto = linksRepository.find(10L).get();
 
         //then
         var queryDto = jdbcTemplate.queryForObject("select * from links where id = 10", mapper);
@@ -70,7 +70,7 @@ public class LinksDaoTest extends IntegrationTest {
         );
 
         //when
-        var listDto = linksDao.findAll(10L, 11L);
+        var listDto = linksRepository.findAll(10L, 11L);
 
         //then
         var queryDtos = jdbcTemplate.query("select * from links where id in (10, 11)", mapper);
@@ -85,7 +85,7 @@ public class LinksDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into links(id, url) values (10, ?)", EXAMPLE_URL);
 
         //when
-        var dto = linksDao.find(URI.create(EXAMPLE_URL)).get();
+        var dto = linksRepository.find(URI.create(EXAMPLE_URL)).get();
 
         //then
         var queryDto =
@@ -105,7 +105,7 @@ public class LinksDaoTest extends IntegrationTest {
         );
 
         //when
-        var listDto = linksDao.findAll(URI.create(EXAMPLE_URL), URI.create(EXAMPLE2_URL));
+        var listDto = linksRepository.findAll(URI.create(EXAMPLE_URL), URI.create(EXAMPLE2_URL));
 
         //then
         var queryDtos =
@@ -130,7 +130,7 @@ public class LinksDaoTest extends IntegrationTest {
         );
 
         //when
-        var listDto = linksDao.findAll();
+        var listDto = linksRepository.findAll();
 
         //then
         var queryDtos =
@@ -153,7 +153,7 @@ public class LinksDaoTest extends IntegrationTest {
         );
 
         //when
-        linksDao.remove(2L);
+        linksRepository.remove(2L);
 
         //then
         Assertions.assertTrue(
@@ -174,7 +174,7 @@ public class LinksDaoTest extends IntegrationTest {
         );
 
         //when
-        linksDao.remove(URI.create(EXAMPLE2_URL));
+        linksRepository.remove(URI.create(EXAMPLE2_URL));
 
         //then
         Assertions.assertTrue(
@@ -195,7 +195,7 @@ public class LinksDaoTest extends IntegrationTest {
             OffsetDateTime.parse("2024-03-10T10:45:00.0+00:00")
         );
 
-        var dtoList = linksDao.findAllWhereCheckedAtBefore(OffsetDateTime.parse("2024-03-11T00:00:00.0+00:00"));
+        var dtoList = linksRepository.findAllWhereCheckedAtBefore(OffsetDateTime.parse("2024-03-11T00:00:00.0+00:00"));
         Assertions.assertEquals(1, dtoList.size());
         Assertions.assertEquals(EXAMPLE2_URL, dtoList.getFirst().url().toString());
     }
@@ -209,7 +209,7 @@ public class LinksDaoTest extends IntegrationTest {
 
         //when
         OffsetDateTime newOffsetDateTime = OffsetDateTime.parse("2019-03-11T00:00:00.0+00:00");
-        linksDao.updateUpdatedAt(1L, newOffsetDateTime);
+        linksRepository.updateUpdatedAt(1L, newOffsetDateTime);
 
         //then
         var timestamp = jdbcTemplate.queryForObject("select updated_at from links", Timestamp.class);
@@ -225,7 +225,7 @@ public class LinksDaoTest extends IntegrationTest {
 
         //when
         OffsetDateTime newOffsetDateTime = OffsetDateTime.parse("2019-03-11T00:00:00.0+00:00");
-        linksDao.updateCheckedAt(1L, newOffsetDateTime);
+        linksRepository.updateCheckedAt(1L, newOffsetDateTime);
 
         //then
         var timestamp = jdbcTemplate.queryForObject("select checked_at from links", Timestamp.class);

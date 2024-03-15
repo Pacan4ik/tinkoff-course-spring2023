@@ -1,6 +1,6 @@
 package edu.java.scrapper;
 
-import edu.java.scrapper.domain.dao.ChatsDao;
+import edu.java.scrapper.domain.dao.ChatsRepository;
 import edu.java.scrapper.domain.dto.ChatDto;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +12,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class ChatsDaoTest extends IntegrationTest {
+public class ChatsRepositoryTest extends IntegrationTest {
     @Autowired
-    private ChatsDao chatsDao;
+    private ChatsRepository chatsRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -26,7 +26,7 @@ public class ChatsDaoTest extends IntegrationTest {
     @Transactional
     @Rollback
     void shouldAdd() {
-        var dto = chatsDao.add(0L);
+        var dto = chatsRepository.add(0L);
         Assertions.assertEquals(0L, dto.id());
         Assertions.assertNotNull(dto.registeredAt());
 
@@ -42,7 +42,7 @@ public class ChatsDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dto = chatsDao.find(0L).get();
+        var dto = chatsRepository.find(0L).get();
 
         //then
         var dtoQuery = jdbcTemplate.queryForObject("select * from chats where id = 0", mapper);
@@ -57,7 +57,7 @@ public class ChatsDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatsDao.findAll();
+        var dtoList = chatsRepository.findAll();
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(0L, 1L, 2L));
@@ -71,7 +71,7 @@ public class ChatsDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        var dtoList = chatsDao.findAll(1L, 2L);
+        var dtoList = chatsRepository.findAll(1L, 2L);
 
         //then
         Assertions.assertEquals(dtoList.stream().map(ChatDto::id).toList(), List.of(1L, 2L));
@@ -85,7 +85,7 @@ public class ChatsDaoTest extends IntegrationTest {
         jdbcTemplate.update("insert into chats(id) values (0), (1), (2)");
 
         //when
-        chatsDao.remove(1L);
+        chatsRepository.remove(1L);
 
         //then
         Assertions.assertTrue(
