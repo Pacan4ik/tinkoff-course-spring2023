@@ -1,11 +1,10 @@
 package edu.java.scrapper.domain.dao;
 
 import edu.java.scrapper.domain.dto.ChatDto;
-import edu.java.scrapper.domain.dto.LinkDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface ChatsRepository {
+public interface ChatRepository {
     ChatDto add(Long id);
 
     ChatDto remove(Long id);
@@ -16,10 +15,10 @@ public interface ChatsRepository {
 
     Optional<ChatDto> find(Long id);
 
-    LinkDto addLink(Long chatId, Long linkId);
+    Long addLink(Long chatId, Long linkId);
 
-    LinkDto removeLink(Long chatId, Long linkId);
+    Long removeLink(Long chatId, Long linkId);
 
-    List<LinkDto> getAllLinks(Long id);
+    List<Long> getAllLinks(Long id);
 
 }

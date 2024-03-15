@@ -4,41 +4,43 @@ import edu.java.scrapper.domain.dto.ChatDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import edu.java.scrapper.domain.dto.LinkDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbcChatsRepository")
-public class JdbcChatsRepository implements ChatsRepository {
-    JdbcTemplate jdbcTemplate;
-    ChatDto.ChatDTORowMapper mapper;
+@Repository("jdbcChatRepository")
+public class JdbcChatRepository implements ChatRepository {
+    private final JdbcTemplate jdbcTemplate;
+    private final ChatDto.ChatDTORowMapper chatDtoMapper;
 
-    public JdbcChatsRepository(JdbcTemplate jdbcTemplate, ChatDto.ChatDTORowMapper mapper) {
+    public JdbcChatRepository(
+        JdbcTemplate jdbcTemplate,
+        ChatDto.ChatDTORowMapper chatDtoMapper
+    ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.mapper = mapper;
+        this.chatDtoMapper = chatDtoMapper;
     }
 
     public ChatDto add(Long id) {
-        return jdbcTemplate.queryForObject("insert into chats(id) values (?) returning *", mapper, id);
+        return jdbcTemplate.queryForObject("insert into chat(id) values (?) returning *", chatDtoMapper, id);
     }
 
     public ChatDto remove(Long id) {
-        return jdbcTemplate.queryForObject("delete from chats where id in (?) returning *", mapper, id);
+        return jdbcTemplate.queryForObject("delete from chat where id in (?) returning *", chatDtoMapper, id);
     }
 
     public List<ChatDto> findAll() {
-        return jdbcTemplate.query("select * from chats", mapper);
+        return jdbcTemplate.query("select * from chat", chatDtoMapper);
     }
 
     public List<ChatDto> findAll(Long... ids) {
-        String sql = "select * from chats where id in ("
+        String sql = "select * from chat where id in ("
             + String.join(",", Collections.nCopies(ids.length, "?"))
             + ")";
-        return jdbcTemplate.query(sql, mapper, (Object[]) ids);
+        return jdbcTemplate.query(sql, chatDtoMapper, (Object[]) ids);
     }
 
     public Optional<ChatDto> find(Long id) {
-        var list = jdbcTemplate.query("select * from chats where id = (?)", mapper, id);
+        var list = jdbcTemplate.query("select * from chat where id = (?)", chatDtoMapper, id);
         if (list.isEmpty()) {
             return Optional.empty();
         }
@@ -46,17 +48,31 @@ public class JdbcChatsRepository implements ChatsRepository {
     }
 
     @Override
-    public LinkDto addLink(Long chatId, Long linkId) {
-        return null;
+    public Long addLink(Long chatId, Long linkId) {
+        return jdbcTemplate.queryForObject(
+            "insert into link_chat_assignment(chat_id, link_id) values (?,?) returning link_id",
+            Long.class,
+            chatId,
+            linkId
+        );
     }
 
     @Override
-    public LinkDto removeLink(Long chatId, Long linkId) {
-        return null;
+    public Long removeLink(Long chatId, Long linkId) {
+        return jdbcTemplate.queryForObject(
+            "delete from link_chat_assignment where chat_id = (?) and link_id = (?) returning link_id",
+            Long.class,
+            chatId,
+            linkId
+        );
     }
 
     @Override
-    public List<LinkDto> getAllLinks(Long id) {
-        return null;
+    public List<Long> getAllLinks(Long id) {
+        return jdbcTemplate.queryForList(
+            "select link_id from link_chat_assignment where chat_id = (?)",
+            Long.class,
+            id
+        );
     }
 }
