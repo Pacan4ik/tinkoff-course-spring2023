@@ -58,8 +58,8 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public List<LinkDto> remove(Long... ids) {
         String sql = "delete from link where id in ("
-            + String.join(",", Collections.nCopies(ids.length, "?"))
-            + ") returning *";
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ") returning *";
         return jdbcTemplate.query(sql, mapper, (Object[]) ids);
     }
 
@@ -69,8 +69,8 @@ public class JdbcLinkRepository implements LinkRepository {
 
     public List<LinkDto> findAll(URI... urls) {
         String sql = "select * from link where url in ("
-            + String.join(",", Collections.nCopies(urls.length, "?"))
-            + ")";
+                     + String.join(",", Collections.nCopies(urls.length, "?"))
+                     + ")";
         return jdbcTemplate.query(sql, mapper, Arrays.stream(urls).map(Object::toString).toArray());
     }
 
@@ -84,8 +84,8 @@ public class JdbcLinkRepository implements LinkRepository {
 
     public List<LinkDto> findAll(Long... ids) {
         String sql = "select * from link where id in ("
-            + String.join(",", Collections.nCopies(ids.length, "?"))
-            + ")";
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ")";
         return jdbcTemplate.query(sql, mapper, (Object[]) ids);
     }
 
@@ -128,6 +128,19 @@ public class JdbcLinkRepository implements LinkRepository {
             "select chat_id from link_chat_assignment where link_id = (?)",
             Long.class,
             linkId
+        );
+    }
+
+    @Override
+    public LinkDto updateAdditionalInfo(Long id, String fieldName, Object value) {
+        String sql = "update link set additional_info = jsonb_set(coalesce(additional_info, '{}'::jsonb),"
+                     + "concat('{', ?, '}')::text[], to_jsonb(?) ) where id = ? returning *";
+        return jdbcTemplate.queryForObject(
+            sql,
+            mapper,
+            fieldName,
+            value,
+            id
         );
     }
 

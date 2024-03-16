@@ -1,0 +1,32 @@
+app:
+  scheduler:
+    enable: true
+    interval: 10000
+    force-check-delay: 10000
+    link-checking-frequency: 3m
+  base-urls:
+    git-hub-api: https://api.github.com/
+    stack-overflow-api: https://api.stackexchange.com/
+    bot-api: http://localhost:8090/
+
+spring:
+  application:
+    name: scrapper
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /swagger-ui.html
+
