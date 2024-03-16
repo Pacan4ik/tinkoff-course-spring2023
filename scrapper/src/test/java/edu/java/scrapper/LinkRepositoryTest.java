@@ -251,4 +251,41 @@ public class LinkRepositoryTest extends IntegrationTest {
             chatsIds
         );
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldSetAdditionalInfo() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (1, ?)", EXAMPLE_URL);
+
+        //when
+        linkRepository.updateAdditionalInfo(1L, "field1", 10L);
+
+        //then
+        LinkDto dto = jdbcTemplate.queryForObject("select * from link where id = 1", mapper);
+        Assertions.assertTrue(dto.additionalInfo().has("field1"));
+        Assertions.assertEquals(10L, dto.additionalInfo().findValue("field1").asLong());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldRewriteAdditionalInfo() {
+        //given
+        jdbcTemplate.update(
+            "insert into link(id, url, additional_info) values (1, ?, ?::jsonb)",
+            EXAMPLE_URL,
+            "{\"key1\": \"value1\", \"key2\": \"value2\"}"
+        );
+
+        //when
+        linkRepository.updateAdditionalInfo(1L, "key2", "value3");
+
+        //then
+        LinkDto dto = jdbcTemplate.queryForObject("select * from link where id = 1", mapper);
+        Assertions.assertTrue(dto.additionalInfo().has("key1"));
+        Assertions.assertTrue(dto.additionalInfo().has("key2"));
+        Assertions.assertEquals("value3", dto.additionalInfo().findValue("key2").asText());
+    }
 }

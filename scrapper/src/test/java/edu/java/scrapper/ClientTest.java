@@ -70,7 +70,8 @@ public class ClientTest {
                 OffsetDateTime.parse("2024-02-20T17:37:57Z"),
                 OffsetDateTime.parse("2024-02-02T10:09:10Z"),
                 "https://github.com/Pacan4ik/tinkoff-course-spring2023",
-                null
+                null,
+                1L
             ), gitHubResponse
 
         );
@@ -107,7 +108,9 @@ public class ClientTest {
                     OffsetDateTime.parse("2014-05-30T05:29:52Z"),
                     OffsetDateTime.parse("2014-01-19T23:06:34Z"),
                     "https://stackoverflow.com/questions/20089818/get-questions-content-from-stack-exchange-api",
-                    "Get questions content from Stack Exchange API"
+                    "Get questions content from Stack Exchange API",
+                    0L,
+                    2L
                 ))
             ), stackOverFlowResponse
 

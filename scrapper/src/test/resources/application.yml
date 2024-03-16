@@ -1,12 +1,12 @@
 app:
   scheduler:
-    enable: true
+    enable: false
     interval: 10000
     force-check-delay: 10000
     link-checking-frequency: 3m
   base-urls:
-    git-hub-api: https://api.github.com/
-    stack-overflow-api: https://api.stackexchange.com/
+    git-hub-api: http://localhost:8080/
+    stack-overflow-api: http://localhost:8080
     bot-api: http://localhost:8090/
 
 spring:
@@ -27,6 +27,6 @@ logging:
 
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
     path: /swagger-ui.html
 
