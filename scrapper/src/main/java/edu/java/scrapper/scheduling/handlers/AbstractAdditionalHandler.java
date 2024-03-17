@@ -6,6 +6,7 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 @Setter
 public abstract class AbstractAdditionalHandler<T> {
@@ -35,6 +36,9 @@ public abstract class AbstractAdditionalHandler<T> {
         String message,
         AdditionalHandlerResult result
     ) {
+        if (responseValue == null) {
+            return result;
+        }
         JsonNode jsonNode = dto.additionalInfo().findValue(fieldName);
         try {
             Long dtoValue = Objects.requireNonNull(jsonNode).longValue();
@@ -53,10 +57,10 @@ public abstract class AbstractAdditionalHandler<T> {
     }
 
     protected Consumer<LinkRepository> addToConsumerUpdateAdditionalInfo(
-        String fieldName,
-        Object newValue,
-        LinkDto dto,
-        AdditionalHandlerResult result
+        @NotNull String fieldName,
+        @NotNull Object newValue,
+        @NotNull LinkDto dto,
+        @NotNull AdditionalHandlerResult result
     ) {
         return result.getRowUpdateConsumer()
             .andThen(linkRepository -> linkRepository.updateAdditionalInfo(

@@ -39,8 +39,8 @@ public class StackOverflowHandler extends AbstractDomainHandler {
         String[] path = linkDto.url().getPath().split("/");
         AdditionalHandlerResult additionalHandlerResult = new AdditionalHandlerResult();
         try {
-            StackOverFlowResponse gitHubResponse = stackOverflowClient.fetchResponse(path[2]);
-            additionalHandlerResult = startHandler.handle(gitHubResponse, linkDto, additionalHandlerResult);
+            StackOverFlowResponse stackOverFlowResponse = stackOverflowClient.fetchResponse(path[2]);
+            additionalHandlerResult = startHandler.handle(stackOverFlowResponse, linkDto, additionalHandlerResult);
         } catch (IndexOutOfBoundsException e) {
             log.error("Unable to resolve path: " + linkDto.url(), e);
         } catch (WebClientResponseException e) {

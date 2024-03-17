@@ -83,7 +83,7 @@ public class ClientTest {
         //given
         stubFor(
             get(urlEqualTo(
-                "/2.3/questions/testUser"))
+                "/2.3/questions/testUser?site=stackoverflow&filter=!nNPvSNR9ie"))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withBody(Files.readAllBytes(

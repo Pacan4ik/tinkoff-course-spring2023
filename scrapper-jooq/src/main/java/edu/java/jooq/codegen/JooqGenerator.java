@@ -6,9 +6,7 @@ import org.jooq.meta.jaxb.Database;
 import org.jooq.meta.jaxb.Generate;
 import org.jooq.meta.jaxb.Generator;
 import org.jooq.meta.jaxb.Jdbc;
-import org.jooq.meta.jaxb.Matchers;
 import org.jooq.meta.jaxb.Property;
-import org.jooq.meta.jaxb.Strategy;
 import org.jooq.meta.jaxb.Target;
 
 public class JooqGenerator {

@@ -30,7 +30,7 @@ public abstract class AbstractDomainHandler {
 
     public final void handle(LinkDto linkDto) {
         if (!isSuitableHost(linkDto.url())) {
-            handleNext();
+            handleNext(linkDto);
             return;
         }
         AdditionalHandlerResult result = getResult(linkDto);
@@ -38,9 +38,9 @@ public abstract class AbstractDomainHandler {
         updateRow(result, linkDto);
     }
 
-    protected final void handleNext() {
+    protected final void handleNext(LinkDto linkDto) {
         if (nextSuccessor != null) {
-            nextSuccessor.handleNext();
+            nextSuccessor.handle(linkDto);
         } else {
             log.warn("No suitable handlers");
         }
