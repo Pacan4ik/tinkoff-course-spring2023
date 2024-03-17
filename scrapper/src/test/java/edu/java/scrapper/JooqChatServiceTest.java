@@ -1,5 +1,6 @@
 package edu.java.scrapper;
 
+
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
 import edu.java.scrapper.api.services.ChatRepositoryService;
@@ -13,9 +14,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class ChatRepositoryServiceTest extends IntegrationTest {
+public class JooqChatServiceTest extends IntegrationTest {
     @Autowired
-    @Qualifier("jdbcChatService")
+    @Qualifier("jooqChatService")
     ChatRepositoryService chatRepositoryService;
 
     @Autowired

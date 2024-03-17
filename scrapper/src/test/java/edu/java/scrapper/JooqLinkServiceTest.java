@@ -4,6 +4,8 @@ import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.model.LinkResponse;
 import edu.java.scrapper.api.services.LinkRepositoryService;
+import java.net.URI;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.util.List;
 
 @SpringBootTest
-public class LinkRepositoryServiceTest extends IntegrationTest {
+public class JooqLinkServiceTest extends IntegrationTest {
     @Autowired
-    @Qualifier("jdbcLinkService")
+    @Qualifier("jooqLinkService")
     LinkRepositoryService linkRepositoryService;
 
     @Autowired
