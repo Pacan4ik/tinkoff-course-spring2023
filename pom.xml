@@ -23,6 +23,14 @@
         <!-- Spring -->
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-starter-jooq.version>3.2.1</spring-starter-jooq.version>
+
+        <!-- Jooq -->
+        <jooq-codegen.version>3.18.7</jooq-codegen.version>
+        <jooq-liquibase.version>3.19.6</jooq-liquibase.version>
+
+        <!-- Liquibase -->
+        <liquibase-core.version>4.26.0</liquibase-core.version>
 
         <!-- Other -->
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
@@ -49,6 +57,7 @@
     <modules>
         <module>bot</module>
         <module>scrapper</module>
+        <module>scrapper-jooq</module>
     </modules>
 
     <dependencyManagement>

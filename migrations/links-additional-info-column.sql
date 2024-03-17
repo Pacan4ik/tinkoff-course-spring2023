@@ -1,1 +1,1 @@
-alter table link add column additional_info jsonb default '{}'::jsonb;
+alter table link add column additional_info json default '{}'::json;

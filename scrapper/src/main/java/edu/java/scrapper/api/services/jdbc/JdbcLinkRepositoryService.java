@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service("jdbcLinkService")
 public class JdbcLinkRepositoryService implements LinkRepositoryService {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String LINK_NOT_FOUND = "Link not found";

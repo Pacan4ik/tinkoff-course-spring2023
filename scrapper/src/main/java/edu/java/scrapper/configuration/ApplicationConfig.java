@@ -22,5 +22,4 @@ public record ApplicationConfig(
 
     public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
     }
-
 }
