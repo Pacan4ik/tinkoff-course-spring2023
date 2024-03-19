@@ -44,10 +44,4 @@ public class ContainerTest extends IntegrationTest {
             assertTrue(rs.next());
         }
     }
-
-    @AfterAll
-    static void stop() {
-        POSTGRES.stop();
-    }
-
 }
