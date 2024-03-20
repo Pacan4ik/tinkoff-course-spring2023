@@ -18,8 +18,8 @@ public class ContainerTest extends IntegrationTest {
 
     static Arguments[] tableNames() {
         return new Arguments[] {
-            Arguments.of("chats"),
-            Arguments.of("links"),
+            Arguments.of("chat"),
+            Arguments.of("link"),
             Arguments.of("link_chat_assignment")
         };
     }
