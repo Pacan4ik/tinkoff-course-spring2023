@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {TestConfig.class})
 @Import(TestConfig.class)
 @AutoConfigureMockMvc
-public class LinksControllerTest {
+public class LinksControllerTest extends IntegrationTest {
     @Autowired
     MockMvc mockMvc;
 

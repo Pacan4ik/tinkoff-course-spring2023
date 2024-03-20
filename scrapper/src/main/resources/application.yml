@@ -11,6 +11,8 @@ app:
 spring:
   application:
     name: scrapper
+  liquibase:
+    enabled: false
 
 server:
   port: 8080
