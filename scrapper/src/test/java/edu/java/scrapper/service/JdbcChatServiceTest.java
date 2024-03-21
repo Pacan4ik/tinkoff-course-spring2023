@@ -1,35 +1,42 @@
-package edu.java.scrapper;
-
+package edu.java.scrapper.service;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
-import edu.java.scrapper.api.services.ChatRepositoryService;
+import edu.java.scrapper.api.services.ChatService;
+import edu.java.scrapper.api.services.jdbc.JdbcChatService;
+import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.integration.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class JooqChatServiceTest extends IntegrationTest {
-    @Autowired
-    @Qualifier("jooqChatService")
-    ChatRepositoryService chatRepositoryService;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
+public class JdbcChatServiceTest extends IntegrationTest {
+    private final JdbcTemplate jdbcTemplate;
+    private final ChatService chatService;
     private static final String EXAMPLE_URL = "https://example.com/";
     private static final String EXAMPLE2_URL = "https://example2.com/";
+
+    @Autowired
+    public JdbcChatServiceTest(
+        JdbcTemplate jdbcTemplate,
+        ChatRepository chatRepository,
+        LinkRepository linkRepository
+    ) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.chatService = new JdbcChatService(chatRepository, linkRepository);
+    }
 
     @Test
     @Transactional
     @Rollback
     void shouldRegisterChat() {
-        chatRepositoryService.registerChat(123L);
+        chatService.registerChat(123L);
 
         Assertions.assertEquals(
             123L,
@@ -43,7 +50,7 @@ public class JooqChatServiceTest extends IntegrationTest {
     void shouldThrowExceptionIfChatExists() {
         jdbcTemplate.update("insert into chat(id) values (123)");
 
-        Assertions.assertThrows(UserAlreadyExistsException.class, () -> chatRepositoryService.registerChat(123L));
+        Assertions.assertThrows(UserAlreadyExistsException.class, () -> chatService.registerChat(123L));
     }
 
     @Test
@@ -54,7 +61,7 @@ public class JooqChatServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into chat(id) values (123)");
 
         //when
-        chatRepositoryService.deleteChat(123L);
+        chatService.deleteChat(123L);
 
         //then
         Assertions.assertTrue(
@@ -72,7 +79,7 @@ public class JooqChatServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (1, 1234), (2, 123)");
 
         //when
-        chatRepositoryService.deleteChat(123L);
+        chatService.deleteChat(123L);
 
         //then
         Assertions.assertTrue(
@@ -87,6 +94,6 @@ public class JooqChatServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     void shouldThrowExceptionIfChatDoesntExistOnDelete() {
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> chatRepositoryService.deleteChat(123L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> chatService.deleteChat(123L));
     }
 }

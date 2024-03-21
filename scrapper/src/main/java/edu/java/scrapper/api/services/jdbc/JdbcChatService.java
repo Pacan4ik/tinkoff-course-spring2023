@@ -2,19 +2,17 @@ package edu.java.scrapper.api.services.jdbc;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
-import edu.java.scrapper.api.services.ChatRepositoryService;
-import edu.java.scrapper.domain.dao.ChatRepository;
-import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.api.services.ChatService;
+import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbcChatService")
-public class JdbcChatRepositoryService implements ChatRepositoryService {
+public class JdbcChatService implements ChatService {
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
 
-    public JdbcChatRepositoryService(
+    public JdbcChatService(
         @Qualifier("jdbcChatRepository") ChatRepository chatRepository,
         @Qualifier("jdbcLinkRepository") LinkRepository linkRepository
     ) {

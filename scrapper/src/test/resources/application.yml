@@ -8,6 +8,7 @@ app:
     git-hub-api: http://localhost:8080/
     stack-overflow-api: http://localhost:8080
     bot-api: http://localhost:8090/
+  data-base-access-type: jpa
 
 spring:
   application:

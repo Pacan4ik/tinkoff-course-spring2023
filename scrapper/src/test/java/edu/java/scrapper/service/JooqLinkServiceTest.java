@@ -1,30 +1,37 @@
-package edu.java.scrapper;
+package edu.java.scrapper.service;
 
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.model.LinkResponse;
-import edu.java.scrapper.api.services.LinkRepositoryService;
+import edu.java.scrapper.api.services.LinkService;
+import edu.java.scrapper.api.services.jooq.JooqLinkService;
+import edu.java.scrapper.integration.IntegrationTest;
+import java.net.URI;
+import java.util.List;
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.util.List;
 
 @SpringBootTest
-public class LinkRepositoryServiceTest extends IntegrationTest {
-    @Autowired
-    @Qualifier("jdbcLinkService")
-    LinkRepositoryService linkRepositoryService;
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+public class JooqLinkServiceTest extends IntegrationTest {
+    private final JdbcTemplate jdbcTemplate;
+    private final LinkService linkService;
     private static final String EXAMPLE_URL = "https://example.com/";
     private static final String EXAMPLE2_URL = "https://example2.com/";
+
+    @Autowired
+    public JooqLinkServiceTest(
+        JdbcTemplate jdbcTemplate,
+        DSLContext dslContext
+    ) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.linkService = new JooqLinkService(dslContext);
+    }
 
     @Test
     @Transactional
@@ -34,7 +41,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into chat values (123)");
 
         //when
-        linkRepositoryService.addLink(123L, URI.create(EXAMPLE_URL));
+        linkService.addLink(123L, URI.create(EXAMPLE_URL));
 
         //then
         Assertions.assertEquals(
@@ -52,7 +59,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
     void shouldThrowExceptionIfUserDoesntExistOnAdd() {
         Assertions.assertThrows(
             ResourceNotFoundException.class,
-            () -> linkRepositoryService.addLink(123L, URI.create(EXAMPLE_URL))
+            () -> linkService.addLink(123L, URI.create(EXAMPLE_URL))
         );
     }
 
@@ -66,7 +73,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
 
         Assertions.assertThrows(
             LinkAlreadyExistsException.class,
-            () -> linkRepositoryService.addLink(123L, URI.create(EXAMPLE_URL))
+            () -> linkService.addLink(123L, URI.create(EXAMPLE_URL))
         );
     }
 
@@ -80,7 +87,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (2, 123)");
 
         //when
-        var listResponse = linkRepositoryService.getUserLinks(123L);
+        var listResponse = linkService.getUserLinks(123L);
 
         //then
         Assertions.assertEquals(
@@ -95,7 +102,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
     void shouldReturnEmptyCollectionIfNoAssignments() {
         jdbcTemplate.update("insert into chat(id) values (123)");
 
-        Assertions.assertTrue(linkRepositoryService.getUserLinks(123L).isEmpty());
+        Assertions.assertTrue(linkService.getUserLinks(123L).isEmpty());
     }
 
     @Test
@@ -104,7 +111,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
     void shouldThrowExceptionIfUserDoesntExistOnGet() {
         Assertions.assertThrows(
             ResourceNotFoundException.class,
-            () -> linkRepositoryService.getUserLinks(123L)
+            () -> linkService.getUserLinks(123L)
         );
     }
 
@@ -118,7 +125,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123)");
 
         //when
-        linkRepositoryService.removeLink(123L, URI.create(EXAMPLE_URL));
+        linkService.removeLink(123L, URI.create(EXAMPLE_URL));
 
         //then
         Assertions.assertTrue(
@@ -138,7 +145,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
         jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (1, 1234), (2, 123)");
 
         //when
-        linkRepositoryService.removeLink(123L, URI.create(EXAMPLE2_URL));
+        linkService.removeLink(123L, URI.create(EXAMPLE2_URL));
 
         //then
         Assertions.assertEquals(
@@ -156,7 +163,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
     void shouldThrowExceptionIfUserDoesntExistOnDelete() {
         Assertions.assertThrows(
             ResourceNotFoundException.class,
-            () -> linkRepositoryService.removeLink(123L, URI.create(EXAMPLE_URL)),
+            () -> linkService.removeLink(123L, URI.create(EXAMPLE_URL)),
             "User not found"
         );
     }
@@ -169,7 +176,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
 
         Assertions.assertThrows(
             ResourceNotFoundException.class,
-            () -> linkRepositoryService.removeLink(123L, URI.create(EXAMPLE_URL)),
+            () -> linkService.removeLink(123L, URI.create(EXAMPLE_URL)),
             "Link not found"
         );
     }
@@ -183,7 +190,7 @@ public class LinkRepositoryServiceTest extends IntegrationTest {
 
         Assertions.assertThrows(
             ResourceNotFoundException.class,
-            () -> linkRepositoryService.removeLink(123L, URI.create(EXAMPLE_URL)),
+            () -> linkService.removeLink(123L, URI.create(EXAMPLE_URL)),
             "User has not yet subscribed to this link"
         );
     }

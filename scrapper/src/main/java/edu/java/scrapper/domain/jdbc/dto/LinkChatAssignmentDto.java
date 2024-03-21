@@ -1,4 +1,4 @@
-package edu.java.scrapper.domain.dto;
+package edu.java.scrapper.domain.jdbc.dto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

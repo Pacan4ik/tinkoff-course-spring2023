@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.scrapperClient.ScrapperClient;
 import java.util.Objects;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +35,15 @@ public class ListCommand extends AbstractCommand {
             var urls = Objects.requireNonNull(scrapperClient.getTrackingLinks(id).getBody()).links().stream()
                 .map((linkResponse) -> linkResponse.url().toString())
                 .toList();
-            message = "Ваши ссылки:\n" + String.join("\n", urls);
+            var numberedUrls = IntStream.range(0, urls.size())
+                .mapToObj(i -> (i + 1) + ". " + urls.get(i))
+                .toList();
+            message = "Ваши ссылки:\n" + String.join("\n", numberedUrls);
         } catch (Exception e) {
             message = "Произошла ошибка. Убедитесь, что Вы зарегистрированы";
         }
 
-        return new SendMessage(id, message);
+        return new SendMessage(id, message)
+            .disableWebPagePreview(true);
     }
 }

@@ -1,6 +1,5 @@
-package edu.java.scrapper;
+package edu.java.scrapper.integration;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

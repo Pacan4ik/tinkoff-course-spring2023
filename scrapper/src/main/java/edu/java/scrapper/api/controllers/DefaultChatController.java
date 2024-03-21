@@ -1,27 +1,26 @@
 package edu.java.scrapper.api.controllers;
 
-import edu.java.scrapper.api.services.ChatRepositoryService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import edu.java.scrapper.api.services.ChatService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DefaultChatController implements ChatController {
-    private final ChatRepositoryService chatRepositoryService;
+    private final ChatService chatService;
 
-    DefaultChatController(@Qualifier("jooqChatService") ChatRepositoryService chatRepositoryService) {
-        this.chatRepositoryService = chatRepositoryService;
+    DefaultChatController(ChatService chatService) {
+        this.chatService = chatService;
     }
 
     @Override
     public ResponseEntity<Void> registerChat(Long id) {
-        chatRepositoryService.registerChat(id);
+        chatService.registerChat(id);
         return ResponseEntity.ok(null);
     }
 
     @Override
     public ResponseEntity<Void> deleteChat(Long id) {
-        chatRepositoryService.deleteChat(id);
+        chatService.deleteChat(id);
         return ResponseEntity.ok(null);
     }
 }

@@ -2,8 +2,8 @@ package edu.java.scrapper.scheduling.handlers;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.botClient.BotClient;
-import edu.java.scrapper.domain.dao.LinkRepository;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;

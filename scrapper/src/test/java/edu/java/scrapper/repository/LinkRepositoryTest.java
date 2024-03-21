@@ -1,11 +1,13 @@
-package edu.java.scrapper;
+package edu.java.scrapper.repository;
 
-import edu.java.scrapper.domain.dao.LinkRepository;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import edu.java.scrapper.integration.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package edu.java.scrapper.domain.dao;
+package edu.java.scrapper.domain.jdbc.dao;
 
-import edu.java.scrapper.domain.dto.ChatDto;
+import edu.java.scrapper.domain.jdbc.dto.ChatDto;
 import java.util.List;
 import java.util.Optional;
 

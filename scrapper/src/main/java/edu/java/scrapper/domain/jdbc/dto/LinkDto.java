@@ -1,4 +1,4 @@
-package edu.java.scrapper.domain.dto;
+package edu.java.scrapper.domain.jdbc.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.configuration.EventsHandlersConfig;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 import java.net.URI;

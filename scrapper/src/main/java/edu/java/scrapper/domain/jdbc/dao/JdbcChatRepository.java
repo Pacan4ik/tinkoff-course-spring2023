@@ -1,6 +1,6 @@
-package edu.java.scrapper.domain.dao;
+package edu.java.scrapper.domain.jdbc.dao;
 
-import edu.java.scrapper.domain.dto.ChatDto;
+import edu.java.scrapper.domain.jdbc.dto.ChatDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +34,8 @@ public class JdbcChatRepository implements ChatRepository {
 
     public List<ChatDto> findAll(Long... ids) {
         String sql = "select * from chat where id in ("
-            + String.join(",", Collections.nCopies(ids.length, "?"))
-            + ")";
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ")";
         return jdbcTemplate.query(sql, chatDtoMapper, (Object[]) ids);
     }
 

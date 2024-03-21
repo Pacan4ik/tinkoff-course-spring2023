@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

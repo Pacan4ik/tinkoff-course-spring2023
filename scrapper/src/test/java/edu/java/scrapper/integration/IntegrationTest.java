@@ -1,4 +1,4 @@
-package edu.java.scrapper;
+package edu.java.scrapper.integration;
 
 import java.io.File;
 import java.io.FileNotFoundException;

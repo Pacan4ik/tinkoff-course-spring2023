@@ -1,6 +1,6 @@
 app:
   scheduler:
-    enable: true
+    enable: false
     interval: 10000
     force-check-delay: 10000
     link-checking-frequency: 3m
@@ -8,7 +8,7 @@ app:
     git-hub-api: https://api.github.com/
     stack-overflow-api: https://api.stackexchange.com/
     bot-api: http://localhost:8090/
-
+  data-base-access-type: jpa
 spring:
   application:
     name: scrapper
@@ -19,6 +19,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
 server:
   port: 8080
 

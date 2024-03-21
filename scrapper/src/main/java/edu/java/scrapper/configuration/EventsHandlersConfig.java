@@ -5,7 +5,7 @@ import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
-import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
 import edu.java.scrapper.scheduling.handlers.github.GitHubHandler;

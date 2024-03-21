@@ -3,19 +3,17 @@ package edu.java.scrapper.api.services.jdbc;
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.model.LinkResponse;
-import edu.java.scrapper.api.services.LinkRepositoryService;
-import edu.java.scrapper.domain.dao.ChatRepository;
-import edu.java.scrapper.domain.dao.LinkRepository;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.api.services.LinkService;
+import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbcLinkService")
-public class JdbcLinkRepositoryService implements LinkRepositoryService {
+public class JdbcLinkService implements LinkService {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String LINK_NOT_FOUND = "Link not found";
     public static final String USER_HAS_NOT_YET_SUBSCRIBED = "User has not yet subscribed to this link";
@@ -24,7 +22,7 @@ public class JdbcLinkRepositoryService implements LinkRepositoryService {
 
     private final ChatRepository chatRepository;
 
-    public JdbcLinkRepositoryService(
+    public JdbcLinkService(
         @Qualifier("jdbcLinkRepository") LinkRepository linkRepository,
         @Qualifier("jdbcChatRepository") ChatRepository chatRepository
     ) {

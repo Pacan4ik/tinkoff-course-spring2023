@@ -1,8 +1,10 @@
-package edu.java.scrapper;
+package edu.java.scrapper.repository;
 
-import edu.java.scrapper.domain.dao.ChatRepository;
-import edu.java.scrapper.domain.dto.ChatDto;
+import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
+import edu.java.scrapper.domain.jdbc.dto.ChatDto;
 import java.util.List;
+
+import edu.java.scrapper.integration.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -72,7 +72,8 @@ class CommandsTest {
                 new StartCommand(mockScrapper(123L)),
                 123L,
                 "/start",
-                "Добро пожаловать! Введите /help для просмотра списка команд."
+                "Добро пожаловать! Введите /help для просмотра списка команд.",
+                false
             ),
             Arguments.of(
                 new TrackCommand(
@@ -83,7 +84,8 @@ class CommandsTest {
                 ),
                 123L,
                 "/track",
-                "Неправильный формат команды.\nИспользуйте: /track {URL}"
+                "Неправильный формат команды.\nИспользуйте: /track {URL}",
+                false
             ),
             Arguments.of(
                 new TrackCommand(
@@ -94,7 +96,8 @@ class CommandsTest {
                 ),
                 123L,
                 "/track https://stackoverflow.com/questions/123",
-                "Ссылка успешно добавлена!"
+                "Ссылка успешно добавлена!",
+                false
             ),
             Arguments.of(
                 new TrackCommand(
@@ -105,7 +108,8 @@ class CommandsTest {
                 ),
                 123L,
                 "/track https://translate.google.com",
-                "Ссылка не поддерживается"
+                "Ссылка не поддерживается",
+                false
             ),
             Arguments.of(
                 new TrackCommand(
@@ -116,13 +120,15 @@ class CommandsTest {
                 ),
                 123L,
                 "/track www.youtube.com",
-                "Неправильный формат ссылки."
+                "Неправильный формат ссылки.",
+                false
             ),
             Arguments.of(
                 new ListCommand(mockScrapper(123L)),
                 123L,
                 "/list",
-                "Ваши ссылки:\nhttps://google.com"
+                "Ваши ссылки:\n1. https://google.com",
+                true
             ),
             Arguments.of(
                 new UntrackCommand(
@@ -131,7 +137,8 @@ class CommandsTest {
                 ),
                 123L,
                 "/untrack https://google.com",
-                "Ссылка успешно удалена"
+                "Ссылка успешно удалена",
+                false
             ),
             Arguments.of(
                 new UntrackCommand(
@@ -140,7 +147,8 @@ class CommandsTest {
                 ),
                 123L,
                 "/untrack",
-                "Неправильный формат команды.\nИспользуйте: /untrack {URL}"
+                "Неправильный формат команды.\nИспользуйте: /untrack {URL}",
+                false
             ),
             Arguments.of(
                 new UntrackCommand(
@@ -149,26 +157,31 @@ class CommandsTest {
                 ),
                 123L,
                 "/untrack https://github.com",
-                "Что-то пошло не так. Попробуйте позднее."
+                "Что-то пошло не так. Попробуйте позднее.",
+                false
             ),
             Arguments.of(
                 prepareHelpCommand(),
                 123L,
                 "/help",
-                "/test1\t - \tDescription of testCommand1\n/test2\t - \tDescription of testCommand2"
+                "/test1\t - \tDescription of testCommand1\n/test2\t - \tDescription of testCommand2",
+                false
             )
         };
     }
 
     @ParameterizedTest
     @MethodSource("commandsOutput")
-    void commandsTest(Command command, long id, String input, String expectedOutput) {
+    void commandsTest(Command command, long id, String input, String expectedOutput, boolean disableWebPagePreview) {
         //prepare
         Update update = mockPrepare(id, input);
 
         Map<String, Object> expectedParameters = new HashMap<>();
         expectedParameters.put("chat_id", id);
         expectedParameters.put("text", expectedOutput);
+        if (disableWebPagePreview) {
+            expectedParameters.put("disable_web_page_preview", true);
+        }
 
         //when
         SendMessage sendMessage = command.handle(update);
