@@ -30,15 +30,6 @@ public class JdbcLinkRepository implements LinkRepository {
         );
     }
 
-    public LinkDto add(URI url, String description) {
-        return jdbcTemplate.queryForObject(
-            "insert into link(url, event_description) values (?, ?) returning *",
-            mapper,
-            url.toString(),
-            description
-        );
-    }
-
     public LinkDto remove(URI url) {
         return jdbcTemplate.queryForObject(
             "delete from link where url in (?) returning *",

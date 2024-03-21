@@ -36,7 +36,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -68,7 +67,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -100,7 +98,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -132,7 +129,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -170,7 +166,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -208,7 +203,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -246,7 +240,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -284,7 +277,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,

@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface LinkRepository {
     LinkDto add(URI url);
 
-    LinkDto add(URI url, String description);
-
     LinkDto remove(Long id);
 
     List<LinkDto> remove(Long... ids);

@@ -39,7 +39,6 @@ public class LinkRepositoryTest extends IntegrationTest {
         Assertions.assertNotNull(dto.id());
         Assertions.assertNotNull(dto.createdAt());
         Assertions.assertNotNull(dto.updatedAt());
-        Assertions.assertNotNull(dto.eventDescription());
 
         var dtoQuery = jdbcTemplate.queryForObject("select * from link where url = ?", mapper, EXAMPLE_URL);
         Assertions.assertEquals(dto, dtoQuery);
