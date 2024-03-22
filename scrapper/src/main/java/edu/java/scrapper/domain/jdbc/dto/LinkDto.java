@@ -35,6 +35,7 @@ public record LinkDto(
         public LinkDtoRowMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
         }
+
         @Override
         public LinkDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             Long id = rs.getLong(ID_COLUMN);
