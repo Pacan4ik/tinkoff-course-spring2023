@@ -19,7 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class EventHandlersTest {
 
-    @Autowired EventsHandlersConfig eventsHandlersConfig;
+    EventsHandlersConfig eventsHandlersConfig =
+        new EventsHandlersConfig(null, null, null, null);
+
+    @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test

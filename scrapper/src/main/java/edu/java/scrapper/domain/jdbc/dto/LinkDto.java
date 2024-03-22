@@ -30,8 +30,11 @@ public record LinkDto(
         private static final String CHECKED_AT_COLUMN = "checked_at";
         private static final String ADDITIONAL_INFO_COLUMN = "additional_info";
 
-        private final ObjectMapper objectMapper = new ObjectMapper();
+        private final ObjectMapper objectMapper;
 
+        public LinkDtoRowMapper(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+        }
         @Override
         public LinkDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             Long id = rs.getLong(ID_COLUMN);
