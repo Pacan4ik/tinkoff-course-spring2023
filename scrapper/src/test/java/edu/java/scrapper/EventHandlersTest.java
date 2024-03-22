@@ -13,16 +13,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class EventHandlersTest {
 
     EventsHandlersConfig eventsHandlersConfig =
         new EventsHandlersConfig(null, null, null, null);
 
-    @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
