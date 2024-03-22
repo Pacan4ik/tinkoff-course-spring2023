@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +63,7 @@ class CommandsTest {
         when(scrapperClient.deleteLink(chatId, "https://google.com"))
             .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(200)));
         when(scrapperClient.deleteLink(chatId, "https://github.com"))
-            .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(400)));
+            .thenThrow(new WebClientResponseException(404, "Not found", null, null, null));
         return scrapperClient;
     }
 
@@ -157,7 +158,7 @@ class CommandsTest {
                 ),
                 123L,
                 "/untrack https://github.com",
-                "Что-то пошло не так. Попробуйте позднее.",
+                "Вы не отслеживаете данную ссылку",
                 false
             ),
             Arguments.of(
