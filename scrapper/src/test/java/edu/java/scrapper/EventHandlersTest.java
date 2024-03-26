@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.configuration.EventsHandlersConfig;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 import java.net.URI;
@@ -13,13 +13,12 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class EventHandlersTest {
 
-    @Autowired EventsHandlersConfig eventsHandlersConfig;
+    EventsHandlersConfig eventsHandlersConfig =
+        new EventsHandlersConfig(null, null, null, null, null);
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
@@ -36,7 +35,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -68,7 +66,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -100,7 +97,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -132,7 +128,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://gtihub.com"),
-            null,
             OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
             null,
             null,
@@ -170,7 +165,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -208,7 +202,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -246,7 +239,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,
@@ -284,7 +276,6 @@ public class EventHandlersTest {
         LinkDto linkDto = new LinkDto(
             1L,
             URI.create("https://stackoverflow.com"),
-            null,
             OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
             null,
             null,

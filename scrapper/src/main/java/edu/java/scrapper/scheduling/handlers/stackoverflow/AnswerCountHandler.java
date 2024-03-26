@@ -1,7 +1,7 @@
 package edu.java.scrapper.scheduling.handlers.stackoverflow;
 
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 

@@ -1,8 +1,8 @@
 package edu.java.scrapper.scheduling.handlers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.scrapper.domain.dao.LinkRepository;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.Setter;

@@ -11,7 +11,9 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     @NotNull
-    BaseUrls baseUrls
+    BaseUrls baseUrls,
+    @NotNull
+    AccessType dataBaseAccessType
 ) {
 
     public record Scheduler(boolean enable,
@@ -21,5 +23,9 @@ public record ApplicationConfig(
     }
 
     public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
+    }
+
+    public enum AccessType {
+        JDBC, JPA, JOOQ
     }
 }

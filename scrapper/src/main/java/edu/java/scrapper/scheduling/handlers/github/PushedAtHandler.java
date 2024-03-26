@@ -1,7 +1,7 @@
 package edu.java.scrapper.scheduling.handlers.github;
 
 import edu.java.scrapper.clients.github.GitHubResponse;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 import java.time.OffsetDateTime;
