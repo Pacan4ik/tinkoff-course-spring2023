@@ -123,7 +123,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
         //then
         Assertions.assertTrue(
             jdbcTemplate.queryForList(
-                "select id from link_chat_assignment", Long.class
+                "select * from link_chat_assignment", Long.class
             ).isEmpty()
         );
     }

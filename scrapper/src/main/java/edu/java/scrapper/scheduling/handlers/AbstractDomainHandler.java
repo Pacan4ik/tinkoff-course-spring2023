@@ -2,7 +2,9 @@ package edu.java.scrapper.scheduling.handlers;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.botClient.BotClient;
+import edu.java.scrapper.domain.dao.ChatRepository;
 import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -18,10 +20,12 @@ public abstract class AbstractDomainHandler {
     protected AbstractDomainHandler nextSuccessor;
     protected BotClient botClient;
     protected LinkRepository linkRepository;
+    protected ChatRepository chatRepository;
 
-    public AbstractDomainHandler(BotClient botClient, LinkRepository linkRepository) {
+    public AbstractDomainHandler(BotClient botClient, LinkRepository linkRepository, ChatRepository chatRepository) {
         this.botClient = botClient;
         this.linkRepository = linkRepository;
+        this.chatRepository = chatRepository;
     }
 
     protected abstract boolean isSuitableHost(URI url);
@@ -52,7 +56,7 @@ public abstract class AbstractDomainHandler {
                 linkDto.id(),
                 linkDto.url(),
                 description,
-                linkRepository.getChats(linkDto.id())
+                chatRepository.getAllChats(linkDto.id()).stream().map(ChatDto::id).toList()
             );
         } catch (ResourceNotFoundException e) {
             log.error(String.format("Link %s not found", linkDto), e);
