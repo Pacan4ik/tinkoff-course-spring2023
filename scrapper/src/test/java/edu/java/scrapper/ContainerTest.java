@@ -1,88 +1,46 @@
 package edu.java.scrapper;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ContainerTest extends IntegrationTest {
-
-    private static final Connection CONNECTION;
-
-    static {
-        try {
-            CONNECTION =
-                DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void isRunning() {
         assertTrue(POSTGRES.isRunning());
     }
 
-    @Test
-    public void chatsTableExists() throws SQLException {
-        //given
-        DatabaseMetaData metaData = CONNECTION.getMetaData();
-
-        //when
-        ResultSet rs = metaData.getTables(
-            CONNECTION.getCatalog(),
-            null,
-            "chat",
-            new String[] {"TABLE"}
-        );
-
-        //then
-        assertTrue(rs.next());
-        rs.close();
-
+    static Arguments[] tableNames() {
+        return new Arguments[] {
+            Arguments.of("chat"),
+            Arguments.of("link"),
+            Arguments.of("link_chat_assignment")
+        };
     }
 
-    @Test
-    public void linksTableExists() throws SQLException {
-        //given
-        DatabaseMetaData metaData = CONNECTION.getMetaData();
-
-        //when
-        ResultSet rs = metaData.getTables(
-            CONNECTION.getCatalog(),
-            null,
-            "link",
-            new String[] {"TABLE"}
-        );
-
-        //then
-        assertTrue(rs.next());
-        rs.close();
-
-    }
-
-    @Test
-    public void linkChatAssignmentTableExists() throws SQLException {
-        //given
-        DatabaseMetaData metaData = CONNECTION.getMetaData();
-
-        //when
-        ResultSet rs =
-            metaData.getTables(
-                CONNECTION.getCatalog(),
-                null,
-                "link_chat_assignment",
-                new String[] {"TABLE"}
+    @ParameterizedTest
+    @MethodSource("tableNames")
+    void tableExists(String tableName) throws SQLException {
+        try (
+            Connection connection = DriverManager.getConnection(
+                POSTGRES.getJdbcUrl(),
+                POSTGRES.getUsername(),
+                POSTGRES.getPassword()
             );
-
-        //then
-        assertTrue(rs.next());
-        rs.close();
-
+            ResultSet rs = connection.getMetaData().getTables(
+                connection.getCatalog(),
+                "public",
+                tableName,
+                new String[] {"TABLE"}
+            )
+        ) {
+            assertTrue(rs.next());
+        }
     }
-
 }

@@ -236,19 +236,40 @@ public class LinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void shouldReturnAssignedChats() {
+    void shouldReturnAssignedLinksByChatId() {
         //given
-        jdbcTemplate.update("insert into link(id, url) values (123, ?)", EXAMPLE_URL);
-        jdbcTemplate.update("insert into chat(id) values (1), (2), (3)");
-        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (123, 1), (123, 2), (123, 3)");
+        jdbcTemplate.update("insert into link(id, url) values (123, ?), (1234, ?)", EXAMPLE_URL, EXAMPLE2_URL);
+        jdbcTemplate.update("insert into chat(id) values (1)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (123, 1), (1234, 1)");
 
         //when
-        var chatsIds = linkRepository.getChats(123L);
+        List<LinkDto> links = linkRepository.getAllLinks(1L);
 
         //then
         Assertions.assertEquals(
-            List.of(1L, 2L, 3L),
-            chatsIds
+            List.of(EXAMPLE_URL, EXAMPLE2_URL),
+            links.stream().map(linkDto -> linkDto.url().toString()).toList()
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void shouldDeleteUnassigned() {
+        //given
+        jdbcTemplate.update("insert into link(id, url) values (123, ?), (1234, ?), (12345, 'https://example3.com/')",
+            EXAMPLE_URL, EXAMPLE2_URL
+        );
+        jdbcTemplate.update("insert into chat(id) values (1)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (12345, 1)");
+
+        //when
+        linkRepository.removeUnassigned(123L, 1234L, 12345L);
+
+        //then
+        Assertions.assertEquals(
+            "https://example3.com/",
+            jdbcTemplate.queryForObject("select url from link", String.class)
         );
     }
 

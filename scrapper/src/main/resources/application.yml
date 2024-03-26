@@ -19,6 +19,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
+
 server:
   port: 8080
 

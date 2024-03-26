@@ -13,7 +13,7 @@ public class StubLinkProvider implements SupportedLinkProvider {
     );
 
     @Override
-    public boolean isSupports(ParsedUrl parsedUrl) {
+    public boolean isSupported(ParsedUrl parsedUrl) {
         for (Pattern pattern : SUPPORTED_HOSTS) {
             if (pattern.matcher(parsedUrl.toString()).matches()) {
                 return true;

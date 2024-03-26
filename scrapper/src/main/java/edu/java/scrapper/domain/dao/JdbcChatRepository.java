@@ -68,11 +68,12 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public List<Long> getAllLinks(Long id) {
-        return jdbcTemplate.queryForList(
-            "select link_id from link_chat_assignment where chat_id = (?)",
-            Long.class,
-            id
+    public List<ChatDto> getAllChats(Long linkId) {
+        return jdbcTemplate.query(
+            "select * from chat join public.link_chat_assignment lca on chat.id = lca.chat_id and link_id = (?)",
+            chatDtoMapper,
+            linkId
         );
     }
+
 }

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import liquibase.Liquibase;
-import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
@@ -31,11 +30,8 @@ public abstract class IntegrationTest {
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) {
-        Connection connection;
-        try {
-            connection = c.createConnection("");
-            Database database =
-                DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        try (
+            Connection connection = c.createConnection("");
             Liquibase liquibase = new Liquibase(
                 "master.xml",
                 new DirectoryResourceAccessor(
@@ -45,15 +41,12 @@ public abstract class IntegrationTest {
                         .getParent()
                         .getParent()
                         .resolve("migrations")
-
-                )
-                , database
+                ),
+                DatabaseFactory.getInstance()
+                    .findCorrectDatabaseImplementation(new JdbcConnection(connection))
             );
-
-
+        ) {
             liquibase.update("");
-            //liquibase.update("", new OutputStreamWriter(System.out));
-
         } catch (SQLException | LiquibaseException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }

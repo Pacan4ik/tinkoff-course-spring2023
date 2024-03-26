@@ -60,7 +60,7 @@ public class TrackCommand extends AbstractCommand {
             ParsedUrl parsedUrl = null;
             try {
                 parsedUrl = urlParser.parse(link);
-                if (supportedLinkProvider.isSupports(parsedUrl)) {
+                if (supportedLinkProvider.isSupported(parsedUrl)) {
                     scrapperClient.addTrackingLink(id, parsedUrl.toString());
                     responseMessage = "Ссылка успешно добавлена!";
                 } else {
