@@ -6,7 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class StackOverflowClient extends Client<StackOverFlowResponse> {
     private static final String BASE_URL = "https://api.stackexchange.com/";
     private static final String URI_STRING =
-        "/2.3/questions/{userInfo}";
+        "/2.3/questions/{userInfo}?site=stackoverflow&filter=!nNPvSNR9ie";
 
     private static final Class<StackOverFlowResponse> CLASS_REF = StackOverFlowResponse.class;
 

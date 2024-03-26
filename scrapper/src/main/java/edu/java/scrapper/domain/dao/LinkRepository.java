@@ -35,4 +35,6 @@ public interface LinkRepository {
 
     List<LinkDto> getAllLinks(Long chatId);
 
+    LinkDto updateAdditionalInfo(Long id, String fieldName, Object value);
+
 }

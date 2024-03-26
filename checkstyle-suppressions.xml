@@ -6,4 +6,6 @@
 
 <suppressions>
     <suppress files=".*Exception\.java" checks="AvoidNoArgumentSuperConstructorCall"/>
+    <suppress files="[\\/]scrapper[\\/]src[\\/]main[\\/]java[\\/]edu[\\/]java[\\/]scrapper[\\/]domain[\\/]jooq[\\/].*"
+              checks=".*"/>
 </suppressions>

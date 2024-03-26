@@ -5,6 +5,7 @@ import edu.java.scrapper.api.model.LinkResponse;
 import edu.java.scrapper.api.model.ListLinksResponse;
 import edu.java.scrapper.api.model.RemoveLinkRequest;
 import edu.java.scrapper.api.services.LinkRepositoryService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DefaultLinksController implements LinksController {
     private final LinkRepositoryService linkRepositoryService;
 
-    DefaultLinksController(LinkRepositoryService linkRepositoryService) {
+    DefaultLinksController(@Qualifier("jooqLinkService") LinkRepositoryService linkRepositoryService) {
         this.linkRepositoryService = linkRepositoryService;
     }
 

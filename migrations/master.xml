@@ -8,5 +8,6 @@
                http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="tables.sql"/>
+    <include file="links-additional-info-column.sql"/>
 
 </databaseChangeLog>

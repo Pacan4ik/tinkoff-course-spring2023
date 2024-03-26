@@ -11,7 +11,10 @@ public record StackOverFlowResponse(
         @JsonProperty("last_activity_date") OffsetDateTime lastActivityDate,
         @JsonProperty("last_edit_date") OffsetDateTime lastEditDate,
         @JsonProperty("link") String link,
-        @JsonProperty("title") String title
+        @JsonProperty("title") String title,
+        @JsonProperty("comment_count") Long commentCount,
+        @JsonProperty("answer_count") Long answerCount
+
     ) {
     }
 }
