@@ -1,6 +1,7 @@
 package edu.java.scrapper.api.exceptions.handlers;
 
 import edu.java.scrapper.api.exceptions.BadRequestException;
+import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.ScrapperException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
@@ -16,62 +17,41 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(ScrapperException.class)
     public ResponseEntity<ApiErrorResponse> handleException(ScrapperException e) {
+        return generateResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(BadRequestException e) {
+        return generateResponseEntity(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(ResourceNotFoundException e) {
+        return generateResponseEntity(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(UserAlreadyExistsException e) {
+        return generateResponseEntity(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(LinkAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(LinkAlreadyExistsException e) {
+        return generateResponseEntity(e, HttpStatus.CONFLICT);
+    }
+
+    private ResponseEntity<ApiErrorResponse> generateResponseEntity(Exception e, HttpStatus httpStatus) {
         return new ResponseEntity<>(
             new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                Integer.toString(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                httpStatus.getReasonPhrase(),
+                Integer.toString(httpStatus.value()),
                 e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace())
                     .map(StackTraceElement::toString)
                     .collect(Collectors.toList())
             ),
-            HttpStatus.INTERNAL_SERVER_ERROR
-        );
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(BadRequestException e) {
-        return new ResponseEntity<>(new ApiErrorResponse(
-            HttpStatus.BAD_REQUEST.getReasonPhrase(),
-            Integer.toString(HttpStatus.BAD_REQUEST.value()),
-            e.getClass().getName(),
-            e.getMessage(),
-            Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .collect(Collectors.toList())
-        ),
-            HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(ResourceNotFoundException e) {
-        return new ResponseEntity<>(new ApiErrorResponse(
-            HttpStatus.NOT_FOUND.getReasonPhrase(),
-            Integer.toString(HttpStatus.NOT_FOUND.value()),
-            e.getClass().getName(),
-            e.getMessage(),
-            Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .collect(Collectors.toList())
-        ),
-            HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(UserAlreadyExistsException e) {
-        return new ResponseEntity<>(new ApiErrorResponse(
-            HttpStatus.CONFLICT.getReasonPhrase(),
-            Integer.toString(HttpStatus.CONFLICT.value()),
-            e.getClass().getName(),
-            e.getMessage(),
-            Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .collect(Collectors.toList())
-        ),
-            HttpStatus.CONFLICT
+            httpStatus
         );
     }
 }

@@ -2,19 +2,24 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dataSources.UsersTracksDB;
+import edu.java.bot.scrapperClient.ScrapperClient;
 import edu.java.bot.utils.commands.ParamsParser;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-@Component public class UntrackCommand extends AbstractCommand {
-    private ParamsParser paramsParser;
+@Component
+@Slf4j
+public class UntrackCommand extends AbstractCommand {
+    private final ParamsParser paramsParser;
 
-    private UsersTracksDB usersTracksDB;
+    private final ScrapperClient scrapperClient;
 
-    public UntrackCommand(ParamsParser paramsParser, UsersTracksDB usersTracksDB) {
+    public UntrackCommand(ParamsParser paramsParser, ScrapperClient scrapperClient) {
         this.paramsParser = paramsParser;
-        this.usersTracksDB = usersTracksDB;
+        this.scrapperClient = scrapperClient;
     }
 
     @Override public String command() {
@@ -39,11 +44,18 @@ import org.springframework.stereotype.Component;
         }
 
         String link = oplink.get();
-
-        if (usersTracksDB.deleteLink(id, link)) {
-            return new SendMessage(id, "Ссылка успешно удалена");
+        String message;
+        try {
+            var status = scrapperClient.deleteLink(id, link).getStatusCode();
+            message = switch (status) {
+                case HttpStatusCode code when code.is2xxSuccessful() -> "Ссылка успешно удалена";
+                case HttpStatusCode code when code.isSameCodeAs(HttpStatus.NOT_FOUND) ->
+                    "Вы не отслеживаете данную ссылку";
+                default -> throw new IllegalStateException("Unexpected status: " + status);
+            };
+        } catch (Exception e) {
+            message = "Что-то пошло не так. Попробуйте позднее.";
         }
-
-        return new SendMessage(id, "Что-то пошло не так. Убедитесь в правильности ссылки.");
+        return new SendMessage(id, message);
     }
 }

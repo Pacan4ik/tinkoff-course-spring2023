@@ -21,6 +21,11 @@ public interface ChatController {
         @ApiResponse(responseCode = "400",
                      description = "Некорректные параметры запроса",
                      content = @Content(mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiErrorResponse.class))),
+
+        @ApiResponse(responseCode = "409",
+                     description = "Чат уже существует",
+                     content = @Content(mediaType = "application/json",
                                         schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     ResponseEntity<Void> registerChat(@PathVariable Long id);

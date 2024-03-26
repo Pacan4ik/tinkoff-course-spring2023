@@ -18,8 +18,8 @@ public class StackOverflowClient extends Client<StackOverFlowResponse> {
         super(webClientBuilder, CLASS_REF, BASE_URL);
     }
 
-    public StackOverFlowResponse fetchResponse(String userId) {
-        return super.fetchResponse(userId);
+    public StackOverFlowResponse fetchResponse(String questionId) {
+        return super.fetchResponse(questionId);
     }
 
     @Override

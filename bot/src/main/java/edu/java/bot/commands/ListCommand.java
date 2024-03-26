@@ -2,18 +2,18 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dataSources.UsersTracksDB;
-import java.util.Collections;
-import java.util.List;
+import edu.java.bot.scrapperClient.ScrapperClient;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ListCommand extends AbstractCommand {
-    private final UsersTracksDB usersTracksDB;
+    private final ScrapperClient scrapperClient;
 
-    public ListCommand(UsersTracksDB usersTracksDB) {
-        this.usersTracksDB = usersTracksDB;
+    public ListCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -29,9 +29,16 @@ public class ListCommand extends AbstractCommand {
     @Override
     public SendMessage handle(Update update) {
         long id = update.message().chat().id();
+        String message;
+        try {
+            var urls = Objects.requireNonNull(scrapperClient.getTrackingLinks(id).getBody()).links().stream()
+                .map((linkResponse) -> linkResponse.url().toString())
+                .toList();
+            message = "Ваши ссылки:\n" + String.join("\n", urls);
+        } catch (Exception e) {
+            message = "Произошла ошибка. Убедитесь, что Вы зарегистрированы";
+        }
 
-        List<String> urls = Objects.requireNonNullElse(usersTracksDB.getUserLinks(id), Collections.emptyList());
-
-        return new SendMessage(id, "Ваши ссылки:\n" + String.join("\n", urls));
+        return new SendMessage(id, message);
     }
 }

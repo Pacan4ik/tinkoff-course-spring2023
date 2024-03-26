@@ -10,4 +10,7 @@ public record ListLinksResponse(
     @JsonProperty("size")
     Integer size
 ) {
+    public ListLinksResponse(List<LinkResponse> links) {
+        this(links, links.size());
+    }
 }

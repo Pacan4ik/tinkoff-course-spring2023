@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,8 +18,8 @@ public class ContainerTest extends IntegrationTest {
 
     static Arguments[] tableNames() {
         return new Arguments[] {
-            Arguments.of("chats"),
-            Arguments.of("links"),
+            Arguments.of("chat"),
+            Arguments.of("link"),
             Arguments.of("link_chat_assignment")
         };
     }

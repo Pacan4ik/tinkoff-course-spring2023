@@ -1,5 +1,6 @@
 package edu.java.bot.scrapperClient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.bot.scrapperClient.model.LinkResponse;
 import edu.java.bot.scrapperClient.model.ListLinksResponse;
 import org.springframework.http.HttpMethod;
@@ -52,7 +53,7 @@ public class ScrapperClient {
             .uri(LINKS_URI_STRING)
             .header(LINKS_CHAT_ID_HEADER, Long.toString(chatId))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(link))
+            .body(BodyInserters.fromValue(new LinkRequest(link)))
             .retrieve()
             .toEntity(LinkResponse.class)
             .block();
@@ -72,10 +73,13 @@ public class ScrapperClient {
             .uri(LINKS_URI_STRING)
             .header(LINKS_CHAT_ID_HEADER, Long.toString(chatId))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(link))
+            .body(BodyInserters.fromValue(new LinkRequest(link)))
             .retrieve()
             .toEntity(LinkResponse.class)
             .block();
     }
 
+    private record LinkRequest(@JsonProperty("link") String link) {
+
+    }
 }
