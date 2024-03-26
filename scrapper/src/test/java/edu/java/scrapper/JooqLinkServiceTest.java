@@ -144,7 +144,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
         Assertions.assertEquals(
             EXAMPLE_URL,
             jdbcTemplate.queryForObject(
-                "select distinct(url) from link join link_chat_assignment lca on link.id = lca.link_id",
+                "select distinct(url) from link",
                 String.class
             )
         );

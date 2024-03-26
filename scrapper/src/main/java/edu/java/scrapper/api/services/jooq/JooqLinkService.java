@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import org.jooq.DSLContext;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,6 @@ public class JooqLinkService implements LinkRepositoryService {
             throw new ResourceNotFoundException(USER_NOT_FOUND);
         }
 
-
         List<LinkRecord> recordList = dslContext.select(link.fields())
             .from(link)
             .join(linkChatAssignment).on(link.ID.eq(linkChatAssignment.LINK_ID))
@@ -60,13 +60,6 @@ public class JooqLinkService implements LinkRepositoryService {
     @Override
     @Transactional
     public LinkResponse addLink(Long id, URI link) {
-        ChatRecord chatRecord = dslContext.selectFrom(chat)
-            .where(chat.ID.eq(id))
-            .fetchOne();
-        if (chatRecord == null) {
-            throw new ResourceNotFoundException(USER_NOT_FOUND);
-        }
-
         LinkRecord linkRecord = Objects.requireNonNullElseGet(
             dslContext.selectFrom(this.link)
                 .where(this.link.URL.eq(link.toString()))
@@ -79,10 +72,12 @@ public class JooqLinkService implements LinkRepositoryService {
         try {
             dslContext.insertInto(linkChatAssignment)
                 .set(linkChatAssignment.LINK_ID, linkRecord.getId())
-                .set(linkChatAssignment.CHAT_ID, chatRecord.getId())
+                .set(linkChatAssignment.CHAT_ID, id)
                 .execute();
         } catch (DuplicateKeyException e) {
             throw new LinkAlreadyExistsException(USER_ALREADY_SUBSCRIBED);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND, e);
         }
 
         return new LinkResponse(linkRecord.getId(), URI.create(linkRecord.get(this.link.URL)));
@@ -106,15 +101,14 @@ public class JooqLinkService implements LinkRepositoryService {
             throw new ResourceNotFoundException(USER_HAS_NOT_SUBSCRIBED);
         }
 
-        int remainingAssignments = Objects.requireNonNull(dslContext.selectCount()
-            .from(linkChatAssignment)
-            .where(linkChatAssignment.LINK_ID.eq(linkRecord.getId()))
-            .fetchOne(0, int.class));
-        if (remainingAssignments == 0) {
-            dslContext.deleteFrom(this.link)
-                .where(this.link.ID.eq(linkRecord.getId()))
-                .execute();
-        }
+        dslContext.deleteFrom(this.link)
+            .where(this.link.ID.eq(linkRecord.getId()))
+            .andNotExists(
+                dslContext.selectOne()
+                    .from(linkChatAssignment)
+                    .where(linkChatAssignment.LINK_ID.eq(linkRecord.getId()))
+            )
+            .execute();
         return new LinkResponse(linkRecord.getId(), URI.create(linkRecord.getUrl()));
     }
 }
