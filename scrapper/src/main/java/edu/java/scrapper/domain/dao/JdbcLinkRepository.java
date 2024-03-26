@@ -58,8 +58,17 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public List<LinkDto> remove(Long... ids) {
         String sql = "delete from link where id in ("
-            + String.join(",", Collections.nCopies(ids.length, "?"))
-            + ") returning *";
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ") returning *";
+        return jdbcTemplate.query(sql, mapper, (Object[]) ids);
+    }
+
+    @Override
+    public List<LinkDto> removeUnassigned(Long... ids) {
+        String sql = "delete from link where link.id in ("
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ") and link.id not in (select link_id from link_chat_assignment) returning *";
+
         return jdbcTemplate.query(sql, mapper, (Object[]) ids);
     }
 
@@ -69,8 +78,8 @@ public class JdbcLinkRepository implements LinkRepository {
 
     public List<LinkDto> findAll(URI... urls) {
         String sql = "select * from link where url in ("
-            + String.join(",", Collections.nCopies(urls.length, "?"))
-            + ")";
+                     + String.join(",", Collections.nCopies(urls.length, "?"))
+                     + ")";
         return jdbcTemplate.query(sql, mapper, Arrays.stream(urls).map(Object::toString).toArray());
     }
 
@@ -84,8 +93,8 @@ public class JdbcLinkRepository implements LinkRepository {
 
     public List<LinkDto> findAll(Long... ids) {
         String sql = "select * from link where id in ("
-            + String.join(",", Collections.nCopies(ids.length, "?"))
-            + ")";
+                     + String.join(",", Collections.nCopies(ids.length, "?"))
+                     + ")";
         return jdbcTemplate.query(sql, mapper, (Object[]) ids);
     }
 
@@ -123,11 +132,11 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<Long> getChats(Long linkId) {
-        return jdbcTemplate.queryForList(
-            "select chat_id from link_chat_assignment where link_id = (?)",
-            Long.class,
-            linkId
+    public List<LinkDto> getAllLinks(Long chatId) {
+        return jdbcTemplate.query(
+            "select * from link join public.link_chat_assignment lca on link.id = lca.link_id and lca.chat_id = (?)",
+            mapper,
+            chatId
         );
     }
 

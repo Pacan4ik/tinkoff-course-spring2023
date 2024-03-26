@@ -19,6 +19,5 @@ public interface ChatRepository {
 
     Long removeLink(Long chatId, Long linkId);
 
-    List<Long> getAllLinks(Long id);
-
+    List<ChatDto> getAllChats(Long linkId);
 }

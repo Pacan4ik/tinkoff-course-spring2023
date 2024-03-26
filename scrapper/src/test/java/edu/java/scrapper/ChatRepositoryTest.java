@@ -118,19 +118,19 @@ public class ChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void shouldReturnAssignedLinks() {
+    void shouldReturnAssignedChatsByLinkId() {
         //given
-        jdbcTemplate.update("insert into link(id, url) values (1, ?), (2, ?)", EXAMPLE_URL, EXAMPLE2_URL);
-        jdbcTemplate.update("insert into chat(id) values (123)");
-        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (2, 123)");
+        jdbcTemplate.update("insert into link(id, url) values (123, ?)", EXAMPLE_URL);
+        jdbcTemplate.update("insert into chat(id) values (1), (2), (3)");
+        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (123, 1), (123, 2), (123, 3)");
 
         //when
-        var linkIds = chatRepository.getAllLinks(123L);
+        List<ChatDto> chats = chatRepository.getAllChats(123L);
 
         //then
         Assertions.assertEquals(
-            List.of(1L, 2L),
-            linkIds
+            List.of(1L, 2L, 3L),
+            chats.stream().map(ChatDto::id).toList()
         );
     }
 
@@ -148,7 +148,7 @@ public class ChatRepositoryTest extends IntegrationTest {
 
         //then
         Assertions.assertTrue(
-            jdbcTemplate.queryForList("select id from link_chat_assignment where chat_id = 123", Long.class)
+            jdbcTemplate.queryForList("select * from link_chat_assignment where chat_id = 123", Long.class)
                 .isEmpty()
         );
     }

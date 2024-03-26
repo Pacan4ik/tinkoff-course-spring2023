@@ -7,7 +7,9 @@ import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.domain.dao.ChatRepository;
 import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -24,6 +26,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class LinkUpdateScheduler {
     private final ApplicationConfig applicationConfig;
     private final LinkRepository linkRepository;
+    private final ChatRepository chatRepository;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final BotClient botClient;
@@ -49,7 +52,7 @@ public class LinkUpdateScheduler {
                                 dto.id(),
                                 dto.url(),
                                 "Новое обновление",
-                                linkRepository.getChats(dto.id())
+                                chatRepository.getAllChats(dto.id()).stream().map(ChatDto::id).toList()
                             );
                             linkRepository.updateUpdatedAt(dto.id(), newUpdate);
                         } catch (ResourceNotFoundException ignored) {
