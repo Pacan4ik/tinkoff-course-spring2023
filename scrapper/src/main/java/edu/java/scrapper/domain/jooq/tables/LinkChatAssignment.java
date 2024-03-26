@@ -18,12 +18,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
-import org.jooq.Identity;
+import org.jooq.Function2;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row2;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -63,11 +62,6 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
     public Class<LinkChatAssignmentRecord> getRecordType() {
         return LinkChatAssignmentRecord.class;
     }
-
-    /**
-     * The column <code>LINK_CHAT_ASSIGNMENT.ID</code>.
-     */
-    public final TableField<LinkChatAssignmentRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>LINK_CHAT_ASSIGNMENT.LINK_ID</code>.
@@ -120,26 +114,14 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
 
     @Override
     @NotNull
-    public Identity<LinkChatAssignmentRecord, Long> getIdentity() {
-        return (Identity<LinkChatAssignmentRecord, Long>) super.getIdentity();
-    }
-
-    @Override
-    @NotNull
     public UniqueKey<LinkChatAssignmentRecord> getPrimaryKey() {
-        return Keys.CONSTRAINT_6;
-    }
-
-    @Override
-    @NotNull
-    public List<UniqueKey<LinkChatAssignmentRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.UNIQUE_LINK_CHAT_ASSIGNMENT);
+        return Keys.UNIQUE_LINK_CHAT_ASSIGNMENT;
     }
 
     @Override
     @NotNull
     public List<ForeignKey<LinkChatAssignmentRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.CONSTRAINT_60, Keys.CONSTRAINT_604);
+        return Arrays.asList(Keys.CONSTRAINT_6, Keys.CONSTRAINT_60);
     }
 
     private transient Link _link;
@@ -150,7 +132,7 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
      */
     public Link link() {
         if (_link == null)
-            _link = new Link(this, Keys.CONSTRAINT_60);
+            _link = new Link(this, Keys.CONSTRAINT_6);
 
         return _link;
     }
@@ -160,7 +142,7 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
      */
     public Chat chat() {
         if (_chat == null)
-            _chat = new Chat(this, Keys.CONSTRAINT_604);
+            _chat = new Chat(this, Keys.CONSTRAINT_60);
 
         return _chat;
     }
@@ -211,19 +193,19 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row2 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row3<Long, Long, Long> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row2<Long, Long> fieldsRow() {
+        return (Row2) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super Long, ? super Long, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -231,7 +213,7 @@ public class LinkChatAssignment extends TableImpl<LinkChatAssignmentRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Long, ? super Long, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

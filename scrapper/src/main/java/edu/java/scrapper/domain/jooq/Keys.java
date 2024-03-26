@@ -41,13 +41,12 @@ public class Keys {
     public static final UniqueKey<ChatRecord> CONSTRAINT_1 = Internal.createUniqueKey(Chat.CHAT, DSL.name("CONSTRAINT_1"), new TableField[] { Chat.CHAT.ID }, true);
     public static final UniqueKey<LinkRecord> CONSTRAINT_2 = Internal.createUniqueKey(Link.LINK, DSL.name("CONSTRAINT_2"), new TableField[] { Link.LINK.ID }, true);
     public static final UniqueKey<LinkRecord> CONSTRAINT_23 = Internal.createUniqueKey(Link.LINK, DSL.name("CONSTRAINT_23"), new TableField[] { Link.LINK.URL }, true);
-    public static final UniqueKey<LinkChatAssignmentRecord> CONSTRAINT_6 = Internal.createUniqueKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("CONSTRAINT_6"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.ID }, true);
     public static final UniqueKey<LinkChatAssignmentRecord> UNIQUE_LINK_CHAT_ASSIGNMENT = Internal.createUniqueKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("UNIQUE_LINK_CHAT_ASSIGNMENT"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.LINK_ID, LinkChatAssignment.LINK_CHAT_ASSIGNMENT.CHAT_ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<LinkChatAssignmentRecord, LinkRecord> CONSTRAINT_60 = Internal.createForeignKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("CONSTRAINT_60"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.LINK_ID }, Keys.CONSTRAINT_2, new TableField[] { Link.LINK.ID }, true);
-    public static final ForeignKey<LinkChatAssignmentRecord, ChatRecord> CONSTRAINT_604 = Internal.createForeignKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("CONSTRAINT_604"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.CHAT_ID }, Keys.CONSTRAINT_1, new TableField[] { Chat.CHAT.ID }, true);
+    public static final ForeignKey<LinkChatAssignmentRecord, LinkRecord> CONSTRAINT_6 = Internal.createForeignKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("CONSTRAINT_6"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.LINK_ID }, Keys.CONSTRAINT_2, new TableField[] { Link.LINK.ID }, true);
+    public static final ForeignKey<LinkChatAssignmentRecord, ChatRecord> CONSTRAINT_60 = Internal.createForeignKey(LinkChatAssignment.LINK_CHAT_ASSIGNMENT, DSL.name("CONSTRAINT_60"), new TableField[] { LinkChatAssignment.LINK_CHAT_ASSIGNMENT.CHAT_ID }, Keys.CONSTRAINT_1, new TableField[] { Chat.CHAT.ID }, true);
 }
