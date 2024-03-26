@@ -85,7 +85,7 @@ public class TrackCommand extends AbstractCommand {
             throw new IllegalArgumentException("Неправильный формат ссылки.");
         }
 
-        if (!supportedLinkProvider.isSupports(parsedUrl)) {
+        if (!supportedLinkProvider.isSupported(parsedUrl)) {
             throw new IllegalArgumentException("Ссылка не поддерживается");
         }
         return parsedUrl;

@@ -16,8 +16,7 @@ create table chat
 );
 create table link_chat_assignment
 (
-    id      bigserial primary key,
     link_id bigint references link (id) on delete cascade not null,
     chat_id bigint references chat (id) on delete cascade not null,
-    CONSTRAINT unique_link_chat_assignment UNIQUE (link_id, chat_id)
+    constraint unique_link_chat_assignment primary key (link_id, chat_id)
 );

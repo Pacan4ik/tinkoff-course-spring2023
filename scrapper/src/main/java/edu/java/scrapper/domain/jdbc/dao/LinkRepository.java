@@ -13,6 +13,8 @@ public interface LinkRepository {
 
     List<LinkDto> remove(Long... ids);
 
+    List<LinkDto> removeUnassigned(Long... ids);
+
     List<LinkDto> findAll();
 
     List<LinkDto> findAll(URI... urls);
@@ -29,7 +31,7 @@ public interface LinkRepository {
 
     LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime);
 
-    List<Long> getChats(Long linkId);
+    List<LinkDto> getAllLinks(Long chatId);
 
     LinkDto updateAdditionalInfo(Long id, String fieldName, Object value);
 

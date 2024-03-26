@@ -10,7 +10,6 @@ import java.io.Serializable;
 import javax.annotation.processing.Generated;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -28,42 +27,23 @@ public class LinkChatAssignment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
     private Long linkId;
     private Long chatId;
 
     public LinkChatAssignment() {}
 
     public LinkChatAssignment(LinkChatAssignment value) {
-        this.id = value.id;
         this.linkId = value.linkId;
         this.chatId = value.chatId;
     }
 
-    @ConstructorProperties({ "id", "linkId", "chatId" })
+    @ConstructorProperties({ "linkId", "chatId" })
     public LinkChatAssignment(
-        @Nullable Long id,
         @NotNull Long linkId,
         @NotNull Long chatId
     ) {
-        this.id = id;
         this.linkId = linkId;
         this.chatId = chatId;
-    }
-
-    /**
-     * Getter for <code>LINK_CHAT_ASSIGNMENT.ID</code>.
-     */
-    @Nullable
-    public Long getId() {
-        return this.id;
-    }
-
-    /**
-     * Setter for <code>LINK_CHAT_ASSIGNMENT.ID</code>.
-     */
-    public void setId(@Nullable Long id) {
-        this.id = id;
     }
 
     /**
@@ -107,12 +87,6 @@ public class LinkChatAssignment implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         final LinkChatAssignment other = (LinkChatAssignment) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
         if (this.linkId == null) {
             if (other.linkId != null)
                 return false;
@@ -132,7 +106,6 @@ public class LinkChatAssignment implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.linkId == null) ? 0 : this.linkId.hashCode());
         result = prime * result + ((this.chatId == null) ? 0 : this.chatId.hashCode());
         return result;
@@ -142,8 +115,7 @@ public class LinkChatAssignment implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("LinkChatAssignment (");
 
-        sb.append(id);
-        sb.append(", ").append(linkId);
+        sb.append(linkId);
         sb.append(", ").append(chatId);
 
         sb.append(")");

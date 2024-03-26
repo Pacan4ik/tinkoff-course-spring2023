@@ -8,9 +8,11 @@ import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
 import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JdbcLinkService implements LinkService {
@@ -34,26 +36,22 @@ public class JdbcLinkService implements LinkService {
     @Transactional
     public List<LinkResponse> getUserLinks(Long id) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
-        List<Long> linkIds = chatRepository.getAllLinks(id);
-        if (linkIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return linkRepository.findAll(linkIds.toArray(Long[]::new)).stream()
-            .map((dto) -> new LinkResponse(dto.id(), dto.url()))
+        return linkRepository.getAllLinks(id).stream()
+            .map(linkDto -> new LinkResponse(linkDto.id(), linkDto.url()))
             .toList();
     }
 
     @Override
     @Transactional
     public LinkResponse addLink(Long id, URI link) {
-        chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         LinkDto linkDto = linkRepository.find(link).orElseGet(() -> linkRepository.add(link));
-
-        if (chatRepository.getAllLinks(id).stream().anyMatch(linkId -> linkId.equals(linkDto.id()))) {
-            throw new LinkAlreadyExistsException(USER_ALREADY_SUBSCRIBED);
+        try {
+            chatRepository.addLink(id, linkDto.id());
+        } catch (DuplicateKeyException e) {
+            throw new LinkAlreadyExistsException(USER_ALREADY_SUBSCRIBED, e);
+        } catch (DataAccessException e) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND, e);
         }
-
-        chatRepository.addLink(id, linkDto.id());
         return new LinkResponse(linkDto.id(), linkDto.url());
     }
 
@@ -62,15 +60,13 @@ public class JdbcLinkService implements LinkService {
     public LinkResponse removeLink(Long id, URI link) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         LinkDto linkDto = linkRepository.find(link).orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
-        if (chatRepository.getAllLinks(id).stream().noneMatch(linkId -> linkId.equals(linkDto.id()))) {
-            throw new ResourceNotFoundException(USER_HAS_NOT_YET_SUBSCRIBED);
+        try {
+            chatRepository.removeLink(id, linkDto.id());
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(USER_HAS_NOT_YET_SUBSCRIBED, e);
         }
 
-        chatRepository.removeLink(id, linkDto.id());
-
-        if (linkRepository.getChats(linkDto.id()).isEmpty()) {
-            linkRepository.remove(linkDto.id());
-        }
+        linkRepository.removeUnassigned(linkDto.id());
 
         return new LinkResponse(linkDto.id(), linkDto.url());
     }

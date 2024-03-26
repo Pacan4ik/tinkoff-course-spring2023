@@ -27,7 +27,7 @@
         <Logger name="org.springframework.web" level="DEBUG"/>
         <Logger name="sun.rmi" level="WARN"/>
         <Logger name="sun.rmi.transport" level="WARN"/>
-
+        <Logger name="org.jooq.tools.LoggerListener" level="DEBUG"/>
 <!--        <Logger name="org.hibernate" level="info"/>-->
 <!--        <Logger name="org.hibernate.SQL" level="debug"/>-->
 <!--        <Logger name="org.hibernate.orm.jdbc.bind" level="trace"/>-->

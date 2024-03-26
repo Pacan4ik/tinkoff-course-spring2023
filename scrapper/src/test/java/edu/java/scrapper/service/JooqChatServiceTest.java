@@ -72,16 +72,21 @@ public class JooqChatServiceTest extends IntegrationTest {
     @Rollback
     void shouldDeleteUnassignedLinksIfChatDeleted() {
         //given
-        jdbcTemplate.update("insert into link(id, url) values (1, ?), (2, ?)", EXAMPLE_URL, EXAMPLE2_URL);
+        jdbcTemplate.update(
+            "insert into link(id, url) values (1, ?), (2, ?), (3, 'https://example3.com/')",
+            EXAMPLE_URL,
+            EXAMPLE2_URL
+        );
         jdbcTemplate.update("insert into chat(id) values (123), (1234)");
-        jdbcTemplate.update("insert into link_chat_assignment(link_id, chat_id) values (1, 123), (1, 1234), (2, 123)");
+        jdbcTemplate.update(
+            "insert into link_chat_assignment(link_id, chat_id) values (1, 123), (1, 1234), (2, 123), (3, 123)");
 
         //when
         chatService.deleteChat(123L);
 
         //then
         Assertions.assertTrue(
-            jdbcTemplate.queryForList("select id from link where id = 2", Long.class).isEmpty()
+            jdbcTemplate.queryForList("select id from link where id in (2, 3)", Long.class).isEmpty()
         );
         Assertions.assertFalse(
             jdbcTemplate.queryForList("select id from link where id = 1", Long.class).isEmpty()

@@ -5,7 +5,10 @@ import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
 import edu.java.scrapper.api.services.ChatService;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
 import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
+import edu.java.scrapper.domain.jdbc.dto.LinkDto;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JdbcChatService implements ChatService {
@@ -21,27 +24,28 @@ public class JdbcChatService implements ChatService {
     }
 
     @Override
-    @Transactional
     public void registerChat(Long id) {
-        if (chatRepository.find(id).isEmpty()) {
+        try {
             chatRepository.add(id);
-        } else {
-            throw new UserAlreadyExistsException("User already exists");
+        } catch (DuplicateKeyException e) {
+            throw new UserAlreadyExistsException("User already exists", e);
         }
     }
 
     @Override
     @Transactional
     public void deleteChat(Long id) {
-        chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Long[] linksToDelete = chatRepository.getAllLinks(id).stream()
-            .filter(linkId -> linkRepository.getChats(linkId).stream()
-                .allMatch(chatId -> chatId.equals(id)))
+        Long[] userLinks = linkRepository.getAllLinks(id).stream()
+            .map(LinkDto::id)
             .toArray(Long[]::new);
-        if (linksToDelete.length != 0) {
-            linkRepository.remove(linksToDelete);
+        try {
+            chatRepository.remove(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("User not found", e);
         }
-        chatRepository.remove(id);
+        if (userLinks.length != 0) {
+            linkRepository.removeUnassigned(userLinks);
+        }
     }
 }
 

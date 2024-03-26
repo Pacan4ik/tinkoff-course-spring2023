@@ -5,6 +5,7 @@ import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
+import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
 import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
@@ -27,12 +28,20 @@ public class EventsHandlersConfig {
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final LinkRepository linkRepository;
+    private final ChatRepository chatRepository;
 
     @Bean
     public AbstractDomainHandler firstHandler() {
-        GitHubHandler gitHubHandler = new GitHubHandler(botClient, linkRepository, gitHubClient, createGitHubChain());
+        GitHubHandler gitHubHandler =
+            new GitHubHandler(botClient, linkRepository, chatRepository, gitHubClient, createGitHubChain());
         StackOverflowHandler stackOverflowHandler =
-            new StackOverflowHandler(botClient, linkRepository, stackOverflowClient, createStackOverflowChain());
+            new StackOverflowHandler(
+                botClient,
+                linkRepository,
+                chatRepository,
+                stackOverflowClient,
+                createStackOverflowChain()
+            );
         gitHubHandler.setNextSuccessor(stackOverflowHandler);
         return gitHubHandler;
     }

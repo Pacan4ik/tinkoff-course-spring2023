@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 public class EventHandlersTest {
 
     EventsHandlersConfig eventsHandlersConfig =
-        new EventsHandlersConfig(null, null, null, null);
+        new EventsHandlersConfig(null, null, null, null, null);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
