@@ -2,6 +2,7 @@ package edu.java.scrapper.api.exceptions.handlers;
 
 import edu.java.scrapper.api.exceptions.BadRequestException;
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
+import edu.java.scrapper.api.exceptions.OutOfTokensException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.ScrapperException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
@@ -38,6 +39,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LinkAlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleException(LinkAlreadyExistsException e) {
         return generateResponseEntity(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(OutOfTokensException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(OutOfTokensException e) {
+        return generateResponseEntity(e, HttpStatus.TOO_MANY_REQUESTS);
     }
 
     private ResponseEntity<ApiErrorResponse> generateResponseEntity(Exception e, HttpStatus httpStatus) {
