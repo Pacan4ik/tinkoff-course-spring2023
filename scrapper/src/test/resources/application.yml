@@ -4,10 +4,28 @@ app:
     interval: 10000
     force-check-delay: 10000
     link-checking-frequency: 3m
-  base-urls:
-    git-hub-api: http://localhost:8080/
-    stack-overflow-api: http://localhost:8080
-    bot-api: http://localhost:8090/
+
+  github:
+    base-url: http://localhost:8080/
+    back-off:
+      delay: 1s
+      policy: linear
+      max-attempts: 3
+
+  stackoverflow:
+    base-url: http://localhost:8080/
+    back-off:
+      delay: 1s
+      policy: linear
+      max-attempts: 3
+
+  bot:
+    base-url: http://localhost:8080/
+    back-off:
+      delay: 500ms
+      policy: exponential
+      max-attempts: 10
+      multiplier: 2
   data-base-access-type: jpa
 
 spring:
