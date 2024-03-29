@@ -4,11 +4,31 @@ app:
     interval: 10000
     force-check-delay: 10000
     link-checking-frequency: 3m
-  base-urls:
-    git-hub-api: https://api.github.com/
-    stack-overflow-api: https://api.stackexchange.com/
-    bot-api: http://localhost:8090/
+
+  github:
+    base-url: https://api.github.com/
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+
+  stackoverflow:
+    base-url: https://api.stackexchange.com/
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+
+  bot:
+    base-url: http://localhost:8090/
+    back-off:
+      delay: 500ms
+      policy: exponential
+      max-attempts: 10
+      multiplier: 2
+
   data-base-access-type: jpa
+
 spring:
   application:
     name: scrapper

@@ -11,7 +11,11 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     @NotNull
-    BaseUrls baseUrls,
+    Client github,
+    @NotNull
+    Client stackoverflow,
+    @NotNull
+    Client bot,
     @NotNull
     AccessType dataBaseAccessType
 ) {
@@ -22,8 +26,19 @@ public record ApplicationConfig(
                             @NotNull Duration linkCheckingFrequency) {
     }
 
-    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
+    public record Client(@NotNull String baseUrl, @NotNull BackOff backOff) {
+        public record BackOff(@NotNull Integer maxAttempts,
+                              @NotNull Duration delay,
+                              @NotNull Policy policy,
+                              Integer multiplier) {
+            public enum Policy {
+                CONSTANT, LINEAR, EXPONENTIAL
+            }
+        }
     }
+
+//    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
+//    }
 
     public enum AccessType {
         JDBC, JPA, JOOQ
