@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers.github;
 
-import edu.java.scrapper.botClient.BotClient;
+import edu.java.scrapper.clients.botClient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;

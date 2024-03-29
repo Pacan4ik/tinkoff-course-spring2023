@@ -1,7 +1,7 @@
 package edu.java.scrapper.scheduling.handlers;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
-import edu.java.scrapper.botClient.BotClient;
+import edu.java.scrapper.clients.botClient.BotClient;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
 import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import edu.java.scrapper.domain.jdbc.dto.ChatDto;

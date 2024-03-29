@@ -1,9 +1,8 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.botClient.BotClient;
+import edu.java.scrapper.clients.botClient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
-import edu.java.scrapper.configuration.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

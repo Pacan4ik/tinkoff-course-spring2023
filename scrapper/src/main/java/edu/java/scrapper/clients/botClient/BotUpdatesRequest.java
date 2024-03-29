@@ -1,4 +1,4 @@
-package edu.java.scrapper.botClient;
+package edu.java.scrapper.clients.botClient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
