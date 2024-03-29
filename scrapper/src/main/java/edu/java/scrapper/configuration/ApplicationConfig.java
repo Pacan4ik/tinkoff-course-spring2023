@@ -17,7 +17,10 @@ public record ApplicationConfig(
     @NotNull
     Client bot,
     @NotNull
-    AccessType dataBaseAccessType
+    AccessType dataBaseAccessType,
+
+    @NotNull
+    RateLimiting rateLimiting
 ) {
 
     public record Scheduler(boolean enable,
@@ -37,8 +40,8 @@ public record ApplicationConfig(
         }
     }
 
-//    public record BaseUrls(@NotNull String gitHubApi, @NotNull String stackOverflowApi, @NotNull String botApi) {
-//    }
+    public record RateLimiting(@NotNull Long requestsLimit, @NotNull Duration timeDuration) {
+    }
 
     public enum AccessType {
         JDBC, JPA, JOOQ

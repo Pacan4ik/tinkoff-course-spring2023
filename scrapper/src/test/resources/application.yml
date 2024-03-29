@@ -27,7 +27,9 @@ app:
       max-attempts: 10
       multiplier: 2
   data-base-access-type: jpa
-
+  rate-limiting:
+    requests-limit: 30
+    time-duration: 1m
 spring:
   application:
     name: scrapper
