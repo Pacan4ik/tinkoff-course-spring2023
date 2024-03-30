@@ -1,6 +1,7 @@
 package edu.java.scrapper.configuration.retry;
 
 import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.tinkoff.linearbackoffextension.LinearBackoffPolicy;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;

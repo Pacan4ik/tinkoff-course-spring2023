@@ -1,8 +1,5 @@
-package edu.java.scrapper.configuration.retry;
+package edu.tinkoff.linearbackoffextension;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.backoff.BackOffContext;
 import org.springframework.retry.backoff.BackOffInterruptedException;
@@ -10,19 +7,25 @@ import org.springframework.retry.backoff.Sleeper;
 import org.springframework.retry.backoff.SleepingBackOffPolicy;
 import org.springframework.retry.backoff.ThreadWaitSleeper;
 
-@Slf4j
 public class LinearBackoffPolicy implements SleepingBackOffPolicy<LinearBackoffPolicy> {
 
     private static final long DEFAULT_INITIAL_PERIOD = 100L;
     private static final long DEFAULT_MAX_PERIOD = 30000L;
-
-    @Getter
     private Long initialPeriod = DEFAULT_INITIAL_PERIOD;
-
-    @Getter
     private Long maxPeriod = DEFAULT_MAX_PERIOD;
 
-    @Setter
+    public Long getInitialPeriod() {
+        return initialPeriod;
+    }
+
+    public Long getMaxPeriod() {
+        return maxPeriod;
+    }
+
+    public void setSleeper(Sleeper sleeper) {
+        this.sleeper = sleeper;
+    }
+
     private Sleeper sleeper = new ThreadWaitSleeper();
 
     public void setInitialPeriod(long backOffPeriod) {
@@ -51,7 +54,6 @@ public class LinearBackoffPolicy implements SleepingBackOffPolicy<LinearBackoffP
     public void backOff(BackOffContext backOffContext) throws BackOffInterruptedException {
         LinearBackOffContext linearBackOffContext = (LinearBackOffContext) backOffContext;
         long sleepTime = linearBackOffContext.getSleepAndIncrement();
-        log.debug("Sleeping for " + sleepTime);
         try {
             this.sleeper.sleep(sleepTime);
         } catch (InterruptedException e) {
