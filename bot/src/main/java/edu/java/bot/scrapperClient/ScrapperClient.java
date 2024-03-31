@@ -3,7 +3,6 @@ package edu.java.bot.scrapperClient;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.bot.scrapperClient.model.LinkResponse;
 import edu.java.bot.scrapperClient.model.ListLinksResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Slf4j
 public class ScrapperClient {
     private static final String DEFAULT_BASE_URL = "http://localhost:8090/";
     private static final String TG_CHAT_URI_STRING = "/tg-chat/{id}";
