@@ -11,6 +11,9 @@ app:
       delay: 3s
       policy: linear
       max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
 
   stackoverflow:
     base-url: https://api.stackexchange.com/
@@ -18,6 +21,9 @@ app:
       delay: 3s
       policy: linear
       max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
 
   bot:
     base-url: http://localhost:8090/
@@ -26,6 +32,8 @@ app:
       policy: exponential
       max-attempts: 10
       multiplier: 2
+      additional-statuses:
+        - 429
 
   data-base-access-type: jpa
   rate-limiting:

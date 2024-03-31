@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import edu.java.scrapper.configuration.retry.RetryTemplatesConfig;
@@ -29,6 +30,7 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryPolicy;
+import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplateBuilder;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,7 +48,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @EnableConfigurationProperties(value = ApplicationConfig.class)
 @AutoConfigureWebClient
-@ContextConfiguration(classes = {ClientsConfig.class, RetryTemplatesConfig.class}, initializers = ConfigDataApplicationContextInitializer.class)
+@ContextConfiguration(classes = {ClientsConfig.class, RetryTemplatesConfig.class},
+                      initializers = ConfigDataApplicationContextInitializer.class)
 public class ClientTest {
     static WireMockServer wireMockServer;
 
@@ -223,11 +226,12 @@ public class ClientTest {
 
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
         RetryPolicy retryPolicy = new SimpleRetryPolicy(4);
-        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy).accept(retryTemplateBuilder);
+        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy, null).accept(retryTemplateBuilder);
         retryTemplatesConfig.retryBackoffPolicyCustomizer(new ApplicationConfig.Client.BackOff(
             4,
             Duration.ofSeconds(1),
             ApplicationConfig.Client.BackOff.Policy.CONSTANT,
+            null,
             null
         )).accept(retryTemplateBuilder);
 
@@ -263,12 +267,13 @@ public class ClientTest {
         );
 
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
-        RetryPolicy retryPolicy = new SimpleRetryPolicy(10);
-        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy).accept(retryTemplateBuilder);
+        RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(10);
+        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy, Collections.emptyList()).accept(retryTemplateBuilder);
         retryTemplatesConfig.retryBackoffPolicyCustomizer(new ApplicationConfig.Client.BackOff(
             10,
             Duration.ofSeconds(5),
             ApplicationConfig.Client.BackOff.Policy.LINEAR,
+            null,
             null
         )).accept(retryTemplateBuilder);
 
@@ -276,7 +281,8 @@ public class ClientTest {
         BotClient botClient = new BotClient(webClientBuilder, "http://localhost:8080", retryTemplateBuilder.build());
 
         //then
-        Assertions.assertThrows(WebClientResponseException.class,
+        Assertions.assertThrows(
+            WebClientResponseException.class,
             () -> botClient.sendUpdates(
                 1L,
                 URI.create("https://example.com/"),

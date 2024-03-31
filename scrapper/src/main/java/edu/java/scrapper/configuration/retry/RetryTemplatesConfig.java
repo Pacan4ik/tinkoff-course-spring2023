@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
@@ -28,11 +27,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @Slf4j
 public class RetryTemplatesConfig {
     private final ApplicationConfig applicationConfig;
-
-    private final List<HttpStatusCode> additionalRetryableList = List.of(
-        HttpStatus.TOO_MANY_REQUESTS,
-        HttpStatus.REQUEST_TIMEOUT
-    );
 
     public RetryTemplatesConfig(ApplicationConfig applicationConfig) {
         this.applicationConfig = applicationConfig;
@@ -68,8 +62,10 @@ public class RetryTemplatesConfig {
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
         RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(applicationConfig.github().backOff().maxAttempts());
 
-        retryOnStatusCustomizer(retryPolicy).accept(retryTemplateBuilder);
-        retryBackoffPolicyCustomizer(applicationConfig.github().backOff()).accept(retryTemplateBuilder);
+        retryOnStatusCustomizer(retryPolicy, applicationConfig.github().backOff().additionalStatuses())
+            .accept(retryTemplateBuilder);
+        retryBackoffPolicyCustomizer(applicationConfig.github().backOff())
+            .accept(retryTemplateBuilder);
 
         RetryTemplate template = retryTemplateBuilder.build();
         template.registerListener(retryListener);
@@ -81,8 +77,10 @@ public class RetryTemplatesConfig {
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
         RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(applicationConfig.stackoverflow().backOff().maxAttempts());
 
-        retryOnStatusCustomizer(retryPolicy).accept(retryTemplateBuilder);
-        retryBackoffPolicyCustomizer(applicationConfig.stackoverflow().backOff()).accept(retryTemplateBuilder);
+        retryOnStatusCustomizer(retryPolicy, applicationConfig.stackoverflow().backOff().additionalStatuses())
+            .accept(retryTemplateBuilder);
+        retryBackoffPolicyCustomizer(applicationConfig.stackoverflow().backOff())
+            .accept(retryTemplateBuilder);
 
         RetryTemplate template = retryTemplateBuilder.build();
         template.registerListener(retryListener);
@@ -94,20 +92,25 @@ public class RetryTemplatesConfig {
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
         RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(applicationConfig.bot().backOff().maxAttempts());
 
-        retryOnStatusCustomizer(retryPolicy).accept(retryTemplateBuilder);
-        retryBackoffPolicyCustomizer(applicationConfig.bot().backOff()).accept(retryTemplateBuilder);
+        retryOnStatusCustomizer(retryPolicy, applicationConfig.bot().backOff().additionalStatuses())
+            .accept(retryTemplateBuilder);
+        retryBackoffPolicyCustomizer(applicationConfig.bot().backOff())
+            .accept(retryTemplateBuilder);
 
         RetryTemplate template = retryTemplateBuilder.build();
         template.registerListener(retryListener);
         return template;
     }
 
-    public Consumer<RetryTemplateBuilder> retryOnStatusCustomizer(RetryPolicy retryPolicy) {
+    public Consumer<RetryTemplateBuilder> retryOnStatusCustomizer(
+        RetryPolicy retryPolicy,
+        List<Integer> additionalRetryableList
+    ) {
         ExceptionClassifierRetryPolicy classifierRetryPolicy = new ExceptionClassifierRetryPolicy();
         classifierRetryPolicy.setExceptionClassifier((Classifier<Throwable, RetryPolicy>) classifiable -> {
             if (classifiable instanceof WebClientResponseException) {
                 HttpStatusCode status = ((WebClientResponseException) classifiable).getStatusCode();
-                if (status.is5xxServerError() || additionalRetryableList.contains(status)) {
+                if (status.is5xxServerError() || additionalRetryableList.contains(status.value())) {
                     return retryPolicy;
                 }
             }

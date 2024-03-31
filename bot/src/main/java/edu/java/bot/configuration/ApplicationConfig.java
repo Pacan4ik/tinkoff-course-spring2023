@@ -3,6 +3,9 @@ package edu.java.bot.configuration;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,7 +23,12 @@ public record ApplicationConfig(
         public record BackOff(@NotNull Integer maxAttempts,
                               @NotNull Duration delay,
                               @NotNull Policy policy,
-                              Integer multiplier) {
+                              Integer multiplier,
+                              List<Integer> additionalStatuses) {
+            public List<Integer> additionalStatuses() {
+                return Objects.requireNonNullElse(additionalStatuses, Collections.emptyList());
+            }
+
             public enum Policy {
                 CONSTANT, LINEAR, EXPONENTIAL
             }

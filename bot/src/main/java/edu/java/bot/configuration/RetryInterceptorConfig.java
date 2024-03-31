@@ -8,7 +8,6 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.annotation.EnableRetry;
@@ -24,11 +23,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @Configuration
 @EnableRetry
 public class RetryInterceptorConfig {
-    private final List<HttpStatusCode> additionalRetryableList = List.of(
-        HttpStatus.TOO_MANY_REQUESTS,
-        HttpStatus.REQUEST_TIMEOUT
-    );
-
     private final ApplicationConfig applicationConfig;
 
     public RetryInterceptorConfig(ApplicationConfig applicationConfig) {
@@ -40,18 +34,27 @@ public class RetryInterceptorConfig {
         RetryInterceptorBuilder.StatelessRetryInterceptorBuilder builder = RetryInterceptorBuilder.stateless();
         RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(applicationConfig.scrapper().backOff().maxAttempts());
 
-        retryOnStatusCustomizer(retryPolicy).accept(builder);
-        retryBackoffPolicyCustomizer(applicationConfig.scrapper().backOff()).accept(builder);
+        retryOnStatusCustomizer(
+            retryPolicy,
+            applicationConfig.scrapper().backOff().additionalStatuses()
+        )
+            .accept(builder);
+
+        retryBackoffPolicyCustomizer(applicationConfig.scrapper().backOff())
+            .accept(builder);
 
         return builder.build();
     }
 
-    public Consumer<StatelessRetryInterceptorBuilder> retryOnStatusCustomizer(RetryPolicy retryPolicy) {
+    public Consumer<StatelessRetryInterceptorBuilder> retryOnStatusCustomizer(
+        RetryPolicy retryPolicy,
+        List<Integer> additionalRetryableList
+    ) {
         ExceptionClassifierRetryPolicy classifierRetryPolicy = new ExceptionClassifierRetryPolicy();
         classifierRetryPolicy.setExceptionClassifier((Classifier<Throwable, RetryPolicy>) classifiable -> {
             if (classifiable instanceof WebClientResponseException) {
                 HttpStatusCode status = ((WebClientResponseException) classifiable).getStatusCode();
-                if (status.is5xxServerError() || additionalRetryableList.contains(status)) {
+                if (status.is5xxServerError() || additionalRetryableList.contains(status.value())) {
                     return retryPolicy;
                 }
             }
