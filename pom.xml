@@ -24,6 +24,8 @@
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <spring-starter-jooq.version>3.2.1</spring-starter-jooq.version>
+        <spring-aspects.version>6.1.3</spring-aspects.version>
+        <spring-retry.version>2.0.5</spring-retry.version>
 
         <!-- Jooq -->
         <jooq-codegen.version>3.18.7</jooq-codegen.version>
