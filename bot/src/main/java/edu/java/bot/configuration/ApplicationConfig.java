@@ -1,6 +1,8 @@
 package edu.java.bot.configuration;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -9,7 +11,17 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
-    @NotEmpty
-    String scrapperApiBaseUrl
+    @NotNull
+    Client scrapper
 ) {
+    public record Client(@NotNull String baseUrl, @NotNull BackOff backOff) {
+        public record BackOff(@NotNull Integer maxAttempts,
+                              @NotNull Duration delay,
+                              @NotNull Policy policy,
+                              Integer multiplier) {
+            public enum Policy {
+                CONSTANT, LINEAR, EXPONENTIAL
+            }
+        }
+    }
 }

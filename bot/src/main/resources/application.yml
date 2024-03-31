@@ -1,6 +1,12 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
-  scrapper-api-base-url: http://localhost:8080/
+  scrapper:
+    base-url: http://localhost:8080/
+    back-off:
+      delay: 1s
+      policy: exponential
+      max-attempts: 5
+      multiplier: 2
 
 spring:
   application:

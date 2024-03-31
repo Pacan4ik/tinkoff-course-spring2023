@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class ClientsConfig {
     private final ApplicationConfig applicationConfig;
-
     private final WebClient.Builder webClientBuilder;
 
     ClientsConfig(ApplicationConfig applicationConfig, WebClient.Builder webClientBuilder) {
@@ -18,6 +17,6 @@ public class ClientsConfig {
 
     @Bean
     ScrapperClient scrapperClient() {
-        return new ScrapperClient(webClientBuilder, applicationConfig.scrapperApiBaseUrl());
+        return new ScrapperClient(webClientBuilder, applicationConfig.scrapper().baseUrl());
     }
 }

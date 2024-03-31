@@ -3,20 +3,21 @@ package edu.java.bot.scrapperClient;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.bot.scrapperClient.model.LinkResponse;
 import edu.java.bot.scrapperClient.model.ListLinksResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Slf4j
 public class ScrapperClient {
     private static final String DEFAULT_BASE_URL = "http://localhost:8090/";
     private static final String TG_CHAT_URI_STRING = "/tg-chat/{id}";
     private static final String LINKS_URI_STRING = "/links";
     private static final String LINKS_CHAT_ID_HEADER = "Tg-Chat-Id";
-
     private final String baseUrl;
-
     private final WebClient webClient;
 
     public ScrapperClient(WebClient.Builder webClientBuilder, String baseUrl) {
@@ -32,6 +33,7 @@ public class ScrapperClient {
         return webClientBuilder.baseUrl(baseUrl).build();
     }
 
+    @Retryable(interceptor = "scrapperRetryInterceptor")
     public ResponseEntity<Void> registerChat(Long chatId) {
         return webClient.post()
             .uri(TG_CHAT_URI_STRING, chatId)
@@ -40,6 +42,7 @@ public class ScrapperClient {
             .block();
     }
 
+    @Retryable(interceptor = "scrapperRetryInterceptor")
     public ResponseEntity<Void> deleteChat(Long chatId) {
         return webClient.delete()
             .uri(TG_CHAT_URI_STRING, chatId)
@@ -48,6 +51,7 @@ public class ScrapperClient {
             .block();
     }
 
+    @Retryable(interceptor = "scrapperRetryInterceptor")
     public ResponseEntity<LinkResponse> addTrackingLink(Long chatId, String link) {
         return webClient.post()
             .uri(LINKS_URI_STRING)
@@ -59,6 +63,7 @@ public class ScrapperClient {
             .block();
     }
 
+    @Retryable(interceptor = "scrapperRetryInterceptor")
     public ResponseEntity<ListLinksResponse> getTrackingLinks(Long chatId) {
         return webClient.get()
             .uri(LINKS_URI_STRING)
@@ -68,6 +73,7 @@ public class ScrapperClient {
             .block();
     }
 
+    @Retryable(interceptor = "scrapperRetryInterceptor")
     public ResponseEntity<LinkResponse> deleteLink(Long chatId, String link) {
         return webClient.method(HttpMethod.DELETE)
             .uri(LINKS_URI_STRING)
