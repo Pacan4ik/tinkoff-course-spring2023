@@ -38,7 +38,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         @NotNull HttpServletResponse response,
         @NotNull Object handler
     ) {
-        String ip = request.getRemoteAddr();
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty()) {
+            ip = request.getRemoteAddr();
+        }
         if (ip == null || ip.isEmpty()) {
             throw new BadRequestException("IP is missing");
         }
@@ -53,7 +56,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 )
             );
         }
-        response.setHeader("Remaining-Tokens", String.valueOf(probe.getRemainingTokens()));
+        response.setHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
         return true;
     }
 }
