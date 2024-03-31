@@ -7,6 +7,9 @@ app:
       policy: exponential
       max-attempts: 5
       multiplier: 2
+  rate-limiting:
+    requests-limit: 20
+    time-duration: 1m
 
 spring:
   application:

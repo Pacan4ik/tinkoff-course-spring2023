@@ -12,7 +12,9 @@ public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
     @NotNull
-    Client scrapper
+    Client scrapper,
+    @NotNull
+    RateLimiting rateLimiting
 ) {
     public record Client(@NotNull String baseUrl, @NotNull BackOff backOff) {
         public record BackOff(@NotNull Integer maxAttempts,
@@ -23,5 +25,8 @@ public record ApplicationConfig(
                 CONSTANT, LINEAR, EXPONENTIAL
             }
         }
+    }
+
+    public record RateLimiting(@NotNull Long requestsLimit, @NotNull Duration timeDuration) {
     }
 }
