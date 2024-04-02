@@ -44,6 +44,15 @@ public interface LinksController {
         @ApiResponse(responseCode = "400",
                      description = "Некорректные параметры запроса",
                      content = @Content(mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiErrorResponse.class))),
+        @ApiResponse(responseCode = "404",
+                     description = "Чат не найден",
+                     content = @Content(mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiErrorResponse.class))),
+
+        @ApiResponse(responseCode = "409",
+                     description = "Ссылка уже существует",
+                     content = @Content(mediaType = "application/json",
                                         schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     ResponseEntity<LinkResponse> addLink(
@@ -65,7 +74,7 @@ public interface LinksController {
                                         schema = @Schema(implementation = ApiErrorResponse.class))),
 
         @ApiResponse(responseCode = "404",
-                     description = "Ссылка не найдена",
+                     description = "Ссылка/чат не найдены",
                      content = @Content(mediaType = "application/json",
                                         schema = @Schema(implementation = ApiErrorResponse.class)))
     })

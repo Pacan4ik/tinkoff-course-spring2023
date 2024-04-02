@@ -11,10 +11,12 @@ import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.commands.UntrackCommand;
 import edu.java.bot.dataSources.StubLinkProvider;
-import edu.java.bot.dataSources.StubMapDB;
-import edu.java.bot.dataSources.UsersTracksDB;
+import edu.java.bot.scrapperClient.ScrapperClient;
+import edu.java.bot.scrapperClient.model.LinkResponse;
+import edu.java.bot.scrapperClient.model.ListLinksResponse;
 import edu.java.bot.utils.commands.ParamsParser;
 import edu.java.bot.utils.url.SimpleUrlParser;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,10 +44,32 @@ class CommandsTest {
         return update;
     }
 
+    static ScrapperClient mockScrapper(Long chatId) {
+        ScrapperClient scrapperClient = mock(ScrapperClient.class);
+
+        when(scrapperClient.registerChat(chatId))
+            .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(200)));
+        when(scrapperClient.addTrackingLink(chatId, "https://stackoverflow.com/questions/123"))
+            .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(200)));
+        when(scrapperClient.getTrackingLinks(chatId))
+            .thenReturn(new ResponseEntity<>(
+                    new ListLinksResponse(
+                        List.of(new LinkResponse(0L, URI.create("https://google.com"))),
+                        1
+                    ), HttpStatusCode.valueOf(200)
+                )
+            );
+        when(scrapperClient.deleteLink(chatId, "https://google.com"))
+            .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(200)));
+        when(scrapperClient.deleteLink(chatId, "https://github.com"))
+            .thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(400)));
+        return scrapperClient;
+    }
+
     static Arguments[] commandsOutput() {
         return new Arguments[] {
             Arguments.of(
-                new StartCommand(),
+                new StartCommand(mockScrapper(123L)),
                 123L,
                 "/start",
                 "Добро пожаловать! Введите /help для просмотра списка команд."
@@ -52,7 +78,7 @@ class CommandsTest {
                 new TrackCommand(
                     new SimpleUrlParser(),
                     new ParamsParser(),
-                    new StubMapDB(),
+                    mockScrapper(123L),
                     new StubLinkProvider()
                 ),
                 123L,
@@ -63,18 +89,18 @@ class CommandsTest {
                 new TrackCommand(
                     new SimpleUrlParser(),
                     new ParamsParser(),
-                    new StubMapDB(),
+                    mockScrapper(123L),
                     new StubLinkProvider()
                 ),
                 123L,
-                "/track https://google.com",
+                "/track https://stackoverflow.com/questions/123",
                 "Ссылка успешно добавлена!"
             ),
             Arguments.of(
                 new TrackCommand(
                     new SimpleUrlParser(),
                     new ParamsParser(),
-                    new StubMapDB(),
+                    mockScrapper(123L),
                     new StubLinkProvider()
                 ),
                 123L,
@@ -85,7 +111,7 @@ class CommandsTest {
                 new TrackCommand(
                     new SimpleUrlParser(),
                     new ParamsParser(),
-                    new StubMapDB(),
+                    mockScrapper(123L),
                     new StubLinkProvider()
                 ),
                 123L,
@@ -93,7 +119,7 @@ class CommandsTest {
                 "Неправильный формат ссылки."
             ),
             Arguments.of(
-                new ListCommand(prepareDB()),
+                new ListCommand(mockScrapper(123L)),
                 123L,
                 "/list",
                 "Ваши ссылки:\nhttps://google.com"
@@ -101,7 +127,7 @@ class CommandsTest {
             Arguments.of(
                 new UntrackCommand(
                     new ParamsParser(),
-                    prepareDB()
+                    mockScrapper(123L)
                 ),
                 123L,
                 "/untrack https://google.com",
@@ -110,7 +136,7 @@ class CommandsTest {
             Arguments.of(
                 new UntrackCommand(
                     new ParamsParser(),
-                    new StubMapDB()
+                    mockScrapper(123L)
                 ),
                 123L,
                 "/untrack",
@@ -119,11 +145,11 @@ class CommandsTest {
             Arguments.of(
                 new UntrackCommand(
                     new ParamsParser(),
-                    new StubMapDB()
+                    mockScrapper(123L)
                 ),
                 123L,
                 "/untrack https://github.com",
-                "Что-то пошло не так. Убедитесь в правильности ссылки."
+                "Что-то пошло не так. Попробуйте позднее."
             ),
             Arguments.of(
                 prepareHelpCommand(),
@@ -150,12 +176,6 @@ class CommandsTest {
         //then
         Assertions.assertEquals(expectedParameters, sendMessage.getParameters());
 
-    }
-
-    static UsersTracksDB prepareDB() {
-        UsersTracksDB db = new StubMapDB();
-        db.addLink(123L, "https://google.com");
-        return db;
     }
 
     static CommandRegister prepareCommandRegister() {
