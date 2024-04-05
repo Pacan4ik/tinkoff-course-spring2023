@@ -17,7 +17,8 @@ public record ApplicationConfig(
     @NotNull
     Client scrapper,
     @NotNull
-    RateLimiting rateLimiting
+    RateLimiting rateLimiting,
+    Kafka kafka
 ) {
     public record Client(@NotNull String baseUrl, @NotNull BackOff backOff) {
         public record BackOff(@NotNull Integer maxAttempts,
@@ -36,5 +37,8 @@ public record ApplicationConfig(
     }
 
     public record RateLimiting(@NotNull Long requestsLimit, @NotNull Duration timeDuration) {
+    }
+
+    public record Kafka(@NotNull String consumerTopic) {
     }
 }
