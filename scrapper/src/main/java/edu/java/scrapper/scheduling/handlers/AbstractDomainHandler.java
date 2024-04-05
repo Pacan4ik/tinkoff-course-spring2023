@@ -1,7 +1,7 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.UpdatesSender;
+import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
 import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
 import edu.java.scrapper.domain.jdbc.dto.ChatDto;
@@ -11,19 +11,21 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 public abstract class AbstractDomainHandler {
     @Setter
     protected AbstractDomainHandler nextSuccessor;
-    protected BotClient botClient;
+    protected UpdatesSender updatesSender;
     protected LinkRepository linkRepository;
     protected ChatRepository chatRepository;
 
-    public AbstractDomainHandler(BotClient botClient, LinkRepository linkRepository, ChatRepository chatRepository) {
-        this.botClient = botClient;
+    public AbstractDomainHandler(
+        UpdatesSender updatesSender,
+        LinkRepository linkRepository,
+        ChatRepository chatRepository
+    ) {
+        this.updatesSender = updatesSender;
         this.linkRepository = linkRepository;
         this.chatRepository = chatRepository;
     }
@@ -51,19 +53,13 @@ public abstract class AbstractDomainHandler {
     }
 
     protected void sendUpdate(LinkDto linkDto, String description) {
-        try {
-            botClient.sendUpdates(
-                linkDto.id(),
-                linkDto.url(),
-                description,
-                chatRepository.getAllChats(linkDto.id()).stream().map(ChatDto::id).toList()
-            );
-        } catch (ResourceNotFoundException e) {
-            log.error(String.format("Link %s not found", linkDto), e);
-        } catch (WebClientRequestException | WebClientResponseException e) {
-            log.error("Error during sending updates to the bot", e);
-        }
-
+        BotUpdatesRequest botUpdatesRequest = new BotUpdatesRequest(
+            linkDto.id(),
+            linkDto.url(),
+            description,
+            chatRepository.getAllChats(linkDto.id()).stream().map(ChatDto::id).toList()
+        );
+        updatesSender.send(botUpdatesRequest);
     }
 
     protected void processResult(AdditionalHandlerResult additionalHandlerResult, LinkDto linkDto) {

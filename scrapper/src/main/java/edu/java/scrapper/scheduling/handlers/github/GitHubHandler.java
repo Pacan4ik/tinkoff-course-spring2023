@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers.github;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.UpdatesSender;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
@@ -20,13 +20,13 @@ public class GitHubHandler extends AbstractDomainHandler {
     private final AbstractAdditionalHandler<GitHubResponse> startHandler;
 
     public GitHubHandler(
-        BotClient botClient,
+        UpdatesSender updatesSender,
         LinkRepository linkRepository,
         ChatRepository chatRepository,
         GitHubClient gitHubClient,
         AbstractAdditionalHandler<GitHubResponse> startHandler
     ) {
-        super(botClient, linkRepository, chatRepository);
+        super(updatesSender, linkRepository, chatRepository);
         this.gitHubClient = gitHubClient;
         this.startHandler = startHandler;
     }

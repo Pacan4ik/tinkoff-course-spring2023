@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers.stackoverflow;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.UpdatesSender;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
@@ -20,13 +20,13 @@ public class StackOverflowHandler extends AbstractDomainHandler {
     private final AbstractAdditionalHandler<StackOverFlowResponse> startHandler;
 
     public StackOverflowHandler(
-        BotClient botClient,
+        UpdatesSender updatesSender,
         LinkRepository linkRepository,
         ChatRepository chatRepository,
         StackOverflowClient stackOverflowClient,
         AbstractAdditionalHandler<StackOverFlowResponse> startHandler
     ) {
-        super(botClient, linkRepository, chatRepository);
+        super(updatesSender, linkRepository, chatRepository);
         this.stackOverflowClient = stackOverflowClient;
         this.startHandler = startHandler;
     }

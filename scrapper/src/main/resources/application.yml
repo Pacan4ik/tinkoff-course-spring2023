@@ -39,6 +39,7 @@ app:
   rate-limiting:
     requests-limit: 15
     time-duration: 1m
+  sending-method: queue
   kafka:
     producer-topic: edu.tinkoff.updates
 spring:

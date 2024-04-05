@@ -23,6 +23,8 @@ public record ApplicationConfig(
     AccessType dataBaseAccessType,
     @NotNull
     RateLimiting rateLimiting,
+    @NotNull
+    SendingMethod sendingMethod,
     Kafka kafka
 ) {
 
@@ -53,6 +55,10 @@ public record ApplicationConfig(
 
     public enum AccessType {
         JDBC, JPA, JOOQ
+    }
+
+    public enum SendingMethod {
+        HTTP, QUEUE
     }
 
     public record Kafka(String producerTopic) {
