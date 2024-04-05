@@ -21,9 +21,9 @@ public record ApplicationConfig(
     Client bot,
     @NotNull
     AccessType dataBaseAccessType,
-
     @NotNull
-    RateLimiting rateLimiting
+    RateLimiting rateLimiting,
+    Kafka kafka
 ) {
 
     public record Scheduler(boolean enable,
@@ -53,5 +53,8 @@ public record ApplicationConfig(
 
     public enum AccessType {
         JDBC, JPA, JOOQ
+    }
+
+    public record Kafka(String producerTopic) {
     }
 }
