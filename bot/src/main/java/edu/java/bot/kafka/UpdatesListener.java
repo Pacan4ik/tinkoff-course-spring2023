@@ -6,11 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.bot.api.model.LinkUpdateRequest;
 import edu.java.bot.api.services.UpdateHandlerService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +45,5 @@ public class UpdatesListener {
             linkUpdateRequest.description(),
             linkUpdateRequest.tgChatIds()
         );
-    }
-
-    @DltHandler
-    public void handleDead(String payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.warn("Redirected to dlq from {}: {}", topic, payload);
     }
 }
