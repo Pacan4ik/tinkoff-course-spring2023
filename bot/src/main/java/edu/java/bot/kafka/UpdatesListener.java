@@ -49,9 +49,4 @@ public class UpdatesListener {
             linkUpdateRequest.tgChatIds()
         );
     }
-
-    @DltHandler
-    public void handleDead(String payload, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        log.warn("Redirected to dlq from {}: {}", topic, payload);
-    }
 }
