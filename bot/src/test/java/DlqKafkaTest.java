@@ -4,6 +4,7 @@ import edu.java.bot.kafka.UpdatesListener;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest
 @ContextConfiguration(classes = KafkaConfig.class)
 @Import({DlqKafkaTest.TestConfig.class, UpdatesListener.class})
+@Slf4j
 public class DlqKafkaTest extends KafkaContainerEnvironment {
 
     @Value("${app.kafka.consumer-topic}")

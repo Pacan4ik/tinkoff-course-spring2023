@@ -30,6 +30,9 @@ app:
   rate-limiting:
     requests-limit: 30
     time-duration: 1m
+  kafka:
+    producer-topic: edu.tinkoff.updates
+  sending-method: http
 spring:
   application:
     name: scrapper
@@ -40,6 +43,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
+  kafka:
+    bootstrap-servers:
 server:
   port: 8080
 
