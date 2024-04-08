@@ -140,4 +140,18 @@ public class JdbcLinkRepository implements LinkRepository {
         );
     }
 
+    @Override
+    public LinkDto updateAdditionalInfo(Long id, String fieldName, Object value) {
+        String sql = "update link set additional_info = jsonb_set(coalesce(additional_info::jsonb, '{}'::jsonb),"
+                     + "concat('{', ?, '}')::text[], to_jsonb(?) ) where id = ? returning *";
+
+        return jdbcTemplate.queryForObject(
+            sql,
+            mapper,
+            fieldName,
+            value,
+            id
+        );
+    }
+
 }

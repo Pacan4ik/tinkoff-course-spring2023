@@ -7,6 +7,7 @@ import edu.java.scrapper.api.services.LinkRepositoryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
@@ -17,6 +18,7 @@ import java.util.List;
 @SpringBootTest
 public class LinkRepositoryServiceTest extends IntegrationTest {
     @Autowired
+    @Qualifier("jdbcLinkService")
     LinkRepositoryService linkRepositoryService;
 
     @Autowired

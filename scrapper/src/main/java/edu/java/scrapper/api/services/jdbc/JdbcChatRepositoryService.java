@@ -12,7 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service("jdbcChatService")
 public class JdbcChatRepositoryService implements ChatRepositoryService {
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
