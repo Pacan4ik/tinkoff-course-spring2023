@@ -3,7 +3,19 @@ package edu.java.scrapper.domain.jpa.dao;
 import edu.java.scrapper.domain.jpa.model.Link;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface LinkRepository extends JpaRepository<Link, Long> {
     Optional<Link> findByUrl(String url);
+
+    @Modifying
+    @Query(value = "delete from link where link.id in "
+                   + "(select lca.link_id from link_chat_assignment lca "
+                   + "where lca.chat_id = :chatId and lca.link_id not in ("
+                   + "select lca2.link_id from link_chat_assignment lca2 "
+                   + "where lca2.chat_id != :chatId))",
+           nativeQuery = true)
+    void deleteBySubscribedChatsContainsOnlyChatId(@Param("chatId") Long chatId);
 }

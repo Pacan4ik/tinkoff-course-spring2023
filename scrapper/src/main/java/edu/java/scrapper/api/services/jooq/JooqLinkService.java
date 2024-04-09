@@ -33,7 +33,7 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LinkResponse> getUserLinks(Long id) {
         ChatRecord chatRecord = dslContext.selectOne()
             .from(chat)
