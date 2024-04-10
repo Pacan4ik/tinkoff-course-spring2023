@@ -7,9 +7,8 @@ import edu.java.scrapper.domain.adapters.serializing.AdditionalInfoDeserializer;
 import edu.java.scrapper.domain.adapters.serializing.AdditionalInfoSerializer;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class ObjectMapperConfig {
-    private ObjectMapperConfig() {
+public class ObjectMapperUtils {
+    private ObjectMapperUtils() {
     }
 
     public static ObjectMapper objectMapper() {

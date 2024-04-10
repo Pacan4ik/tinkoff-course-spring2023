@@ -4,7 +4,7 @@ import edu.java.scrapper.api.services.ChatService;
 import edu.java.scrapper.api.services.LinkService;
 import edu.java.scrapper.api.services.jpa.JpaChatService;
 import edu.java.scrapper.api.services.jpa.JpaLinkService;
-import edu.java.scrapper.configuration.ObjectMapperConfig;
+import edu.java.scrapper.configuration.ObjectMapperUtils;
 import edu.java.scrapper.domain.adapters.JpaLinkInfoAdapter;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.domain.jpa.dao.ChatRepository;
@@ -33,6 +33,6 @@ public class JpaAccessConfig {
 
     @Bean
     public LinkInfoAdapter linkInfoAdapter() {
-        return new JpaLinkInfoAdapter(linkRepository, ObjectMapperConfig.objectMapper());
+        return new JpaLinkInfoAdapter(linkRepository, ObjectMapperUtils.objectMapper());
     }
 }

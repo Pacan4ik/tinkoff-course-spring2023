@@ -4,7 +4,7 @@ import edu.java.scrapper.api.services.ChatService;
 import edu.java.scrapper.api.services.LinkService;
 import edu.java.scrapper.api.services.jooq.JooqChatService;
 import edu.java.scrapper.api.services.jooq.JooqLinkService;
-import edu.java.scrapper.configuration.ObjectMapperConfig;
+import edu.java.scrapper.configuration.ObjectMapperUtils;
 import edu.java.scrapper.domain.adapters.JooqLinkInfoAdapter;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import org.jooq.DSLContext;
@@ -33,6 +33,6 @@ public class JooqAccessConfig {
 
     @Bean
     public LinkInfoAdapter linkInfoAdapter() {
-        return new JooqLinkInfoAdapter(context, ObjectMapperConfig.objectMapper());
+        return new JooqLinkInfoAdapter(context, ObjectMapperUtils.objectMapper());
     }
 }
