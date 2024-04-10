@@ -3,9 +3,8 @@ package edu.java.scrapper.scheduling.handlers.github;
 import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
-import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
-import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
-import edu.java.scrapper.domain.jdbc.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
@@ -21,12 +20,11 @@ public class GitHubHandler extends AbstractDomainHandler {
 
     public GitHubHandler(
         BotClient botClient,
-        LinkRepository linkRepository,
-        ChatRepository chatRepository,
+        LinkInfoAdapter linkInfoAdapter,
         GitHubClient gitHubClient,
         AbstractAdditionalHandler<GitHubResponse> startHandler
     ) {
-        super(botClient, linkRepository, chatRepository);
+        super(botClient, linkInfoAdapter);
         this.gitHubClient = gitHubClient;
         this.startHandler = startHandler;
     }
@@ -37,14 +35,15 @@ public class GitHubHandler extends AbstractDomainHandler {
     }
 
     @Override
-    protected AdditionalHandlerResult getResult(LinkDto linkDto) {
-        String[] path = linkDto.url().getPath().split("/");
+    protected AdditionalHandlerResult getResult(LinkInfoDto linkDto) {
+        String[] path = linkDto.getUrl().getPath().split("/");
         AdditionalHandlerResult additionalHandlerResult = new AdditionalHandlerResult();
         try {
             GitHubResponse gitHubResponse = gitHubClient.fetchResponse(path[1], path[2]);
-            additionalHandlerResult = startHandler.handle(gitHubResponse, linkDto, additionalHandlerResult);
+            additionalHandlerResult =
+                startHandler.handle(gitHubResponse, linkDto.getAdditionalInfo(), additionalHandlerResult);
         } catch (IndexOutOfBoundsException e) {
-            log.error("Unable to resolve path: " + linkDto.url(), e);
+            log.error("Unable to resolve path: " + linkDto.getUrl(), e);
         } catch (WebClientResponseException e) {
             log.error("Error during fetching response from github api", e);
         }

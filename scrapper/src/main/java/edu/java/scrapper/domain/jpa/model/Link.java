@@ -34,9 +34,6 @@ public class Link {
     @Column(name = "url", nullable = false, length = Integer.MAX_VALUE)
     private String url;
 
-    @Column(name = "updated_at", insertable = false)
-    private OffsetDateTime updatedAt;
-
     @Column(name = "created_at", insertable = false)
     private OffsetDateTime createdAt;
 

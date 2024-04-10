@@ -2,10 +2,8 @@ package edu.java.scrapper.scheduling.handlers;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.botClient.BotClient;
-import edu.java.scrapper.domain.jdbc.dao.ChatRepository;
-import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
-import edu.java.scrapper.domain.jdbc.dto.ChatDto;
-import edu.java.scrapper.domain.jdbc.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -19,21 +17,19 @@ public abstract class AbstractDomainHandler {
     @Setter
     protected AbstractDomainHandler nextSuccessor;
     protected BotClient botClient;
-    protected LinkRepository linkRepository;
-    protected ChatRepository chatRepository;
+    protected LinkInfoAdapter linkInfoAdapter;
 
-    public AbstractDomainHandler(BotClient botClient, LinkRepository linkRepository, ChatRepository chatRepository) {
+    public AbstractDomainHandler(BotClient botClient, LinkInfoAdapter linkInfoAdapter) {
         this.botClient = botClient;
-        this.linkRepository = linkRepository;
-        this.chatRepository = chatRepository;
+        this.linkInfoAdapter = linkInfoAdapter;
     }
 
     protected abstract boolean isSuitableHost(URI url);
 
-    protected abstract AdditionalHandlerResult getResult(LinkDto linkDto);
+    protected abstract AdditionalHandlerResult getResult(LinkInfoDto linkDto);
 
-    public final void handle(LinkDto linkDto) {
-        if (!isSuitableHost(linkDto.url())) {
+    public final void handle(LinkInfoDto linkDto) {
+        if (!isSuitableHost(linkDto.getUrl())) {
             handleNext(linkDto);
             return;
         }
@@ -42,7 +38,7 @@ public abstract class AbstractDomainHandler {
         updateRow(result, linkDto);
     }
 
-    protected final void handleNext(LinkDto linkDto) {
+    protected final void handleNext(LinkInfoDto linkDto) {
         if (nextSuccessor != null) {
             nextSuccessor.handle(linkDto);
         } else {
@@ -50,33 +46,35 @@ public abstract class AbstractDomainHandler {
         }
     }
 
-    protected void sendUpdate(LinkDto linkDto, String description) {
+    protected void sendUpdate(LinkInfoDto linkDto, String description) {
         try {
             botClient.sendUpdates(
-                linkDto.id(),
-                linkDto.url(),
+                linkDto.getId(),
+                linkDto.getUrl(),
                 description,
-                chatRepository.getAllChats(linkDto.id()).stream().map(ChatDto::id).toList()
+                linkInfoAdapter.getSubscribedChats(linkDto.getId())
             );
         } catch (ResourceNotFoundException e) {
-            log.error(String.format("Link %s not found", linkDto), e);
+            log.error(String.format("Link %s not found", linkDto), e); //todo
         } catch (WebClientRequestException | WebClientResponseException e) {
             log.error("Error during sending updates to the bot", e);
         }
 
     }
 
-    protected void processResult(AdditionalHandlerResult additionalHandlerResult, LinkDto linkDto) {
+    protected void processResult(AdditionalHandlerResult additionalHandlerResult, LinkInfoDto linkDto) {
         List<String> descriptions = additionalHandlerResult.getDescriptions();
         if (!descriptions.isEmpty()) {
             sendUpdate(linkDto, concatDescriptions(descriptions));
         }
     }
 
-    private void updateRow(AdditionalHandlerResult additionalHandlerResult, LinkDto linkDto) {
-        additionalHandlerResult.getRowUpdateConsumer().andThen(
-            (linkRepository) -> linkRepository.updateCheckedAt(linkDto.id(), OffsetDateTime.now())
-        ).accept(linkRepository);
+    private void updateRow(AdditionalHandlerResult additionalHandlerResult, LinkInfoDto linkDto) {
+        LinkInfoDto.AdditionalInfo additionalInfo = linkDto.getAdditionalInfo();
+        additionalHandlerResult.getAdditionalInfoConsumer().accept(additionalInfo);
+        linkInfoAdapter.updateAdditionalInfo(linkDto.getId(), additionalInfo);
+
+        linkInfoAdapter.updateCheckedAt(linkDto.getId(), OffsetDateTime.now());
     }
 
     protected String concatDescriptions(List<String> descriptions) {

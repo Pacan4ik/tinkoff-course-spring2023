@@ -1,29 +1,47 @@
 package edu.java.scrapper.scheduling.handlers.github;
 
 import edu.java.scrapper.clients.github.GitHubResponse;
-import edu.java.scrapper.domain.jdbc.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 import java.time.OffsetDateTime;
 
 public class UpdatedAtHandler extends AbstractAdditionalHandler<GitHubResponse> {
+
+    public static final String UPDATE_MESSAGE = "Новое обновление";
+
     @Override
     public AdditionalHandlerResult handle(
         GitHubResponse gitHubResponse,
-        LinkDto linkDto,
+        LinkInfoDto.AdditionalInfo additionalInfo,
         AdditionalHandlerResult result
     ) {
-        OffsetDateTime updatedAt = linkDto.updatedAt();
-        if (updatedAt.isBefore(gitHubResponse.updatedAt())) {
-            result.setRowUpdateConsumer(
-                result.getRowUpdateConsumer()
-                    .andThen(linkRepository -> linkRepository.updateUpdatedAt(linkDto.id(), gitHubResponse.updatedAt()))
-            );
+        return handleNext(gitHubResponse, additionalInfo, processUpdatedAt(gitHubResponse, additionalInfo, result));
+    }
 
-            if (result.getDescriptions().isEmpty()) {
-                result.getDescriptions().add("Новое обновление");
+    private AdditionalHandlerResult processUpdatedAt(
+        GitHubResponse response,
+        LinkInfoDto.AdditionalInfo additionalInfo,
+        AdditionalHandlerResult result
+    ) {
+        OffsetDateTime responseUpdatedAt = response.updatedAt();
+        OffsetDateTime dtoInfoPushedAt = additionalInfo.getUpdatedAt();
+
+        if (responseUpdatedAt == null) {
+            return result;
+        }
+
+        if (!responseUpdatedAt.equals(dtoInfoPushedAt)) {
+            result.setAdditionalInfoConsumer(addToConsumer(
+                result,
+                info -> info.setUpdatedAt(responseUpdatedAt)
+            ));
+
+            if (dtoInfoPushedAt != null && responseUpdatedAt.isAfter(dtoInfoPushedAt)
+                && result.getDescriptions().isEmpty()) {
+                result.getDescriptions().add(UPDATE_MESSAGE);
             }
         }
-        return handleNext(gitHubResponse, linkDto, result);
+        return result;
     }
 }

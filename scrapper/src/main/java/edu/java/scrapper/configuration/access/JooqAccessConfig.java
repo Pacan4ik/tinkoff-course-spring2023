@@ -4,6 +4,9 @@ import edu.java.scrapper.api.services.ChatService;
 import edu.java.scrapper.api.services.LinkService;
 import edu.java.scrapper.api.services.jooq.JooqChatService;
 import edu.java.scrapper.api.services.jooq.JooqLinkService;
+import edu.java.scrapper.configuration.ObjectMapperConfig;
+import edu.java.scrapper.domain.adapters.JooqLinkInfoAdapter;
+import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -26,5 +29,10 @@ public class JooqAccessConfig {
     @Bean
     public LinkService linkService() {
         return new JooqLinkService(context);
+    }
+
+    @Bean
+    public LinkInfoAdapter linkInfoAdapter() {
+        return new JooqLinkInfoAdapter(context, ObjectMapperConfig.objectMapper());
     }
 }

@@ -1,10 +1,12 @@
 package edu.java.scrapper.scheduling;
 
 import edu.java.scrapper.configuration.ApplicationConfig;
-import edu.java.scrapper.domain.jdbc.dao.LinkRepository;
-import edu.java.scrapper.domain.jdbc.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,17 +19,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LinkUpdateScheduler {
     private final ApplicationConfig applicationConfig;
-    private final LinkRepository linkRepository;
+    private final LinkInfoAdapter linkInfoAdapter;
     private final AbstractDomainHandler domainHandler;
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
-        for (LinkDto linkDto : linkRepository.findAllWhereCheckedAtBefore(OffsetDateTime.now()
+        for (LinkInfoDto linkDto : linkInfoAdapter.findAllCheckedAtBefore(OffsetDateTime.now()
             .minus(applicationConfig.scheduler().linkCheckingFrequency()))) {
             try {
                 domainHandler.handle(linkDto);
             } catch (Exception e) {
                 log.error(e.toString());
+                log.error(e.getMessage());
+                log.error(Arrays.toString(e.getStackTrace()));
             }
         }
     }
