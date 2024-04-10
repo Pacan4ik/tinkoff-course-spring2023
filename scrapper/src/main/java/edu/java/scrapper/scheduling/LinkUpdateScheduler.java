@@ -6,7 +6,6 @@ import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

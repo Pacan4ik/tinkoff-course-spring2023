@@ -10,11 +10,9 @@ import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.domain.jpa.dao.ChatRepository;
 import edu.java.scrapper.domain.jpa.dao.LinkRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 @RequiredArgsConstructor

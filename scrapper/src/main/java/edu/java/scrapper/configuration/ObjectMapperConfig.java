@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ObjectMapperConfig {
+    private ObjectMapperConfig() {
+    }
 
     public static ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
