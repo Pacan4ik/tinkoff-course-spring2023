@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.domain.adapters.serializing.AdditionalInfoDeserializer;
 import edu.java.scrapper.domain.adapters.serializing.AdditionalInfoSerializer;
-import org.springframework.context.annotation.Configuration;
 
 public class ObjectMapperUtils {
     private ObjectMapperUtils() {
