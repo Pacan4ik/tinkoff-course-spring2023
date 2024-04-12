@@ -1,6 +1,5 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.domain.adapters.LinkInfoDto;
@@ -9,8 +8,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 public abstract class AbstractDomainHandler {
