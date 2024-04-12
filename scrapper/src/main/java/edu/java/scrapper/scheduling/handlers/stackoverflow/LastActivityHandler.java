@@ -1,30 +1,55 @@
 package edu.java.scrapper.scheduling.handlers.stackoverflow;
 
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
-import edu.java.scrapper.domain.jdbc.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 public class LastActivityHandler extends AbstractAdditionalHandler<StackOverFlowResponse> {
+
+    public static final String NEW_UPDATE_MESSAGE = "Новое обновление";
+
     @Override
     public AdditionalHandlerResult handle(
         StackOverFlowResponse stackOverFlowResponse,
-        LinkDto linkDto,
+        LinkInfoDto.AdditionalInfo additionalInfo,
         AdditionalHandlerResult result
     ) {
-        OffsetDateTime lastActivity = stackOverFlowResponse.items().getLast().lastActivityDate();
-        OffsetDateTime updatedAt = linkDto.updatedAt();
-        if (updatedAt.isBefore(lastActivity)) {
-            result.setRowUpdateConsumer(
-                result.getRowUpdateConsumer()
-                    .andThen(linkRepository -> linkRepository.updateUpdatedAt(linkDto.id(), lastActivity))
-            );
+        return handleNext(
+            stackOverFlowResponse,
+            additionalInfo,
+            processLastActivity(stackOverFlowResponse, additionalInfo, result)
+        );
+    }
 
-            if (result.getDescriptions().isEmpty()) {
-                result.getDescriptions().add("Новое обновление");
+    private AdditionalHandlerResult processLastActivity(
+        StackOverFlowResponse response,
+        LinkInfoDto.AdditionalInfo additionalInfo,
+        AdditionalHandlerResult result
+    ) {
+
+        OffsetDateTime responseLastActivity;
+        try {
+            responseLastActivity = Objects.requireNonNull(response.items().getFirst().lastActivityDate());
+        } catch (NullPointerException e) {
+            return result;
+        }
+
+        OffsetDateTime dtoInfoLastActivity = additionalInfo.getLastActivityDate();
+
+        if (!responseLastActivity.equals(dtoInfoLastActivity)) {
+            result.setAdditionalInfoConsumer(addToConsumer(
+                result,
+                info -> info.setLastActivityDate(responseLastActivity)
+            ));
+
+            if (dtoInfoLastActivity != null && responseLastActivity.isAfter(dtoInfoLastActivity)
+                && result.getDescriptions().isEmpty()) {
+                result.getDescriptions().add(NEW_UPDATE_MESSAGE);
             }
         }
-        return handleNext(stackOverFlowResponse, linkDto, result);
+        return result;
     }
 }

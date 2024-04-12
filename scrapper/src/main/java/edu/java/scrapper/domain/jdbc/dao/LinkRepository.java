@@ -27,12 +27,12 @@ public interface LinkRepository {
 
     List<LinkDto> findAllWhereCheckedAtBefore(OffsetDateTime offsetDateTime);
 
-    LinkDto updateUpdatedAt(Long id, OffsetDateTime newOffsetDateTime);
-
     LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime);
 
     List<LinkDto> getAllLinks(Long chatId);
 
     LinkDto updateAdditionalInfo(Long id, String fieldName, Object value);
+
+    LinkDto setAdditionalInfo(Long id, String json);
 
 }

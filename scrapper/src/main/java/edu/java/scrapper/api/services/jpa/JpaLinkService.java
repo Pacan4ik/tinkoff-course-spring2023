@@ -16,7 +16,6 @@ public class JpaLinkService implements LinkService {
     public static final String CHAT_NOT_FOUND = "Chat not found";
     public static final String USER_ALREADY_SUBSCRIBED = "User already subscribed";
     public static final String LINK_NOT_FOUND = "Link not found";
-    public static final String USER_HAS_NOT_SUBSCRIBED = "User has not yet subscribed to this link";
     private final ChatRepository chatRepository;
     private final LinkRepository linkRepository;
 
@@ -26,7 +25,7 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LinkResponse> getUserLinks(Long id) {
         Chat chat = chatRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(CHAT_NOT_FOUND));
@@ -60,19 +59,15 @@ public class JpaLinkService implements LinkService {
     @Override
     @Transactional
     public LinkResponse removeLink(Long id, URI url) {
-        Chat chat = chatRepository.findById(id)
+        chatRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(CHAT_NOT_FOUND));
+
         Link link = linkRepository.findByUrl(url.toString())
             .orElseThrow(() -> new ResourceNotFoundException(LINK_NOT_FOUND));
-        if (chat.getSubscribedLinks().remove(link)) {
-            chatRepository.saveAndFlush(chat);
-            if (link.getSubscribedChats().isEmpty()) {
-                linkRepository.delete(link);
-                linkRepository.flush();
-            }
-        } else {
-            throw new ResourceNotFoundException(USER_HAS_NOT_SUBSCRIBED);
-        }
+
+        chatRepository.removeLinkByUrl(id, url.toString());
+        chatRepository.flush();
+
         return new LinkResponse(link.getId(), URI.create(link.getUrl()));
     }
 }

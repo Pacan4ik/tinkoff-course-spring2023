@@ -33,7 +33,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LinkResponse> getUserLinks(Long id) {
         chatRepository.find(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         return linkRepository.getAllLinks(id).stream()

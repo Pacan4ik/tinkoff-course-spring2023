@@ -38,7 +38,6 @@ public class LinkRepositoryTest extends IntegrationTest {
         Assertions.assertEquals(EXAMPLE_URL, dto.url().toString());
         Assertions.assertNotNull(dto.id());
         Assertions.assertNotNull(dto.createdAt());
-        Assertions.assertNotNull(dto.updatedAt());
 
         var dtoQuery = jdbcTemplate.queryForObject("select * from link where url = ?", mapper, EXAMPLE_URL);
         Assertions.assertEquals(dto, dtoQuery);
@@ -200,22 +199,6 @@ public class LinkRepositoryTest extends IntegrationTest {
         var dtoList = linkRepository.findAllWhereCheckedAtBefore(OffsetDateTime.parse("2024-03-11T00:00:00.0+00:00"));
         Assertions.assertEquals(1, dtoList.size());
         Assertions.assertEquals(EXAMPLE2_URL, dtoList.getFirst().url().toString());
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    void shouldUpdateUpdatedAtField() {
-        //given
-        jdbcTemplate.update("insert into link(id, url) values (1, ?)", EXAMPLE_URL);
-
-        //when
-        OffsetDateTime newOffsetDateTime = OffsetDateTime.parse("2019-03-11T00:00:00.0+00:00");
-        linkRepository.updateUpdatedAt(1L, newOffsetDateTime);
-
-        //then
-        var timestamp = jdbcTemplate.queryForObject("select updated_at from link", Timestamp.class);
-        Assertions.assertEquals(newOffsetDateTime.toInstant(), timestamp.toInstant());
     }
 
     @Test

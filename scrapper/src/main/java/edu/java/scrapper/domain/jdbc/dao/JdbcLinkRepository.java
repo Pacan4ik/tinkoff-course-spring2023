@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("jdbcLinkRepository")
 public class JdbcLinkRepository implements LinkRepository {
@@ -103,16 +104,6 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public LinkDto updateUpdatedAt(Long id, OffsetDateTime newOffsetDateTime) {
-        return jdbcTemplate.queryForObject(
-            "update link set updated_at = (?) where id = (?) returning *",
-            mapper,
-            newOffsetDateTime,
-            id
-        );
-    }
-
-    @Override
     public LinkDto updateCheckedAt(Long id, OffsetDateTime newOffsetDateTime) {
         return jdbcTemplate.queryForObject(
             "update link set checked_at = (?) where id = (?) returning *",
@@ -141,6 +132,16 @@ public class JdbcLinkRepository implements LinkRepository {
             mapper,
             fieldName,
             value,
+            id
+        );
+    }
+
+    @Override
+    @Transactional
+    public LinkDto setAdditionalInfo(Long id, String json) {
+        return jdbcTemplate.queryForObject(
+            "update link set additional_info = (?)::json where id = ? returning *", mapper,
+            json,
             id
         );
     }

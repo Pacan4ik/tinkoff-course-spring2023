@@ -10,5 +10,6 @@
     <include file="tables.sql"/>
     <include file="links-additional-info-column.sql"/>
     <include file="drop-description-column.sql"/>
+    <include file="drop-updated-at-column.sql"/>
 
 </databaseChangeLog>
