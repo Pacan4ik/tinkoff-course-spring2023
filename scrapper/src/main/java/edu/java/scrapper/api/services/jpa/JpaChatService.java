@@ -34,14 +34,10 @@ public class JpaChatService implements ChatService {
     public void deleteChat(Long id) {
         Chat chat = chatRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        linkRepository.deleteBySubscribedChatsContainsOnlyChatId(id);
         chatRepository.delete(chat);
 
-        linkRepository.deleteAll(
-            chat.getSubscribedLinks().stream()
-                .filter(link -> link.getSubscribedChats().stream()
-                    .allMatch(subChat -> subChat.equals(chat)))
-                .toList()
-        );
         linkRepository.flush();
         chatRepository.flush();
     }

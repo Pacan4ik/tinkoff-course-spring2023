@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 public record LinkDto(
     Long id,
     URI url,
-    OffsetDateTime updatedAt,
     OffsetDateTime createdAt,
     OffsetDateTime checkedAt,
     JsonNode additionalInfo
@@ -25,7 +24,6 @@ public record LinkDto(
     public static class LinkDtoRowMapper implements RowMapper<LinkDto> {
         private static final String ID_COLUMN = "id";
         private static final String URL_COLUMN = "url";
-        private static final String UPDATED_AT_COLUMN = "updated_at";
         private static final String CREATED_AT_COLUMN = "created_at";
         private static final String CHECKED_AT_COLUMN = "checked_at";
         private static final String ADDITIONAL_INFO_COLUMN = "additional_info";
@@ -40,7 +38,6 @@ public record LinkDto(
         public LinkDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             Long id = rs.getLong(ID_COLUMN);
             URI url = URI.create(rs.getString(URL_COLUMN));
-            OffsetDateTime updatedAt = rs.getObject(UPDATED_AT_COLUMN, OffsetDateTime.class);
             OffsetDateTime createdAt = rs.getObject(CREATED_AT_COLUMN, OffsetDateTime.class);
             OffsetDateTime checkedAt = rs.getObject(CHECKED_AT_COLUMN, OffsetDateTime.class);
             String jsonString = rs.getString(ADDITIONAL_INFO_COLUMN);
@@ -51,7 +48,7 @@ public record LinkDto(
                 throw new RuntimeException(e);
             }
 
-            return new LinkDto(id, url, updatedAt, createdAt, checkedAt, jsonNode);
+            return new LinkDto(id, url, createdAt, checkedAt, jsonNode);
         }
     }
 }

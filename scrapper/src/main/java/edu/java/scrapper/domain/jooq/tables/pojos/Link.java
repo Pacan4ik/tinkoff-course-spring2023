@@ -34,7 +34,6 @@ public class Link implements Serializable {
 
     private Long id;
     private String url;
-    private OffsetDateTime updatedAt;
     private OffsetDateTime createdAt;
     private OffsetDateTime checkedAt;
     private JSON additionalInfo;
@@ -44,24 +43,21 @@ public class Link implements Serializable {
     public Link(Link value) {
         this.id = value.id;
         this.url = value.url;
-        this.updatedAt = value.updatedAt;
         this.createdAt = value.createdAt;
         this.checkedAt = value.checkedAt;
         this.additionalInfo = value.additionalInfo;
     }
 
-    @ConstructorProperties({ "id", "url", "updatedAt", "createdAt", "checkedAt", "additionalInfo" })
+    @ConstructorProperties({ "id", "url", "createdAt", "checkedAt", "additionalInfo" })
     public Link(
         @Nullable Long id,
         @NotNull String url,
-        @Nullable OffsetDateTime updatedAt,
         @Nullable OffsetDateTime createdAt,
         @Nullable OffsetDateTime checkedAt,
         @Nullable JSON additionalInfo
     ) {
         this.id = id;
         this.url = url;
-        this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.checkedAt = checkedAt;
         this.additionalInfo = additionalInfo;
@@ -97,21 +93,6 @@ public class Link implements Serializable {
      */
     public void setUrl(@NotNull String url) {
         this.url = url;
-    }
-
-    /**
-     * Getter for <code>LINK.UPDATED_AT</code>.
-     */
-    @Nullable
-    public OffsetDateTime getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    /**
-     * Setter for <code>LINK.UPDATED_AT</code>.
-     */
-    public void setUpdatedAt(@Nullable OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     /**
@@ -180,12 +161,6 @@ public class Link implements Serializable {
         }
         else if (!this.url.equals(other.url))
             return false;
-        if (this.updatedAt == null) {
-            if (other.updatedAt != null)
-                return false;
-        }
-        else if (!this.updatedAt.equals(other.updatedAt))
-            return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -213,7 +188,6 @@ public class Link implements Serializable {
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
-        result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.checkedAt == null) ? 0 : this.checkedAt.hashCode());
         result = prime * result + ((this.additionalInfo == null) ? 0 : this.additionalInfo.hashCode());
@@ -226,7 +200,6 @@ public class Link implements Serializable {
 
         sb.append(id);
         sb.append(", ").append(url);
-        sb.append(", ").append(updatedAt);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(checkedAt);
         sb.append(", ").append(additionalInfo);

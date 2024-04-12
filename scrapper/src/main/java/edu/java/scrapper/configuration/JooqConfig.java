@@ -11,8 +11,11 @@ public class JooqConfig {
     @Bean
     public DefaultConfigurationCustomizer defaultConfigurationCustomizer() {
         return (DefaultConfiguration config) -> config.settings()
+            .withBindOffsetDateTimeType(true)
+            .withBindOffsetTimeType(true)
             .withRenderSchema(false)
             .withRenderFormatted(true)
             .withRenderQuotedNames(RenderQuotedNames.NEVER);
+
     }
 }
