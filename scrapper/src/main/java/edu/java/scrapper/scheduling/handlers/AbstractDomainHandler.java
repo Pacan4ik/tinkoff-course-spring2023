@@ -54,9 +54,7 @@ public abstract class AbstractDomainHandler {
                 description,
                 linkInfoAdapter.getSubscribedChats(linkDto.getId())
             );
-        } catch (ResourceNotFoundException e) {
-            log.error(String.format("Link %s not found", linkDto), e); //todo
-        } catch (WebClientRequestException | WebClientResponseException e) {
+        } catch (Exception e) {
             log.error("Error during sending updates to the bot", e);
         }
 

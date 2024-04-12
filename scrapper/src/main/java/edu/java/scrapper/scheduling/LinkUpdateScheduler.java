@@ -29,8 +29,6 @@ public class LinkUpdateScheduler {
                 domainHandler.handle(linkDto);
             } catch (Exception e) {
                 log.error(e.toString());
-                log.error(e.getMessage());
-                log.error(Arrays.toString(e.getStackTrace()));
             }
         }
     }
