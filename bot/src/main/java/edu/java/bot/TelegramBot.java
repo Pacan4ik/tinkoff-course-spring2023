@@ -10,21 +10,33 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
 import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.bot.processors.MessageProcessor;
+import io.micrometer.core.instrument.Counter;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class TelegramBot implements Bot {
     private final com.pengrad.telegrambot.TelegramBot bot;
-
     private final MessageProcessor messageProcessor;
+    private final Counter processedCounter;
+    private final Counter failedCounter;
 
-    TelegramBot(ApplicationConfig applicationConfig, MessageProcessor messageProcessor) {
+    TelegramBot(
+        ApplicationConfig applicationConfig,
+        MessageProcessor messageProcessor,
+        @Qualifier("messageProcessedCounter")
+        Counter processedCounter,
+        @Qualifier("messageFailedCounter")
+        Counter failedCounter
+    ) {
         this.messageProcessor = messageProcessor;
         this.bot = new com.pengrad.telegrambot.TelegramBot(applicationConfig.telegramToken());
+        this.processedCounter = processedCounter;
+        this.failedCounter = failedCounter;
     }
 
     @Override
@@ -38,11 +50,13 @@ public class TelegramBot implements Bot {
             try {
                 SendMessage sendMessage = messageProcessor.process(update);
                 execute(sendMessage);
+                processedCounter.increment();
             } catch (RuntimeException e) {
                 log.warn(
                     String.format("The update id:%d was ignored", update.updateId())
-                        + "\n Cause: " + e
+                    + "\n Cause: " + e
                 );
+                failedCounter.increment();
             }
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
