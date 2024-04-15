@@ -1,29 +1,32 @@
 package edu.java.scrapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.configuration.EventsHandlersConfig;
-import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import edu.java.scrapper.scheduling.handlers.AbstractAdditionalHandler;
 import edu.java.scrapper.scheduling.handlers.AdditionalHandlerResult;
-import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class EventHandlersTest {
 
-    @Autowired EventsHandlersConfig eventsHandlersConfig;
-    ObjectMapper objectMapper = new ObjectMapper();
+    EventsHandlersConfig eventsHandlersConfig =
+        new EventsHandlersConfig(null, null, null, null);
+
+    private static final LinkInfoDto.AdditionalInfo DEFAULT_INFO = new LinkInfoDto.AdditionalInfo(
+        2L,
+        OffsetDateTime.parse("2024-03-11T00:00:00Z"),
+        OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
+        2L,
+        2L,
+        OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00")
+    );
 
     @Test
-    void shouldProcessTickets() throws JsonProcessingException {
+    void shouldProcessTickets() {
         //given
         AbstractAdditionalHandler<GitHubResponse> gitHubAdditional = eventsHandlersConfig.createGitHubChain();
         GitHubResponse gitHubResponse = new GitHubResponse(
@@ -33,19 +36,10 @@ public class EventHandlersTest {
             null,
             3L
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://gtihub.com"),
-            null,
-            OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"pushed_at\": \"2024-03-11T00:00:00Z\", \"open_issues_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            gitHubAdditional.handle(gitHubResponse, linkDto, new AdditionalHandlerResult());
+            gitHubAdditional.handle(gitHubResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -55,7 +49,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessPushes() throws JsonProcessingException {
+    void shouldProcessPushes() {
         //given
         AbstractAdditionalHandler<GitHubResponse> gitHubAdditional = eventsHandlersConfig.createGitHubChain();
         GitHubResponse gitHubResponse = new GitHubResponse(
@@ -65,19 +59,10 @@ public class EventHandlersTest {
             null,
             2L
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://gtihub.com"),
-            null,
-            OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"pushed_at\": \"2024-03-11T00:00:00Z\", \"open_issues_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            gitHubAdditional.handle(gitHubResponse, linkDto, new AdditionalHandlerResult());
+            gitHubAdditional.handle(gitHubResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -87,7 +72,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessUnknownChangesGit() throws JsonProcessingException {
+    void shouldProcessUnknownChangesGit() {
         //given
         AbstractAdditionalHandler<GitHubResponse> gitHubAdditional = eventsHandlersConfig.createGitHubChain();
         GitHubResponse gitHubResponse = new GitHubResponse(
@@ -97,19 +82,10 @@ public class EventHandlersTest {
             null,
             2L
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://gtihub.com"),
-            null,
-            OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"pushed_at\": \"2024-03-11T00:00:00Z\", \"open_issues_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            gitHubAdditional.handle(gitHubResponse, linkDto, new AdditionalHandlerResult());
+            gitHubAdditional.handle(gitHubResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -119,7 +95,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessSeveralChangesGit() throws JsonProcessingException {
+    void shouldProcessSeveralChangesGit() {
         //given
         AbstractAdditionalHandler<GitHubResponse> gitHubAdditional = eventsHandlersConfig.createGitHubChain();
         GitHubResponse gitHubResponse = new GitHubResponse(
@@ -129,19 +105,10 @@ public class EventHandlersTest {
             null,
             3L
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://gtihub.com"),
-            null,
-            OffsetDateTime.parse("2024-03-08T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"pushed_at\": \"2024-03-11T00:00:00Z\", \"open_issues_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            gitHubAdditional.handle(gitHubResponse, linkDto, new AdditionalHandlerResult());
+            gitHubAdditional.handle(gitHubResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -151,7 +118,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessAnswers() throws JsonProcessingException {
+    void shouldProcessAnswers() {
         //given
         AbstractAdditionalHandler<StackOverFlowResponse> stackOverflowAdditional =
             eventsHandlersConfig.createStackOverflowChain();
@@ -167,19 +134,10 @@ public class EventHandlersTest {
                 )
             )
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://stackoverflow.com"),
-            null,
-            OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"comment_count\": 2, \"answer_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            stackOverflowAdditional.handle(stackOverFlowResponse, linkDto, new AdditionalHandlerResult());
+            stackOverflowAdditional.handle(stackOverFlowResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -189,7 +147,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessComments() throws JsonProcessingException {
+    void shouldProcessComments() {
         //given
         AbstractAdditionalHandler<StackOverFlowResponse> stackOverflowAdditional =
             eventsHandlersConfig.createStackOverflowChain();
@@ -205,19 +163,10 @@ public class EventHandlersTest {
                 )
             )
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://stackoverflow.com"),
-            null,
-            OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"comment_count\": 2, \"answer_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            stackOverflowAdditional.handle(stackOverFlowResponse, linkDto, new AdditionalHandlerResult());
+            stackOverflowAdditional.handle(stackOverFlowResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -227,7 +176,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessUnknownChangesStack() throws JsonProcessingException {
+    void shouldProcessUnknownChangesStack() {
         //given
         AbstractAdditionalHandler<StackOverFlowResponse> stackOverflowAdditional =
             eventsHandlersConfig.createStackOverflowChain();
@@ -243,19 +192,10 @@ public class EventHandlersTest {
                 )
             )
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://stackoverflow.com"),
-            null,
-            OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"comment_count\": 2, \"answer_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            stackOverflowAdditional.handle(stackOverFlowResponse, linkDto, new AdditionalHandlerResult());
+            stackOverflowAdditional.handle(stackOverFlowResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(
@@ -265,7 +205,7 @@ public class EventHandlersTest {
     }
 
     @Test
-    void shouldProcessSeveralChangesStack() throws JsonProcessingException {
+    void shouldProcessSeveralChangesStack() {
         //given
         AbstractAdditionalHandler<StackOverFlowResponse> stackOverflowAdditional =
             eventsHandlersConfig.createStackOverflowChain();
@@ -281,19 +221,10 @@ public class EventHandlersTest {
                 )
             )
         );
-        LinkDto linkDto = new LinkDto(
-            1L,
-            URI.create("https://stackoverflow.com"),
-            null,
-            OffsetDateTime.parse("2024-03-09T00:00:00.0+00:00"),
-            null,
-            null,
-            objectMapper.readTree("{\"comment_count\": 2, \"answer_count\": 2}")
-        );
 
         //when
         AdditionalHandlerResult result =
-            stackOverflowAdditional.handle(stackOverFlowResponse, linkDto, new AdditionalHandlerResult());
+            stackOverflowAdditional.handle(stackOverFlowResponse, DEFAULT_INFO, new AdditionalHandlerResult());
 
         //then
         Assertions.assertEquals(

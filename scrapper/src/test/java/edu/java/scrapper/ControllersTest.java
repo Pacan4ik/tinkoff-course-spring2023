@@ -1,5 +1,6 @@
 package edu.java.scrapper;
 
+import edu.java.scrapper.integration.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -73,14 +75,8 @@ public class ControllersTest extends IntegrationTest {
 
         mockMvc.perform(get("/links").header("Tg-Chat-Id", 123L))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.links[0].url").exists())
-            .andExpect(jsonPath("$.links[0].url").value(EXAMPLE_URL))
-            .andExpect(jsonPath("$.links[0].id").exists())
-            .andExpect(jsonPath("$.links[0].id").value(1))
-            .andExpect(jsonPath("$.links[1].url").exists())
-            .andExpect(jsonPath("$.links[1].url").value(EXAMPLE2_URL))
-            .andExpect(jsonPath("$.links[1].id").exists())
-            .andExpect(jsonPath("$.links[1].id").value(2))
+            .andExpect(jsonPath("$.links[*].url", containsInAnyOrder(EXAMPLE_URL, EXAMPLE2_URL)))
+            .andExpect(jsonPath("$.links[*].id", containsInAnyOrder(1, 2)))
             .andExpect(jsonPath("$.size").value(2));
 
     }

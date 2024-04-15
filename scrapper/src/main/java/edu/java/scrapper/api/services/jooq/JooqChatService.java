@@ -2,18 +2,16 @@ package edu.java.scrapper.api.services.jooq;
 
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
-import edu.java.scrapper.api.services.ChatRepositoryService;
+import edu.java.scrapper.api.services.ChatService;
 import edu.java.scrapper.domain.jooq.tables.Chat;
 import edu.java.scrapper.domain.jooq.tables.Link;
 import edu.java.scrapper.domain.jooq.tables.LinkChatAssignment;
 import org.jooq.DSLContext;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static org.jooq.impl.DSL.selectOne;
 
-@Service("jooqChatService")
-public class JooqChatService implements ChatRepositoryService {
+public class JooqChatService implements ChatService {
 
     private final DSLContext dslContext;
     private final Chat chat = Chat.CHAT;

@@ -3,7 +3,7 @@ package edu.java.scrapper.api.services.jooq;
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.model.LinkResponse;
-import edu.java.scrapper.api.services.LinkRepositoryService;
+import edu.java.scrapper.api.services.LinkService;
 import edu.java.scrapper.domain.jooq.tables.Chat;
 import edu.java.scrapper.domain.jooq.tables.Link;
 import edu.java.scrapper.domain.jooq.tables.LinkChatAssignment;
@@ -15,11 +15,9 @@ import java.util.Objects;
 import org.jooq.DSLContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooqLinkService")
-public class JooqLinkService implements LinkRepositoryService {
+public class JooqLinkService implements LinkService {
 
     public static final String USER_NOT_FOUND = "User not found";
     public static final String USER_ALREADY_SUBSCRIBED = "User already subscribed";
@@ -35,7 +33,7 @@ public class JooqLinkService implements LinkRepositoryService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LinkResponse> getUserLinks(Long id) {
         ChatRecord chatRecord = dslContext.selectOne()
             .from(chat)

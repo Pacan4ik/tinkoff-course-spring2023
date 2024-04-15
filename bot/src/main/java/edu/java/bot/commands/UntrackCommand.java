@@ -7,8 +7,8 @@ import edu.java.bot.utils.commands.ParamsParser;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 @Slf4j
@@ -46,15 +46,12 @@ public class UntrackCommand extends AbstractCommand {
         String link = oplink.get();
         String message;
         try {
-            var status = scrapperClient.deleteLink(id, link).getStatusCode();
-            message = switch (status) {
-                case HttpStatusCode code when code.is2xxSuccessful() -> "Ссылка успешно удалена";
-                case HttpStatusCode code when code.isSameCodeAs(HttpStatus.NOT_FOUND) ->
-                    "Вы не отслеживаете данную ссылку";
-                default -> throw new IllegalStateException("Unexpected status: " + status);
-            };
-        } catch (Exception e) {
-            message = "Что-то пошло не так. Попробуйте позднее.";
+            scrapperClient.deleteLink(id, link);
+            message = "Ссылка успешно удалена";
+        } catch (WebClientResponseException e) {
+            message = e.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)
+                ? "Вы не отслеживаете данную ссылку"
+                : "Произошла ошибка. Попробуйте позднее";
         }
         return new SendMessage(id, message);
     }

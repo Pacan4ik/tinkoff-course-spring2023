@@ -8,9 +8,10 @@ import edu.java.bot.utils.commands.ParamsParser;
 import edu.java.bot.utils.url.ParsedUrl;
 import edu.java.bot.utils.url.URLSyntaxException;
 import edu.java.bot.utils.url.UrlParser;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 @Slf4j
@@ -51,28 +52,43 @@ public class TrackCommand extends AbstractCommand {
         String text = update.message().text();
         long id = update.message().chat().id();
 
-        Optional<String> oplink = paramsParser.getSingleParam(text);
-        String responseMessage;
-        if (oplink.isEmpty()) {
-            responseMessage = String.format("Неправильный формат команды.\nИспользуйте: %s", usage());
-        } else {
-            String link = oplink.get();
-            ParsedUrl parsedUrl = null;
-            try {
-                parsedUrl = urlParser.parse(link);
-                if (supportedLinkProvider.isSupported(parsedUrl)) {
-                    scrapperClient.addTrackingLink(id, parsedUrl.toString());
-                    responseMessage = "Ссылка успешно добавлена!";
-                } else {
-                    responseMessage = "Ссылка не поддерживается";
-                }
-            } catch (URLSyntaxException e) {
-                responseMessage = "Неправильный формат ссылки.";
-            } catch (Exception e) {
-                responseMessage = "Не удалось добавить ссылку. Убедитесь, что Вы её уже не отслеживаете.";
-            }
+        ParsedUrl parsedUrl;
+        try {
+            parsedUrl = getValidUrlFromMessage(text);
+        } catch (IllegalArgumentException e) {
+            return new SendMessage(id, e.getMessage());
         }
+
+        String responseMessage;
+        try {
+            scrapperClient.addTrackingLink(id, parsedUrl.toString());
+            responseMessage = "Ссылка успешно добавлена!";
+        } catch (WebClientResponseException e) {
+            responseMessage = e.getStatusCode().isSameCodeAs(HttpStatus.CONFLICT)
+                ? "Вы уже отслеживаете данную ссылку"
+                : "Произошла ошибка. Попробуйте позднее";
+        }
+
         return new SendMessage(id, responseMessage);
+    }
+
+    private ParsedUrl getValidUrlFromMessage(String message) {
+        String link = paramsParser.getSingleParam(message)
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Неправильный формат команды.\nИспользуйте: " + usage()
+            ));
+
+        ParsedUrl parsedUrl;
+        try {
+            parsedUrl = urlParser.parse(link);
+        } catch (URLSyntaxException e) {
+            throw new IllegalArgumentException("Неправильный формат ссылки.");
+        }
+
+        if (!supportedLinkProvider.isSupported(parsedUrl)) {
+            throw new IllegalArgumentException("Ссылка не поддерживается");
+        }
+        return parsedUrl;
     }
 
 }

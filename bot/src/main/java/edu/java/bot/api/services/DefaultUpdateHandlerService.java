@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultUpdateHandlerService implements UpdateHandlerService {
     private final TelegramBot bot;
-    private static final String DEFAULT_NOTIFICATION_MESSAGE = "Новое обновление по ссылке: ";
+    private static final String DEFAULT_NOTIFICATION_MESSAGE = "Новое обновление по ссылке:\n";
 
     public DefaultUpdateHandlerService(TelegramBot bot) {
         this.bot = bot;
     }
 
-    //TODO rework
     @Override
     public void handleUpdate(URI url, String description, List<Long> ids) {
         for (Long id : ids) {

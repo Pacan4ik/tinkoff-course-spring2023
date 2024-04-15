@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.domain.dao.LinkRepository;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,11 +12,11 @@ public class AdditionalHandlerResult {
     private final List<String> descriptions;
 
     @Setter
-    private Consumer<LinkRepository> rowUpdateConsumer;
+    private Consumer<LinkInfoDto.AdditionalInfo> additionalInfoConsumer;
 
     public AdditionalHandlerResult() {
         this.descriptions = new ArrayList<>();
-        this.rowUpdateConsumer = (linkRepository) -> {
+        this.additionalInfoConsumer = (additionalInfo) -> {
         };
     }
 }

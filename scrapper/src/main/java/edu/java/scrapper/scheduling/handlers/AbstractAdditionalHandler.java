@@ -1,9 +1,6 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.scrapper.domain.dao.LinkRepository;
-import edu.java.scrapper.domain.dto.LinkDto;
-import java.util.Objects;
+import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import java.util.function.Consumer;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -14,61 +11,26 @@ public abstract class AbstractAdditionalHandler<T> {
 
     public abstract AdditionalHandlerResult handle(
         T response,
-        LinkDto linkDto,
+        LinkInfoDto.AdditionalInfo additionalInfo,
         AdditionalHandlerResult result
     );
 
     protected final AdditionalHandlerResult handleNext(
         T response,
-        LinkDto linkDto,
+        LinkInfoDto.AdditionalInfo additionalInfo,
         AdditionalHandlerResult result
     ) {
         if (nextSuccessor != null) {
-            return nextSuccessor.handle(response, linkDto, result);
+            return nextSuccessor.handle(response, additionalInfo, result);
         }
         return result;
     }
 
-    protected AdditionalHandlerResult processNumber(
-        Long responseValue,
-        String fieldName,
-        LinkDto dto,
-        String message,
-        AdditionalHandlerResult result
+    protected Consumer<LinkInfoDto.AdditionalInfo> addToConsumer(
+        @NotNull AdditionalHandlerResult result,
+        @NotNull Consumer<LinkInfoDto.AdditionalInfo> consumer
     ) {
-        if (responseValue == null) {
-            return result;
-        }
-        JsonNode jsonNode = dto.additionalInfo().findValue(fieldName);
-        try {
-            Long dtoValue = Objects.requireNonNull(jsonNode).longValue();
-
-            if (!dtoValue.equals(responseValue)) {
-                result.setRowUpdateConsumer(addToConsumerUpdateAdditionalInfo(fieldName, responseValue, dto, result));
-
-                if (responseValue > dtoValue) {
-                    result.getDescriptions().add(message);
-                }
-            }
-        } catch (NullPointerException e) {
-            result.setRowUpdateConsumer(addToConsumerUpdateAdditionalInfo(fieldName, responseValue, dto, result));
-        }
-        return result;
-    }
-
-    protected Consumer<LinkRepository> addToConsumerUpdateAdditionalInfo(
-        @NotNull String fieldName,
-        @NotNull Object newValue,
-        @NotNull LinkDto dto,
-        @NotNull AdditionalHandlerResult result
-    ) {
-        return result.getRowUpdateConsumer()
-            .andThen(linkRepository -> linkRepository.updateAdditionalInfo(
-                    dto.id(),
-                    fieldName,
-                    newValue
-                )
-            );
-
+        return result.getAdditionalInfoConsumer()
+            .andThen(consumer);
     }
 }

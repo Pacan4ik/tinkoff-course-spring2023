@@ -4,36 +4,35 @@ import edu.java.scrapper.api.model.AddLinkRequest;
 import edu.java.scrapper.api.model.LinkResponse;
 import edu.java.scrapper.api.model.ListLinksResponse;
 import edu.java.scrapper.api.model.RemoveLinkRequest;
-import edu.java.scrapper.api.services.LinkRepositoryService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import edu.java.scrapper.api.services.LinkService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DefaultLinksController implements LinksController {
-    private final LinkRepositoryService linkRepositoryService;
+    private final LinkService linkService;
 
-    DefaultLinksController(@Qualifier("jooqLinkService") LinkRepositoryService linkRepositoryService) {
-        this.linkRepositoryService = linkRepositoryService;
+    DefaultLinksController(LinkService linkService) {
+        this.linkService = linkService;
     }
 
     @Override
     public ResponseEntity<ListLinksResponse> getLinks(Long id) {
-        ListLinksResponse response = new ListLinksResponse(linkRepositoryService.getUserLinks(id));
+        ListLinksResponse response = new ListLinksResponse(linkService.getUserLinks(id));
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<LinkResponse> addLink(Long id, AddLinkRequest addLinkRequest) {
         return ResponseEntity.ok(
-            linkRepositoryService.addLink(id, addLinkRequest.link())
+            linkService.addLink(id, addLinkRequest.link())
         );
     }
 
     @Override
     public ResponseEntity<LinkResponse> deleteLink(Long id, RemoveLinkRequest removeLinkRequest) {
         return ResponseEntity.ok(
-            linkRepositoryService.removeLink(id, removeLinkRequest.link())
+            linkService.removeLink(id, removeLinkRequest.link())
         );
     }
 }

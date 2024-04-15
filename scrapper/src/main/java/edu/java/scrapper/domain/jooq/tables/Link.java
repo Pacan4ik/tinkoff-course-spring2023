@@ -19,13 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function7;
+import org.jooq.Function5;
 import org.jooq.Identity;
 import org.jooq.JSON;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row7;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -75,16 +75,6 @@ public class Link extends TableImpl<LinkRecord> {
      * The column <code>LINK.URL</code>.
      */
     public final TableField<LinkRecord, String> URL = createField(DSL.name("URL"), SQLDataType.VARCHAR(1000000000).nullable(false), this, "");
-
-    /**
-     * The column <code>LINK.EVENT_DESCRIPTION</code>.
-     */
-    public final TableField<LinkRecord, String> EVENT_DESCRIPTION = createField(DSL.name("EVENT_DESCRIPTION"), SQLDataType.VARCHAR(1000000000).defaultValue(DSL.field(DSL.raw("U&'\\041d\\043e\\0432\\043e\\0435 \\0441\\043e\\0431\\044b\\0442\\0438\\0435'"), SQLDataType.VARCHAR)), this, "");
-
-    /**
-     * The column <code>LINK.UPDATED_AT</code>.
-     */
-    public final TableField<LinkRecord, OffsetDateTime> UPDATED_AT = createField(DSL.name("UPDATED_AT"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.TIMESTAMPWITHTIMEZONE)), this, "");
 
     /**
      * The column <code>LINK.CREATED_AT</code>.
@@ -204,19 +194,19 @@ public class Link extends TableImpl<LinkRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row7<Long, String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, JSON> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row5<Long, String, OffsetDateTime, OffsetDateTime, JSON> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function7<? super Long, ? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super JSON, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Long, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super JSON, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -224,7 +214,7 @@ public class Link extends TableImpl<LinkRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super Long, ? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super JSON, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Long, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super JSON, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
