@@ -1,6 +1,6 @@
 package edu.java.bot.configuration;
 
-import edu.java.bot.api.ratelimiting.RateLimitInterceptor;
+import edu.tinkoff.ratelimiting.RateLimitInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

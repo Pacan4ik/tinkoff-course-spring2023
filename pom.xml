@@ -62,7 +62,7 @@
         <module>bot</module>
         <module>scrapper</module>
         <module>scrapper-jooq</module>
-        <module>linear-backoff-extension</module>
+        <module>resilance-extension</module>
     </modules>
 
     <dependencyManagement>
@@ -108,6 +108,11 @@
                 <version>${springdoc.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.github.vladimir-bukhtoyarov</groupId>
+                <artifactId>bucket4j-core</artifactId>
+                <version>${bucket4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

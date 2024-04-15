@@ -1,7 +1,5 @@
-package edu.java.bot.api.ratelimiting;
+package edu.tinkoff.ratelimiting;
 
-import edu.java.bot.api.exceptions.BadRequestException;
-import edu.java.bot.api.exceptions.OutOfTokensException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
@@ -43,7 +41,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             ip = request.getRemoteAddr();
         }
         if (ip == null || ip.isEmpty()) {
-            throw new BadRequestException("IP is missing");
+            throw new MissingAddressException("IP is missing");
         }
         Bucket bucket = bucketMap.computeIfAbsent(ip, this::newBucket);
 
@@ -60,4 +58,3 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         return true;
     }
 }
-

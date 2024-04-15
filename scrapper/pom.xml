@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>edu.java</groupId>
-            <artifactId>linear-backoff-extension</artifactId>
+            <artifactId>resilance-extension</artifactId>
             <version>${revision}</version>
         </dependency>
         <!-- Web -->
@@ -45,12 +45,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.vladimir-bukhtoyarov</groupId>
-            <artifactId>bucket4j-core</artifactId>
-            <version>${bucket4j.version}</version>
-        </dependency>
-
 
         <!-- Kafka -->
         <dependency>

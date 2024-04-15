@@ -1,6 +1,6 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.api.ratelimiting.RateLimitInterceptor;
+import edu.tinkoff.ratelimiting.RateLimitInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;

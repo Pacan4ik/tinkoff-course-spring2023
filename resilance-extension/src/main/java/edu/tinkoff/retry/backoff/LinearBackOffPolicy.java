@@ -1,4 +1,4 @@
-package edu.tinkoff.linearbackoffextension;
+package edu.tinkoff.retry.backoff;
 
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.backoff.BackOffContext;
@@ -7,7 +7,7 @@ import org.springframework.retry.backoff.Sleeper;
 import org.springframework.retry.backoff.SleepingBackOffPolicy;
 import org.springframework.retry.backoff.ThreadWaitSleeper;
 
-public class LinearBackoffPolicy implements SleepingBackOffPolicy<LinearBackoffPolicy> {
+public class LinearBackOffPolicy implements SleepingBackOffPolicy<LinearBackOffPolicy> {
 
     private static final long DEFAULT_INITIAL_PERIOD = 100L;
     private static final long DEFAULT_MAX_PERIOD = 30000L;
@@ -37,8 +37,8 @@ public class LinearBackoffPolicy implements SleepingBackOffPolicy<LinearBackoffP
     }
 
     @Override
-    public LinearBackoffPolicy withSleeper(Sleeper sleeper) {
-        LinearBackoffPolicy res = new LinearBackoffPolicy();
+    public LinearBackOffPolicy withSleeper(Sleeper sleeper) {
+        LinearBackOffPolicy res = new LinearBackOffPolicy();
         res.setInitialPeriod(initialPeriod);
         res.setMaxPeriod(maxPeriod);
         res.setSleeper(sleeper);
