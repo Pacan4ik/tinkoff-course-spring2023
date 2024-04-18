@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import edu.java.scrapper.configuration.retry.RetryTemplatesConfig;
+import edu.tinkoff.retry.backoff.BackOff;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,6 +33,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.retry.support.RetryTemplateBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -224,20 +226,20 @@ public class ClientTest {
                 )
         );
 
-        RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
-        RetryPolicy retryPolicy = new SimpleRetryPolicy(4);
-        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy, null).accept(retryTemplateBuilder);
-        retryTemplatesConfig.retryBackoffPolicyCustomizer(new ApplicationConfig.Client.BackOff(
-            4,
-            Duration.ofSeconds(1),
-            ApplicationConfig.Client.BackOff.Policy.CONSTANT,
-            null,
-            null
-        )).accept(retryTemplateBuilder);
+        RetryTemplate template = retryTemplatesConfig.getRetryTemplate(
+            retryTemplatesConfig.retryListener(),
+            new BackOff(
+                4,
+                Duration.ofSeconds(1),
+                BackOff.Policy.CONSTANT,
+                null,
+                null
+            )
+        );
 
         //when
         GitHubClient githubClient =
-            new GitHubClient(webClientBuilder, "http://localhost:8080/", retryTemplateBuilder.build());
+            new GitHubClient(webClientBuilder, "http://localhost:8080/", template);
 
         //then
         Assertions.assertDoesNotThrow(() -> githubClient.fetchResponse("testUser", "onError"));
@@ -266,19 +268,19 @@ public class ClientTest {
                 )
         );
 
-        RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
-        RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(10);
-        retryTemplatesConfig.retryOnStatusCustomizer(retryPolicy, Collections.emptyList()).accept(retryTemplateBuilder);
-        retryTemplatesConfig.retryBackoffPolicyCustomizer(new ApplicationConfig.Client.BackOff(
-            10,
-            Duration.ofSeconds(5),
-            ApplicationConfig.Client.BackOff.Policy.LINEAR,
-            null,
-            null
-        )).accept(retryTemplateBuilder);
+        RetryTemplate template = retryTemplatesConfig.getRetryTemplate(
+            retryTemplatesConfig.retryListener(),
+            new BackOff(
+                10,
+                Duration.ofSeconds(5),
+                BackOff.Policy.LINEAR,
+                null,
+                null
+            )
+        );
 
         //when
-        BotClient botClient = new BotClient(webClientBuilder, "http://localhost:8080", retryTemplateBuilder.build());
+        BotClient botClient = new BotClient(webClientBuilder, "http://localhost:8080", template);
 
         //then
         Assertions.assertThrows(
