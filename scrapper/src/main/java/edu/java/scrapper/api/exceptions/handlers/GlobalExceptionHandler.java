@@ -2,11 +2,11 @@ package edu.java.scrapper.api.exceptions.handlers;
 
 import edu.java.scrapper.api.exceptions.BadRequestException;
 import edu.java.scrapper.api.exceptions.LinkAlreadyExistsException;
-import edu.java.scrapper.api.exceptions.OutOfTokensException;
 import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.ScrapperException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
 import edu.java.scrapper.api.model.ApiErrorResponse;
+import edu.tinkoff.ratelimiting.OutOfTokensException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;

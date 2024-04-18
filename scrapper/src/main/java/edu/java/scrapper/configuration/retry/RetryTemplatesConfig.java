@@ -66,7 +66,7 @@ public class RetryTemplatesConfig {
         return getRetryTemplate(retryListener, applicationConfig.bot().backOff());
     }
 
-    @NotNull private RetryTemplate getRetryTemplate(RetryListener retryListener, BackOff backOff) {
+    @NotNull public RetryTemplate getRetryTemplate(RetryListener retryListener, BackOff backOff) {
         RetryTemplateBuilder retryTemplateBuilder = new RetryTemplateBuilder();
         RetryPolicy retryPolicy = new MaxAttemptsRetryPolicy(backOff.maxAttempts());
 

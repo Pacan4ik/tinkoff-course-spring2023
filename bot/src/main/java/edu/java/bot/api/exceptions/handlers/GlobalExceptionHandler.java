@@ -2,8 +2,8 @@ package edu.java.bot.api.exceptions.handlers;
 
 import edu.java.bot.api.exceptions.BadRequestException;
 import edu.java.bot.api.exceptions.BotException;
-import edu.java.bot.api.exceptions.OutOfTokensException;
 import edu.java.bot.api.model.ApiErrorResponse;
+import edu.tinkoff.ratelimiting.OutOfTokensException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;

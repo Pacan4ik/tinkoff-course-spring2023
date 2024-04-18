@@ -3,6 +3,7 @@ package edu.java.scrapper.configuration;
 import edu.tinkoff.retry.backoff.BackOff;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,8 +31,21 @@ public record ApplicationConfig(
                             @NotNull Duration linkCheckingFrequency) {
     }
 
-    public record Client(@NotNull String baseUrl, @NotNull BackOff backOff) {
-
+    public record Client(@NotNull String baseUrl, @NotNull ScrapperBackOff backOff) {
+        static class ScrapperBackOff extends BackOff {
+            ScrapperBackOff(
+                @NotNull
+                Integer maxAttempts,
+                @NotNull
+                Duration delay,
+                @NotNull
+                Policy policy,
+                Integer multiplier,
+                List<Integer> additionalStatuses
+            ) {
+                super(maxAttempts, delay, policy, multiplier, additionalStatuses);
+            }
+        }
     }
 
     public record RateLimiting(@NotNull Long requestsLimit, @NotNull Duration timeDuration) {
