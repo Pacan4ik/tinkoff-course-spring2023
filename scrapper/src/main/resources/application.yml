@@ -2,7 +2,6 @@ app:
   scheduler:
     enable: true
     interval: 10000
-    force-check-delay: 30000
     link-checking-frequency: 10m
 
   github:
@@ -39,7 +38,7 @@ app:
   rate-limiting:
     requests-limit: 15
     time-duration: 1m
-  sending-method: http
+  sending-method: queue
   kafka:
     producer-topic: edu.tinkoff.updates
 spring:
