@@ -30,8 +30,7 @@ jobs:
         run: |
           REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           HEAD_REF_LOWER=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]')
-          DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER
-          echo "::set-env name=DOCKER_TAG::$DOCKER_TAG"
+          echo "DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER" >> $GITHUB_ENV
           docker build -t ${{ env.DOCKER_TAG }} -f bot.Dockerfile .
 
       - id: jacoco
@@ -53,6 +52,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to registry
+
         run: docker push ${{ env.DOCKER_TAG }}
 
   checkstyle:
