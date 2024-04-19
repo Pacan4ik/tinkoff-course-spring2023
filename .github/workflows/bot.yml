@@ -48,7 +48,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to registry
-        run: docker push ghcr.io/Pacan4ik/bot:latest
+        run: docker push ghcr.io/pacan4ik/bot:latest
 
   checkstyle:
     name: checkstyle
