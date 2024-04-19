@@ -30,8 +30,8 @@ jobs:
         run: |
           REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           HEAD_REF_LOWER=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]')
-          echo "DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER" >> $GITHUB_ENV
-          docker build -t ${{ env.DOCKER_TAG }} -f bot.Dockerfile .
+          DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER
+          docker build -t $DOCKER_TAG -f bot.Dockerfile .
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -53,7 +53,11 @@ jobs:
 
       - name: Push to registry
 
-        run: docker push ${{ env.DOCKER_TAG }}
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          HEAD_REF_LOWER=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]')
+          DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER
+          docker push $DOCKER_TAG
 
   checkstyle:
     name: checkstyle
