@@ -37,6 +37,21 @@ jobs:
           title: Code Coverage
           update-comment: true
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push to the registry
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          HEAD_REF_LOWER=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]')
+          DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/scrapper:$HEAD_REF_LOWER
+          docker build -t $DOCKER_TAG -f scrapper.Dockerfile .
+          docker push $DOCKER_TAG
+
   checkstyle:
     name: checkstyle
     runs-on: ubuntu-latest
