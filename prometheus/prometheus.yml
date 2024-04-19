@@ -3,7 +3,7 @@ global:
 scrape_configs:
   - job_name: bot
     static_configs:
-      - targets: ["host.docker.internal:8091"]
+      - targets: ['host.docker.internal:8091', 'bot:8091']
   - job_name: scrapper
     static_configs:
-      - targets: ["host.docker.internal:8081"]
+      - targets: ['host.docker.internal:8081', 'scrapper:8081']

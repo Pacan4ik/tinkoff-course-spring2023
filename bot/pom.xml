@@ -11,7 +11,6 @@
 
     <artifactId>bot</artifactId>
     <version>${revision}</version>
-
     <dependencies>
         <dependency>
             <groupId>edu.java</groupId>
