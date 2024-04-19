@@ -1,0 +1,86 @@
+app:
+  scheduler:
+    enable: true
+    interval: 10000
+    link-checking-frequency: 10m
+
+  github:
+    base-url: https://api.github.com/
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
+
+  stackoverflow:
+    base-url: https://api.stackexchange.com/
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
+
+  bot:
+    base-url: http://${BOT_ADDRESS}/
+    back-off:
+      delay: 500ms
+      policy: exponential
+      max-attempts: 10
+      multiplier: 2
+      additional-statuses:
+        - 429
+
+  data-base-access-type: jpa
+  rate-limiting:
+    requests-limit: 15
+    time-duration: 1m
+  sending-method: ${SENDING_METHOD}
+  kafka:
+    producer-topic: edu.tinkoff.updates
+spring:
+  application:
+    name: scrapper
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_ADDRESS}/${DATABASE_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: ${KAFKA_ADDRESS}
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /swagger-ui.html
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info, prometheus
+      path-mapping:
+        prometheus: /metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      show-details: always
