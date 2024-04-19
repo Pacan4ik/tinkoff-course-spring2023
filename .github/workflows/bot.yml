@@ -26,6 +26,9 @@ jobs:
       - name: maven build
         run: mvn -pl bot -am package
 
+      - name: docker build
+        run: docker build -t bot -f bot.Dockerfile .
+
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
         if: ( github.event_name != 'workflow_dispatch' )
@@ -36,6 +39,16 @@ jobs:
           min-coverage-changed-files: 30
           title: Code Coverage
           update-comment: true
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to registry
+        run: docker push ghcr.io/Pacan4ik/bot:latest
 
   checkstyle:
     name: checkstyle
