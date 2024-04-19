@@ -27,7 +27,7 @@ jobs:
         run: mvn -pl bot -am package
 
       - name: docker build
-        run: docker build -t bot -f bot.Dockerfile . --tag ghcr.io/pacan4ik/bot:latest
+        run: docker build -t bot -f bot.Dockerfile . --tag ghcr.io/${{ github.repository_owner }}/bot:${{ github.base_ref }}
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -48,7 +48,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to registry
-        run: docker push ghcr.io/pacan4ik/bot:latest
+        run: docker push ghcr.io/${{ github.repository_owner }}/bot:${{ github.base_ref }}
 
   checkstyle:
     name: checkstyle
