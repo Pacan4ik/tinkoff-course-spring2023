@@ -27,7 +27,12 @@ jobs:
         run: mvn -pl bot -am package
 
       - name: docker build
-        run: docker build -t bot -f bot.Dockerfile . --tag ghcr.io/${{ github.repository_owner }}/bot:${{ github.base_ref }}
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          HEAD_REF_LOWER=$(echo "${{ github.head_ref }}" | tr '[:upper:]' '[:lower:]')
+          DOCKER_TAG=ghcr.io/$REPO_OWNER_LOWER/bot:$HEAD_REF_LOWER
+          echo "::set-env name=DOCKER_TAG::$DOCKER_TAG"
+          docker build -t ${{ env.DOCKER_TAG }} -f bot.Dockerfile .
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -48,7 +53,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to registry
-        run: docker push ghcr.io/${{ github.repository_owner }}/bot:${{ github.base_ref }}
+        run: docker push ${{ env.DOCKER_TAG }}
 
   checkstyle:
     name: checkstyle
