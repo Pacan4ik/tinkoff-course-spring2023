@@ -1,0 +1,43 @@
+name: Push packages with tag :latest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    permissions:
+      packages: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: maven build
+        run: mvn -pl bot -am package
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Build and push to the registry
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          DOCKER_TAG_BOT=ghcr.io/$REPO_OWNER_LOWER/bot:latest
+          DOCKER_TAG_SCRAPPER=ghcr.io/$REPO_OWNER_LOWER/scrapper:latest
+          docker build -t $DOCKER_TAG_BOT -f bot.Dockerfile .
+          docker build -t $DOCKER_TAG_SCRAPPER -f scrapper.Dockerfile .
+          docker push $DOCKER_TAG_BOT
+          docker push $DOCKER_TAG_SCRAPPER

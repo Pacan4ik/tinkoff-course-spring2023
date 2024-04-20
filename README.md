@@ -23,9 +23,9 @@ curl https://raw.githubusercontent.com/Pacan4ik/tinkoff-course-spring2023/main/c
 ```
 Telegram бот:
 ``` shell
-docker run -d -p 8090:8090 --name bot --network link_tracker_backend -e TELEGRAM_TOKEN=token ghcr.io/pacan4ik/bot:hw-10
+docker run -d -p 8090:8090 --name bot --network link_tracker_backend -e TELEGRAM_TOKEN=token ghcr.io/pacan4ik/bot
 ```
 Scrapper сервис:
 ``` shell
-docker run -d -p 8080:8080 --name scrapper --network link_tracker_backend ghcr.io/pacan4ik/scrapper:hw-10
+docker run -d -p 8080:8080 --name scrapper --network link_tracker_backend ghcr.io/pacan4ik/scrapper
 ```
