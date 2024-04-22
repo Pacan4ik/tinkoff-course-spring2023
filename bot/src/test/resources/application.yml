@@ -10,12 +10,17 @@ app:
   rate-limiting:
     requests-limit: 20
     time-duration: 1s
-
+  kafka:
+    consumer-topic: edu.tinkoff.updates.test
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  kafka:
+      bootstrap-servers:
+      consumer:
+        group-id: "instance.telegrambot.test"
 
 server:
   port: 8090

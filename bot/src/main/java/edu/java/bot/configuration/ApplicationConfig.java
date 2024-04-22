@@ -16,7 +16,8 @@ public record ApplicationConfig(
     @NotNull
     Client scrapper,
     @NotNull
-    RateLimiting rateLimiting
+    RateLimiting rateLimiting,
+    Kafka kafka
 ) {
     public record Client(@NotNull String baseUrl, @NotNull BotBackoff backOff) {
         static class BotBackoff extends BackOff {
@@ -36,5 +37,8 @@ public record ApplicationConfig(
     }
 
     public record RateLimiting(@NotNull Long requestsLimit, @NotNull Duration timeDuration) {
+    }
+
+    public record Kafka(@NotNull String consumerTopic) {
     }
 }

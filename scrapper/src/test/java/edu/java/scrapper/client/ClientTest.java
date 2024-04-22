@@ -2,6 +2,7 @@ package edu.java.scrapper.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
@@ -168,11 +169,12 @@ public class ClientTest {
                 )
         );
         //when
-        HttpStatusCode statusCode = botClient.sendUpdates(
-            1L,
-            URI.create("https://example.com/"),
-            "descrpiption",
-            List.of(1L, 2L)
+        HttpStatusCode statusCode = botClient.sendUpdates(new BotUpdatesRequest(
+                1L,
+                URI.create("https://example.com/"),
+                "descrpiption",
+                List.of(1L, 2L)
+            )
         ).getStatusCode();
 
         //then
@@ -285,11 +287,12 @@ public class ClientTest {
         //then
         Assertions.assertThrows(
             WebClientResponseException.class,
-            () -> botClient.sendUpdates(
-                1L,
-                URI.create("https://example.com/"),
-                "descrpiption",
-                List.of(1L, 2L)
+            () -> botClient.sendUpdates(new BotUpdatesRequest(
+                    1L,
+                    URI.create("https://example.com/"),
+                    "descrpiption",
+                    List.of(1L, 2L)
+                )
             )
         );
     }

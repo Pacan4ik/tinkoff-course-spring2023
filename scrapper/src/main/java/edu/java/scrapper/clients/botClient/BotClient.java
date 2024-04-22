@@ -1,8 +1,6 @@
 package edu.java.scrapper.clients.botClient;
 
 import edu.java.scrapper.clients.Client;
-import java.net.URI;
-import java.util.Collection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -33,7 +31,7 @@ public class BotClient extends Client<Void> {
         return URI_STRING;
     }
 
-    public ResponseEntity<Void> sendUpdates(Long id, URI url, String description, Collection<Long> tgChatIds) {
-        return send(new BotUpdatesRequest(id, url, description, tgChatIds));
+    public ResponseEntity<Void> sendUpdates(BotUpdatesRequest botUpdatesRequest) {
+        return send(botUpdatesRequest);
     }
 }

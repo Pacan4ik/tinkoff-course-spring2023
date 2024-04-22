@@ -1,6 +1,6 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.UpdatesSender;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class EventsHandlersConfig {
-    private final BotClient botClient;
+    private final UpdatesSender updatesSender;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final LinkInfoAdapter linkInfoAdapter;
@@ -31,10 +31,10 @@ public class EventsHandlersConfig {
     @Bean
     public AbstractDomainHandler firstHandler() {
         GitHubHandler gitHubHandler =
-            new GitHubHandler(botClient, linkInfoAdapter, gitHubClient, createGitHubChain());
+            new GitHubHandler(updatesSender, linkInfoAdapter, gitHubClient, createGitHubChain());
         StackOverflowHandler stackOverflowHandler =
             new StackOverflowHandler(
-                botClient,
+                updatesSender,
                 linkInfoAdapter,
                 stackOverflowClient,
                 createStackOverflowChain()

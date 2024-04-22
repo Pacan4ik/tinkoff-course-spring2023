@@ -1,8 +1,8 @@
 app:
   scheduler:
     enable: true
-    interval: 10000
-    force-check-delay: 10000
+    interval: 1000
+    force-check-delay: 1000
     link-checking-frequency: 3m
 
   github:
@@ -39,6 +39,9 @@ app:
   rate-limiting:
     requests-limit: 15
     time-duration: 1m
+  sending-method: queue
+  kafka:
+    producer-topic: edu.tinkoff.updates
 spring:
   application:
     name: scrapper
@@ -53,6 +56,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
 server:
   port: 8080
 

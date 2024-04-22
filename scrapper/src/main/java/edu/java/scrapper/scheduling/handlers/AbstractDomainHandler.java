@@ -1,6 +1,7 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.UpdatesSender;
+import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import java.net.URI;
@@ -13,11 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractDomainHandler {
     @Setter
     protected AbstractDomainHandler nextSuccessor;
-    protected BotClient botClient;
+    protected UpdatesSender updatesSender;
     protected LinkInfoAdapter linkInfoAdapter;
 
-    public AbstractDomainHandler(BotClient botClient, LinkInfoAdapter linkInfoAdapter) {
-        this.botClient = botClient;
+    public AbstractDomainHandler(
+        UpdatesSender updatesSender,
+        LinkInfoAdapter linkInfoAdapter
+    ) {
+        this.updatesSender = updatesSender;
         this.linkInfoAdapter = linkInfoAdapter;
     }
 
@@ -45,16 +49,17 @@ public abstract class AbstractDomainHandler {
 
     protected void sendUpdate(LinkInfoDto linkDto, String description) {
         try {
-            botClient.sendUpdates(
-                linkDto.getId(),
-                linkDto.getUrl(),
-                description,
-                linkInfoAdapter.getSubscribedChats(linkDto.getId())
+            updatesSender.send(
+                new BotUpdatesRequest(
+                    linkDto.getId(),
+                    linkDto.getUrl(),
+                    description,
+                    linkInfoAdapter.getSubscribedChats(linkDto.getId())
+                )
             );
         } catch (Exception e) {
             log.error("Error during sending updates to the bot", e);
         }
-
     }
 
     protected void processResult(AdditionalHandlerResult additionalHandlerResult, LinkInfoDto linkDto) {
