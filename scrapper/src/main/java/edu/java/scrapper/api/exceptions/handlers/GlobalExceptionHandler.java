@@ -6,7 +6,6 @@ import edu.java.scrapper.api.exceptions.ResourceNotFoundException;
 import edu.java.scrapper.api.exceptions.ScrapperException;
 import edu.java.scrapper.api.exceptions.UserAlreadyExistsException;
 import edu.java.scrapper.api.model.ApiErrorResponse;
-import edu.tinkoff.ratelimiting.OutOfTokensException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -39,11 +38,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LinkAlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleException(LinkAlreadyExistsException e) {
         return generateResponseEntity(e, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(OutOfTokensException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(OutOfTokensException e) {
-        return generateResponseEntity(e, HttpStatus.TOO_MANY_REQUESTS);
     }
 
     private ResponseEntity<ApiErrorResponse> generateResponseEntity(Exception e, HttpStatus httpStatus) {

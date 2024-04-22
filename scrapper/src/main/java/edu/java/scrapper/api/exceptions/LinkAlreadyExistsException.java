@@ -2,7 +2,6 @@ package edu.java.scrapper.api.exceptions;
 
 public class LinkAlreadyExistsException extends ScrapperException {
     public LinkAlreadyExistsException() {
-        super();
     }
 
     public LinkAlreadyExistsException(String message) {

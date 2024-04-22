@@ -24,8 +24,6 @@
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <spring-starter-jooq.version>3.2.1</spring-starter-jooq.version>
-        <spring-aspects.version>6.1.3</spring-aspects.version>
-        <spring-retry.version>2.0.5</spring-retry.version>
 
         <!-- Jooq -->
         <jooq-codegen.version>3.18.7</jooq-codegen.version>
@@ -51,7 +49,6 @@
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-        <bucket4j.version>7.6.0</bucket4j.version>
 
         <!-- Linters -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
@@ -62,7 +59,6 @@
         <module>bot</module>
         <module>scrapper</module>
         <module>scrapper-jooq</module>
-        <module>resilance-extension</module>
     </modules>
 
     <dependencyManagement>
@@ -108,11 +104,6 @@
                 <version>${springdoc.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.vladimir-bukhtoyarov</groupId>
-                <artifactId>bucket4j-core</artifactId>
-                <version>${bucket4j.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.domain.adapters.LinkInfoDto;
 import java.net.URI;

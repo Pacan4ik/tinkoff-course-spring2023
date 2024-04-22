@@ -13,11 +13,6 @@
     <version>${revision}</version>
 
     <dependencies>
-        <dependency>
-            <groupId>edu.java</groupId>
-            <artifactId>resilance-extension</artifactId>
-            <version>${revision}</version>
-        </dependency>
         <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,10 +40,7 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.vladimir-bukhtoyarov</groupId>
-            <artifactId>bucket4j-core</artifactId>
-        </dependency>
+
         <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>

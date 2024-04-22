@@ -1,6 +1,6 @@
 package edu.java.scrapper.scheduling.handlers.stackoverflow;
 
-import edu.java.scrapper.clients.botClient.BotClient;
+import edu.java.scrapper.botClient.BotClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverFlowResponse;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;

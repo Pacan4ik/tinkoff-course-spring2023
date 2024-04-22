@@ -1,7 +1,6 @@
 package edu.java.scrapper.clients.stackoverflow;
 
 import edu.java.scrapper.clients.Client;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverflowClient extends Client<StackOverFlowResponse> {
@@ -11,16 +10,8 @@ public class StackOverflowClient extends Client<StackOverFlowResponse> {
 
     private static final Class<StackOverFlowResponse> CLASS_REF = StackOverFlowResponse.class;
 
-    public StackOverflowClient(WebClient.Builder webClientBuilder, String baseUrl, RetryTemplate retryTemplate) {
-        super(webClientBuilder, CLASS_REF, baseUrl, retryTemplate);
-    }
-
     public StackOverflowClient(WebClient.Builder webClientBuilder, String baseUrl) {
         super(webClientBuilder, CLASS_REF, baseUrl);
-    }
-
-    public StackOverflowClient(WebClient.Builder webClientBuilder, RetryTemplate retryTemplate) {
-        super(webClientBuilder, CLASS_REF, BASE_URL, retryTemplate);
     }
 
     public StackOverflowClient(WebClient.Builder webClientBuilder) {
