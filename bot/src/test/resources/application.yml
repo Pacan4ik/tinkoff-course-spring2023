@@ -4,15 +4,13 @@ app:
     base-url: http://localhost:8080/
     back-off:
       delay: 1s
-      policy: exponential
+      policy: linear
       max-attempts: 5
       multiplier: 2
-      additional-statuses:
-        - 408
-        - 429
   rate-limiting:
     requests-limit: 20
-    time-duration: 1m
+    time-duration: 1s
+
 spring:
   application:
     name: bot
