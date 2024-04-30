@@ -17,6 +17,22 @@
 Для работы требуется БД `PostgreSQL`. Присутствует опциональная зависимость на `Kafka`.
 
 ### Запуск "из коробки"
+Файлы миграции и prometheus.yml
+```shell
+mkdir migrations
+cd migrations/
+curl -s https://api.github.com/repos/Pacan4ik/tinkoff-course-spring2023/contents/migrations | grep -oP '(?<="download_url": ")[^"]+' | xargs -I {} curl -O {}
+cd ..
+mkdir prometheus
+cd prometheus/
+curl -O https://raw.githubusercontent.com/Pacan4ik/tinkoff-course-spring2023/main/migrations/drop-description-column.sql
+cd ..
+```
+<details>
+  <summary>Windows</summary>
+        Ну... Можно ручками выкачать всё из migrations :)
+</details>
+
 Compose файл (PostgreSQL, Kafka, Zookeeper, Prometheus, Grafana):
 ``` shell
 curl https://raw.githubusercontent.com/Pacan4ik/tinkoff-course-spring2023/main/compose.yml | docker compose -f - up -d 
