@@ -21,8 +21,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: maven build
+      - name: maven bot build
         run: mvn -pl bot -am package
+
+      - name: maven scrapper build
+        run: mvn -pl scrapper -am package
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
