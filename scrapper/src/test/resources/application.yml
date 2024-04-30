@@ -2,7 +2,6 @@ app:
   scheduler:
     enable: false
     interval: 10000
-    force-check-delay: 10000
     link-checking-frequency: 3m
 
   github:

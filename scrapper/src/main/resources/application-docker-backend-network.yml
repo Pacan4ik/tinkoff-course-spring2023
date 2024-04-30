@@ -25,7 +25,7 @@ app:
         - 408
 
   bot:
-    base-url: http://localhost:8090/
+    base-url: http://${BOT_ADDRESS}/
     back-off:
       delay: 500ms
       policy: exponential
@@ -38,16 +38,16 @@ app:
   rate-limiting:
     requests-limit: 15
     time-duration: 1m
-  sending-method: queue
+  sending-method: ${SENDING_METHOD}
   kafka:
     producer-topic: edu.tinkoff.updates
 spring:
   application:
     name: scrapper
   datasource:
-    url: jdbc:postgresql://localhost:5432/scrapper
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${POSTGRES_ADDRESS}/${DATABASE_NAME}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false
@@ -56,7 +56,7 @@ spring:
     hibernate:
       ddl-auto: none
   kafka:
-    bootstrap-servers: 127.0.0.1:9092
+    bootstrap-servers: ${KAFKA_ADDRESS}
 server:
   port: 8080
 
