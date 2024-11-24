@@ -14,7 +14,7 @@ app:
     requests-limit: 20
     time-duration: 1m
   kafka:
-    consumer-topic: edu.tinkoff.updates
+    consumer-topic: ru.andryxx.botupdates
 spring:
   application:
     name: bot

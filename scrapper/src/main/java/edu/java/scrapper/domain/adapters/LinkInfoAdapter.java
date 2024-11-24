@@ -7,13 +7,12 @@ import java.util.Collection;
 import java.util.List;
 
 public interface LinkInfoAdapter {
-    List<LinkInfoDto> findAllCheckedAtBefore(OffsetDateTime offsetDateTime);
+    List<LinkDto> findAllCheckedAtBefore(OffsetDateTime offsetDateTime);
 
     void updateCheckedAt(Long id, OffsetDateTime offsetDateTime);
 
     Collection<Long> getSubscribedChats(Long id);
 
-    void updateAdditionalInfo(Long id, LinkInfoDto.AdditionalInfo additionalInfo);
 
     default JsonNode mergeJsonNodes(JsonNode oldNode, JsonNode newNode) {
         JsonNode finalNode = oldNode.deepCopy();

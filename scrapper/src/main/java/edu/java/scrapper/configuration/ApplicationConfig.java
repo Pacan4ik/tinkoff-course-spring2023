@@ -53,13 +53,13 @@ public record ApplicationConfig(
     }
 
     public enum AccessType {
-        JDBC, JPA, JOOQ
+        JPA
     }
 
     public enum SendingMethod {
         HTTP, QUEUE
     }
 
-    public record Kafka(String producerTopic) {
+    public record Kafka(String botProducerTopic, String gitworkerProducerTopic, String stackworkerProducerTopic, String workersConsumerTopic) {
     }
 }

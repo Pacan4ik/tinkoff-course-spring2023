@@ -40,7 +40,10 @@ app:
     time-duration: 1m
   sending-method: queue
   kafka:
-    producer-topic: edu.tinkoff.updates
+    bot-producer-topic: ru.andryxx.botupdates
+    gitworker-producer-topic: ru.andryxx.gitrequests
+    stackworker-producer-topic: ru.andryxx.stackrequests
+    workers-consumer-topic: ru.andryxx.workerupdates
 spring:
   application:
     name: scrapper
@@ -57,6 +60,8 @@ spring:
       ddl-auto: none
   kafka:
     bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: "instance.scrapper"
 server:
   port: 8080
 

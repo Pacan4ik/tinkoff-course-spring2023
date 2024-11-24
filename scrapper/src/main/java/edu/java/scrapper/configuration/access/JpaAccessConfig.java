@@ -34,6 +34,6 @@ public class JpaAccessConfig {
 
     @Bean
     public LinkInfoAdapter linkInfoAdapter() {
-        return new JpaLinkInfoAdapter(linkRepository, objectMapper);
+        return new JpaLinkInfoAdapter(linkRepository);
     }
 }

@@ -30,7 +30,10 @@ app:
     requests-limit: 30
     time-duration: 1m
   kafka:
-    producer-topic: edu.tinkoff.updates
+    bot-producer-topic: ru.andryxx.botupdates-test
+    gitworker-producer-topic: ru.andryxx.gitrequests-test
+    stackworker-producer-topic: ru.andryxx.stackrequests-test
+    workers-consumer-topic: ru.andryxx.workerupdates-test
   sending-method: http
 spring:
   application:

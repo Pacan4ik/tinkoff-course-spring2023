@@ -1,10 +1,8 @@
-package edu.java.bot.kafka;
+package edu.java.scrapper.kafka.consumers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.bot.api.model.LinkUpdateRequest;
-import edu.java.bot.api.services.UpdateHandlerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -13,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class UpdatesListener {
-    private final UpdateHandlerService updateHandlerService;
+public class MessageListener {
+    private final WorkerMessageHandlerService workerMessageHandlerService;
     private final ObjectMapper objectMapper;
 
-    public UpdatesListener(UpdateHandlerService updateHandlerService) {
-        this.updateHandlerService = updateHandlerService;
+    public MessageListener(WorkerMessageHandlerService workerMessageHandlerService) {
+        this.workerMessageHandlerService = workerMessageHandlerService;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
@@ -27,23 +25,20 @@ public class UpdatesListener {
     @RetryableTopic(
         attempts = "1",
         autoCreateTopics = "true",
-        kafkaTemplate = "kafkaTemplate",
+        kafkaTemplate = "dlqKafkaTemplate",
         dltTopicSuffix = "_dlq"
     )
-    @KafkaListener(topics = "${app.kafka.consumer-topic}",
+    @KafkaListener(topics = "${app.kafka.workers-consumer-topic}",
                    containerFactory = "containerFactory")
     public void listen(@Payload String data) {
         log.info("message has been received {}", data);
-        LinkUpdateRequest linkUpdateRequest;
+        WorkerMessage workerMessage;
         try {
-            linkUpdateRequest = objectMapper.readValue(data, LinkUpdateRequest.class);
+            workerMessage = objectMapper.readValue(data, WorkerMessage.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        updateHandlerService.handleUpdate(
-            linkUpdateRequest.url(),
-            linkUpdateRequest.description(),
-            linkUpdateRequest.tgChatIds()
-        );
+        workerMessageHandlerService.handle(workerMessage);
     }
+
 }
