@@ -6,6 +6,7 @@ import edu.java.bot.commands.AbstractCommand;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.CommandRegister;
 import edu.java.bot.commands.HelpCommand;
+import edu.java.bot.commands.InfoCommand;
 import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
@@ -16,10 +17,15 @@ import edu.java.bot.scrapperClient.model.LinkResponse;
 import edu.java.bot.scrapperClient.model.ListLinksResponse;
 import edu.java.bot.utils.commands.ParamsParser;
 import edu.java.bot.utils.url.SimpleUrlParser;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -67,7 +73,7 @@ class CommandsTest {
         return scrapperClient;
     }
 
-    static Arguments[] commandsOutput() {
+    static Arguments[] commandsOutput() throws URISyntaxException, IOException {
         return new Arguments[] {
             Arguments.of(
                 new StartCommand(mockScrapper(123L)),
@@ -161,6 +167,12 @@ class CommandsTest {
                 "Вы не отслеживаете данную ссылку",
                 false
             ),
+            Arguments.of(new InfoCommand(), 123L, "/info", Files.readString(Path.of(Objects.requireNonNull(
+                    CommandsTest.class
+                        .getClassLoader()
+                        .getResource("info_response.txt"))
+                .toURI())), true),
+
             Arguments.of(
                 prepareHelpCommand(),
                 123L,
