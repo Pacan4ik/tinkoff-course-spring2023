@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
     private final KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate;
 
     public StackWorkerQueueProducer(
-        @Qualifier("stackWorkerProducerFactory") KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate
+        @Qualifier("stackWorkerKafkaTemplate") KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate
     ) {
         this.kafkaTemplate = kafkaTemplate;
     }

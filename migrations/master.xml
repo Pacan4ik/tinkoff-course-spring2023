@@ -12,5 +12,6 @@
     <include file="drop-description-column.sql"/>
     <include file="drop-updated-at-column.sql"/>
     <include file="tablesforeachdomain-git-stack.sql"/>
+    <include file="only-lasteventid-git.sql"/>
 
 </databaseChangeLog>

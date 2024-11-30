@@ -1,7 +1,7 @@
 app:
   github:
     token: ${GITHUB_TOKEN}
-    base-url: http://localhost:8080/
+    base-url: https://api.github.com/
     back-off:
       delay: 3s
       policy: linear
@@ -10,8 +10,8 @@ app:
         - 429
         - 408
   kafka:
-    consumer-topic: ru.andryxx.gitrequests-test
-    producer-topic: ru.andryxx.workerupdates-test
+    consumer-topic: ru.andryxx.gitrequests
+    producer-topic: ru.andryxx.workerupdates
 
 server:
   port: 8070
@@ -31,7 +31,7 @@ spring:
     hibernate:
       ddl-auto: none
   kafka:
-    bootstrap-servers:
+    bootstrap-servers: 127.0.0.1:9092
     consumer:
       group-id: "instance.gitworker"
 

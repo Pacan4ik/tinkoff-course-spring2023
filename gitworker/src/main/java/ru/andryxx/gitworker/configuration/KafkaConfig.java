@@ -1,8 +1,5 @@
-package edu.java.scrapper.configuration;
+package ru.andryxx.gitworker.configuration;
 
-import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
-import edu.java.scrapper.kafka.producers.workers.WorkerCheckRequest;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,6 +15,9 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import ru.andryxx.gitworker.model.ScrapperRequest;
+import ru.andryxx.gitworker.model.WorkerMessage;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class KafkaConfig {
     private final ApplicationConfig applicationConfig;
 
     @Bean
-    public ProducerFactory<String, BotUpdatesRequest> botQueueProducerFactory() {
+    public ProducerFactory<String, WorkerMessage> producerFactory() {
         Map<String, Object> configs = Map.of(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers,
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
@@ -41,54 +41,11 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, WorkerCheckRequest> workerQueueProducerFactory() {
-        Map<String, Object> configs = Map.of(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers,
-            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class
-        );
-        return new DefaultKafkaProducerFactory<>(configs);
-    }
-
-    @Bean
-    public ProducerFactory<String, String> dlqProducerFactory() {
-        Map<String, Object> configs = Map.of(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers,
-            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class
-        );
-        return new DefaultKafkaProducerFactory<>(configs);
-
-    }
-
-    @Bean
-    public KafkaTemplate<String, BotUpdatesRequest>
-    botKafkaTemplate(ProducerFactory<String, BotUpdatesRequest> producerFactory) {
-        KafkaTemplate<String, BotUpdatesRequest> kafkaTemplate = new KafkaTemplate<>(producerFactory);
-        kafkaTemplate.setDefaultTopic(applicationConfig.kafka().botProducerTopic());
+    public KafkaTemplate<String, WorkerMessage>
+    workerGitKafkaTemplate(ProducerFactory<String, WorkerMessage> producerFactory) {
+        KafkaTemplate<String, WorkerMessage> kafkaTemplate = new KafkaTemplate<>(producerFactory);
+        kafkaTemplate.setDefaultTopic(applicationConfig.kafka().producerTopic());
         return kafkaTemplate;
-    }
-
-    @Bean("gitWorkerKafkaTemplate")
-    public KafkaTemplate<String, WorkerCheckRequest>
-    workerGitKafkaTemplate(ProducerFactory<String, WorkerCheckRequest> producerFactory) {
-        KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate = new KafkaTemplate<>(producerFactory);
-        kafkaTemplate.setDefaultTopic(applicationConfig.kafka().gitworkerProducerTopic());
-        return kafkaTemplate;
-    }
-
-    @Bean("stackWorkerKafkaTemplate")
-    public KafkaTemplate<String, WorkerCheckRequest>
-    workerStackKafkaTemplate(ProducerFactory<String, WorkerCheckRequest> producerFactory) {
-        KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate = new KafkaTemplate<>(producerFactory);
-        kafkaTemplate.setDefaultTopic(applicationConfig.kafka().stackworkerProducerTopic());
-        return kafkaTemplate;
-    }
-
-    @Bean("dlqKafkaTemplate")
-    public KafkaTemplate<String, String>
-    kafkaTemplate(ProducerFactory<String, String> producerFactory) {
-        return new KafkaTemplate<>(producerFactory);
     }
 
     @Bean
@@ -116,5 +73,22 @@ public class KafkaConfig {
         container.setConcurrency(1);
         container.setConsumerFactory(consumerFactory);
         return container;
+    }
+
+    @Bean
+    public ProducerFactory<String, String> dlqProducerFactory() {
+        Map<String, Object> configs = Map.of(
+            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers,
+            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class
+        );
+        return new DefaultKafkaProducerFactory<>(configs);
+
+    }
+
+    @Bean("dlqKafkaTemplate")
+    public KafkaTemplate<String, String>
+    kafkaTemplate(ProducerFactory<String, String> producerFactory) {
+        return new KafkaTemplate<>(producerFactory);
     }
 }

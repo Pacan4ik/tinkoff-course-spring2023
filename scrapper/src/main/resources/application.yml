@@ -2,7 +2,7 @@ app:
   scheduler:
     enable: true
     interval: 10000
-    link-checking-frequency: 10m
+    link-checking-frequency: 5m
 
   github:
     base-url: https://api.github.com/
