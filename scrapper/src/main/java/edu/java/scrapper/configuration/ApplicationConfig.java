@@ -60,6 +60,7 @@ public record ApplicationConfig(
         HTTP, QUEUE
     }
 
-    public record Kafka(String botProducerTopic, String gitworkerProducerTopic, String stackworkerProducerTopic, String workersConsumerTopic) {
+    public record Kafka(String botProducerTopic, String gitworkerProducerTopic, String stackworkerProducerTopic,
+                        String workersConsumerTopic) {
     }
 }

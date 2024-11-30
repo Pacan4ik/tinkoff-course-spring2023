@@ -3,7 +3,6 @@ package edu.java.scrapper.kafka.consumers;
 import edu.java.scrapper.UpdatesSender;
 import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

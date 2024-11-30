@@ -47,6 +47,8 @@ spring:
     enabled: false
   kafka:
     bootstrap-servers:
+    consumer:
+      group-id: "instance.scrapper"
 server:
   port: 8080
 
