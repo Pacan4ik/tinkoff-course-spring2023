@@ -8,9 +8,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-import ru.andryxx.gitworker.model.ScrapperRequest;
+import ru.andryxx.gitworker.kafka.model.ScrapperRequest;
 import ru.andryxx.gitworker.services.MessageHandlerService;
-import java.math.BigInteger;
 
 @Service
 @Slf4j

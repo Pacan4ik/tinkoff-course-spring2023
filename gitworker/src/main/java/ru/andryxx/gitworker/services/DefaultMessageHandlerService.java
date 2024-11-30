@@ -8,8 +8,8 @@ import ru.andryxx.gitworker.client.GitHubEventResponse;
 import ru.andryxx.gitworker.domain.dao.GitEntityRepository;
 import ru.andryxx.gitworker.domain.model.GitEntity;
 import ru.andryxx.gitworker.kafka.QueueProducer;
-import ru.andryxx.gitworker.model.ScrapperRequest;
-import ru.andryxx.gitworker.model.WorkerMessage;
+import ru.andryxx.gitworker.kafka.model.ScrapperRequest;
+import ru.andryxx.gitworker.kafka.model.WorkerMessage;
 import ru.andryxx.gitworker.services.events.EventsProcessor;
 
 import java.util.List;

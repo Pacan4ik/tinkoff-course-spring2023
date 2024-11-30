@@ -1,5 +1,6 @@
 package ru.andryxx.gitworker.configuration;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -15,9 +16,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.andryxx.gitworker.model.ScrapperRequest;
-import ru.andryxx.gitworker.model.WorkerMessage;
-import java.util.Map;
+import ru.andryxx.gitworker.kafka.model.WorkerMessage;
 
 @Configuration
 @RequiredArgsConstructor

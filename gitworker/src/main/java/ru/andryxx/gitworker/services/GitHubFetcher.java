@@ -20,7 +20,7 @@ public class GitHubFetcher {
     public List<GitHubEventResponse> fetchEventsUntilId(String user, String repos, long id) {
         List<GitHubEventResponse> responses = new ArrayList<>();
         int pagenum = 1;
-        for (boolean isFound = false; !isFound; pagenum++) {
+        for (boolean isFound = false; !isFound && pagenum <= 10; pagenum++) {
             try {
                 List<GitHubEventResponse> events = gitHubClient.fetchResponse(user, repos, pagenum);
                 for (GitHubEventResponse event : events) {
