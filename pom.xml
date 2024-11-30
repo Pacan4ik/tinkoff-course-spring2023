@@ -68,6 +68,8 @@
         <module>scrapper</module>
         <module>scrapper-jooq</module>
         <module>resilance-extension</module>
+        <module>gitworker</module>
+        <module>stackworker</module>
     </modules>
 
     <dependencyManagement>
