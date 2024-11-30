@@ -13,5 +13,6 @@
     <include file="drop-updated-at-column.sql"/>
     <include file="tablesforeachdomain-git-stack.sql"/>
     <include file="only-lasteventid-git.sql"/>
+    <include file="int-to-bigint-stack-fields.sql"/>
 
 </databaseChangeLog>
