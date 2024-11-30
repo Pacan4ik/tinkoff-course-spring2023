@@ -1,7 +1,6 @@
 package ru.andryxx.stackworker.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 

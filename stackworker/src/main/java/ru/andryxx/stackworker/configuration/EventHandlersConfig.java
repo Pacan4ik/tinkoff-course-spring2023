@@ -6,7 +6,7 @@ import ru.andryxx.stackworker.services.handlers.AbstractEventHandler;
 import ru.andryxx.stackworker.services.handlers.AnswersCountEventHandler;
 import ru.andryxx.stackworker.services.handlers.CommentsCountEventHandler;
 import ru.andryxx.stackworker.services.handlers.LastActivityDateHandler;
-import java.net.URI;
+
 
 @Configuration
 public class EventHandlersConfig {

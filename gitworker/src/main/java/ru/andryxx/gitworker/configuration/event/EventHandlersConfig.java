@@ -1,9 +1,9 @@
 package ru.andryxx.gitworker.configuration.event;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.andryxx.gitworker.services.events.handlers.AbstractEventHandler;
-import java.util.List;
 
 @Configuration
 public class EventHandlersConfig {

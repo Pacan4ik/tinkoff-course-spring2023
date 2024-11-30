@@ -1,9 +1,8 @@
 package ru.andryxx.stackworker.services.handlers;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.List;
 import ru.andryxx.stackworker.client.StackOverFlowResponse;
 import ru.andryxx.stackworker.domain.model.StackEntity;
-import java.util.List;
 
 // Should be last in chain
 public class LastActivityDateHandler extends AbstractEventHandler {

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class HandlersObjectMapperConfig {
     private final ObjectMapper objectMapper;
 
+    //CHECKSTYLE:OFF
     public HandlersObjectMapperConfig() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
@@ -16,9 +17,10 @@ public class HandlersObjectMapperConfig {
         objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
         this.objectMapper = objectMapper;
     }
+    //CHECKSTYLE:ON
 
     @Bean("handlersObjectMapper")
-    public ObjectMapper objectMapper() {
+    public ObjectMapper handlersObjectMapper() {
         return objectMapper;
     }
 

@@ -7,7 +7,7 @@ import ru.andryxx.gitworker.client.GitHubEventResponse;
 import ru.andryxx.gitworker.services.events.handlers.schema.PushEventPayload;
 
 @Service
-public class PushEventHandler extends AbstractEventHandler{
+public class PushEventHandler extends AbstractEventHandler {
     private static final String EVENT_TYPE = "PushEvent";
     private static final String PUSH_DEFAULT = "Новый push %s";
 

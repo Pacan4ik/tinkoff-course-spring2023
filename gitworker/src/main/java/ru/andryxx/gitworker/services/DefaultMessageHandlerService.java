@@ -1,6 +1,9 @@
 package ru.andryxx.gitworker.services;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,10 +14,6 @@ import ru.andryxx.gitworker.kafka.QueueProducer;
 import ru.andryxx.gitworker.kafka.model.ScrapperRequest;
 import ru.andryxx.gitworker.kafka.model.WorkerMessage;
 import ru.andryxx.gitworker.services.events.EventsProcessor;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

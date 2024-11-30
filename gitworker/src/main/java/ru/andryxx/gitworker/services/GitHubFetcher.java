@@ -1,13 +1,13 @@
 package ru.andryxx.gitworker.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import ru.andryxx.gitworker.client.GitHubClient;
 import ru.andryxx.gitworker.client.GitHubEventResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +15,13 @@ import java.util.List;
 public class GitHubFetcher {
     public static final String FAILED_TO_FETCH_EVENTS_FOR_PAGE = "Failed to fetch events for {}/{} page {}";
     public static final String FAILED_TO_FETCH_ONE_EVENT_FOR = "Failed to fetch one event for {}/{} ";
+    public static final int MAX_PAGE = 10;
     private final GitHubClient gitHubClient;
 
     public List<GitHubEventResponse> fetchEventsUntilId(String user, String repos, long id) {
         List<GitHubEventResponse> responses = new ArrayList<>();
         int pagenum = 1;
-        for (boolean isFound = false; !isFound && pagenum <= 10; pagenum++) {
+        for (boolean isFound = false; !isFound && pagenum <= MAX_PAGE; pagenum++) {
             try {
                 List<GitHubEventResponse> events = gitHubClient.fetchResponse(user, repos, pagenum);
                 for (GitHubEventResponse event : events) {

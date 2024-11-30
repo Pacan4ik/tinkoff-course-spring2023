@@ -1,11 +1,10 @@
 package ru.andryxx.stackworker.services.handlers;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.List;
 import ru.andryxx.stackworker.client.StackOverFlowResponse;
 import ru.andryxx.stackworker.domain.model.StackEntity;
-import java.util.List;
 
-public class AnswersCountEventHandler extends AbstractEventHandler{
+public class AnswersCountEventHandler extends AbstractEventHandler {
 
     public static final String NEW_ANSWER = "Новый ответ";
 
@@ -22,6 +21,6 @@ public class AnswersCountEventHandler extends AbstractEventHandler{
     @Override
     protected boolean isSuitableEvent(StackOverFlowResponse event, StackEntity stackEntity) {
         return stackEntity.getAnswerCount() == null
-            || stackEntity.getAnswerCount() < event.items().getFirst().answerCount();
+               || stackEntity.getAnswerCount() < event.items().getFirst().answerCount();
     }
 }

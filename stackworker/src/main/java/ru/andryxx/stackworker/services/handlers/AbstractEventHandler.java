@@ -1,12 +1,12 @@
 package ru.andryxx.stackworker.services.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import ru.andryxx.stackworker.client.StackOverFlowResponse;
 import ru.andryxx.stackworker.domain.model.StackEntity;
 import ru.andryxx.stackworker.services.handlers.exceptions.NoSuitableHandlersException;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractEventHandler {
     @Setter
@@ -31,14 +31,20 @@ public abstract class AbstractEventHandler {
         }
     }
 
+    //CHECKSTYLE:OFF
     protected final void setList(List<String> messages) {
         if (messages == null) {
             messages = new ArrayList<>();
         }
     }
+    //CHECKSTYLE:ON
 
     @Nullable
-    protected abstract List<String> process(StackOverFlowResponse event, StackEntity stackEntity, List<String> messages);
+    protected abstract List<String> process(
+        StackOverFlowResponse event,
+        StackEntity stackEntity,
+        List<String> messages
+    );
 
     protected abstract boolean isSuitableEvent(StackOverFlowResponse event, StackEntity stackEntity);
 }

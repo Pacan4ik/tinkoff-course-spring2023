@@ -39,45 +39,30 @@ public class DefaultMessageHandlerService implements MessageHandlerService {
     @Override
     @Transactional
     public void handle(ScrapperRequest request) {
-        long stackId;
-        try {
-            stackId = getId(request.url());
-        } catch (Exception e) {
-            log.error("Failed to parse stack id", e);
-            return;
-        }
-        StackOverFlowResponse response;
-        try {
-            response = stackFetcher.fetch(stackId);
-        } catch (Exception e) {
-            log.error("Failed to fetch stack", e);
-            return;
-        }
+        long stackId = getId(request.url());
+
+        StackOverFlowResponse response = stackFetcher.fetch(stackId);
 
         Optional<StackEntity> optional = stackEntityRepository.findById(request.id());
         StackEntity stackEntity;
         if (optional.isEmpty()) {
             stackEntity = new StackEntity();
             stackEntity.setId(request.id());
-            stackEntity.setAnswerCount(response.items().getFirst().answerCount());
-            stackEntity.setCommentCount(response.items().getFirst().commentCount());
-            stackEntity.setLastActivityDate(response.items().getFirst().lastActivityDate());
-            stackEntityRepository.save(stackEntity);
             log.info("Stack entity created: {}", stackEntity);
             log.info("No handlers needed");
-            return;
-        }
-        stackEntity = optional.get();
-        try {
-            List<String> messages = stackChain.handle(response, stackEntity, new ArrayList<>());
-            String result = buildString(messages);
-            if (!result.isEmpty()) {
-                queueProducer.send(new WorkerMessage(stackEntity.getId(), request.url(), result));
-            }
+        } else {
+            stackEntity = optional.get();
+            try {
+                List<String> messages = stackChain.handle(response, stackEntity, new ArrayList<>());
+                String result = buildString(messages);
+                if (!result.isEmpty()) {
+                    queueProducer.send(new WorkerMessage(stackEntity.getId(), request.url(), result));
+                }
 
-        } catch (NoSuitableHandlersException e) {
-            log.warn("No suitable handlers found");
-            log.info("Probably no changes");
+            } catch (NoSuitableHandlersException e) {
+                log.warn("No suitable handlers found");
+                log.info("Probably no changes");
+            }
         }
 
         stackEntity.setAnswerCount(response.items().getFirst().answerCount());

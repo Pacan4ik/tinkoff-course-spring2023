@@ -1,8 +1,8 @@
 package ru.andryxx.stackworker.services.handlers;
 
+import java.util.List;
 import ru.andryxx.stackworker.client.StackOverFlowResponse;
 import ru.andryxx.stackworker.domain.model.StackEntity;
-import java.util.List;
 
 public class CommentsCountEventHandler extends AbstractEventHandler {
 
