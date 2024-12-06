@@ -3,6 +3,7 @@ package ru.andryxx.stackworker.services.handlers;
 import java.util.List;
 import ru.andryxx.stackworker.client.StackOverFlowResponse;
 import ru.andryxx.stackworker.domain.model.StackEntity;
+import ru.andryxx.stackworker.services.handlers.exceptions.NoSuitableHandlersException;
 
 public class AnswersCountEventHandler extends AbstractEventHandler {
 
@@ -13,9 +14,9 @@ public class AnswersCountEventHandler extends AbstractEventHandler {
         StackOverFlowResponse event,
         StackEntity stackEntity,
         List<String> messages
-    ) {
+    ) throws NoSuitableHandlersException {
         messages.add(NEW_ANSWER);
-        return messages;
+        return handleNext(event, stackEntity, messages);
     }
 
     @Override

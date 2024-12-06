@@ -26,8 +26,10 @@ public abstract class AbstractEventHandler {
         throws NoSuitableHandlersException {
         if (nextSuccessor != null) {
             return nextSuccessor.handle(event, stackEntity, messages);
-        } else {
+        } else if (messages.isEmpty()) {
             throw new NoSuitableHandlersException("No suitable handler for " + event.items().getFirst().questionId());
+        } else {
+            return messages;
         }
     }
 
@@ -44,7 +46,7 @@ public abstract class AbstractEventHandler {
         StackOverFlowResponse event,
         StackEntity stackEntity,
         List<String> messages
-    );
+    ) throws NoSuitableHandlersException;
 
     protected abstract boolean isSuitableEvent(StackOverFlowResponse event, StackEntity stackEntity);
 }
