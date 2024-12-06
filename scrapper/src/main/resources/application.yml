@@ -4,26 +4,6 @@ app:
     interval: 10000
     link-checking-frequency: 5m
 
-  github:
-    base-url: https://api.github.com/
-    back-off:
-      delay: 3s
-      policy: linear
-      max-attempts: 3
-      additional-statuses:
-        - 429
-        - 408
-
-  stackoverflow:
-    base-url: https://api.stackexchange.com/
-    back-off:
-      delay: 3s
-      policy: linear
-      max-attempts: 3
-      additional-statuses:
-        - 429
-        - 408
-
   bot:
     base-url: http://localhost:8090/
     back-off:
@@ -43,6 +23,7 @@ app:
     bot-producer-topic: ru.andryxx.botupdates
     gitworker-producer-topic: ru.andryxx.gitrequests
     stackworker-producer-topic: ru.andryxx.stackrequests
+    habrworker-producer-topic: ru.andryxx.habrrequests
     workers-consumer-topic: ru.andryxx.workerupdates
 spring:
   application:

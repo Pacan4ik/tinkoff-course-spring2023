@@ -39,6 +39,7 @@
         <java-telegram-bot-api.version>7.0.1</java-telegram-bot-api.version>
         <springdoc.version>2.3.0</springdoc.version>
         <bucket4j.version>7.6.0</bucket4j.version>
+        <jsoup.version>1.18.1</jsoup.version>
 
         <!-- Tests -->
         <testcontainers.version>1.19.4</testcontainers.version>
@@ -70,6 +71,7 @@
         <module>resilance-extension</module>
         <module>gitworker</module>
         <module>stackworker</module>
+        <module>habrworker</module>
     </modules>
 
     <dependencyManagement>
@@ -83,6 +85,11 @@
                 <groupId>org.wiremock</groupId>
                 <artifactId>wiremock-standalone</artifactId>
                 <version>${wiremock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
             </dependency>
 
             <dependency>

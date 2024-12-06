@@ -1,0 +1,39 @@
+app:
+  habr:
+    comment-selector: "span.tm-article-comments-counter-link__value"
+    content-selector: "div.tm-article-body"
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
+  kafka:
+    consumer-topic: ru.andryxx.habrrequests
+    producer-topic: ru.andryxx.workerupdates
+
+server:
+  port: 8050
+
+spring:
+  application:
+    name: habrworker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: "instance.habrworker"
+
+logging:
+  config: classpath:log4j2-plain.xml

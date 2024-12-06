@@ -2,9 +2,11 @@ package edu.java.scrapper.configuration;
 
 import edu.java.scrapper.domain.adapters.LinkInfoAdapter;
 import edu.java.scrapper.kafka.producers.workers.GitWorkerQueueProducer;
+import edu.java.scrapper.kafka.producers.workers.HabrWorkerQueueProducer;
 import edu.java.scrapper.kafka.producers.workers.StackWorkerQueueProducer;
 import edu.java.scrapper.scheduling.handlers.AbstractDomainHandler;
 import edu.java.scrapper.scheduling.handlers.GitHubHandler;
+import edu.java.scrapper.scheduling.handlers.HabrHandler;
 import edu.java.scrapper.scheduling.handlers.StackOverflowHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class EventsHandlersConfig {
     private final GitWorkerQueueProducer gitWorkerQueueProducer;
     private final StackWorkerQueueProducer stackWorkerQueueProducer;
+    private final HabrWorkerQueueProducer habrWorkerQueueProducer;
     private final LinkInfoAdapter linkInfoAdapter;
 
     @Bean
@@ -29,6 +32,12 @@ public class EventsHandlersConfig {
                 linkInfoAdapter,
                 stackWorkerQueueProducer
             );
+        HabrHandler habrHandler =
+            new HabrHandler(
+                linkInfoAdapter,
+                habrWorkerQueueProducer
+            );
+        stackOverflowHandler.setNextSuccessor(habrHandler);
         gitHubHandler.setNextSuccessor(stackOverflowHandler);
         return gitHubHandler;
     }

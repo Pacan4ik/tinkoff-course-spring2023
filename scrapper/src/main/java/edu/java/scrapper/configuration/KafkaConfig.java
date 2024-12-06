@@ -85,6 +85,14 @@ public class KafkaConfig {
         return kafkaTemplate;
     }
 
+    @Bean("habrWorkerKafkaTemplate")
+    public KafkaTemplate<String, WorkerCheckRequest>
+    workerHabrKafkaTemplate(ProducerFactory<String, WorkerCheckRequest> producerFactory) {
+        KafkaTemplate<String, WorkerCheckRequest> kafkaTemplate = new KafkaTemplate<>(producerFactory);
+        kafkaTemplate.setDefaultTopic(applicationConfig.kafka().habrworkerProducerTopic());
+        return kafkaTemplate;
+    }
+
     @Bean("dlqKafkaTemplate")
     public KafkaTemplate<String, String>
     kafkaTemplate(ProducerFactory<String, String> producerFactory) {

@@ -1,6 +1,5 @@
-package edu.java.scrapper.configuration.retry;
+package ru.andryxx.habrworker.configuration;
 
-import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.tinkoff.retry.backoff.BackOff;
 import edu.tinkoff.retry.backoff.BackOffMatcher;
 import edu.tinkoff.retry.policy.HttpStatusPolicyBuilder;
@@ -19,10 +18,10 @@ import org.springframework.retry.support.RetryTemplateBuilder;
 
 @Configuration
 @Slf4j
-public class RetryTemplatesConfig {
+public class RetryConfig {
     private final ApplicationConfig applicationConfig;
 
-    public RetryTemplatesConfig(ApplicationConfig applicationConfig) {
+    public RetryConfig(ApplicationConfig applicationConfig) {
         this.applicationConfig = applicationConfig;
     }
 
@@ -51,9 +50,9 @@ public class RetryTemplatesConfig {
         };
     }
 
-    @Bean("botRetryTemplate")
-    public RetryTemplate botRetryTemplate(RetryListener retryListener) {
-        return getRetryTemplate(retryListener, applicationConfig.bot().backOff());
+    @Bean("rawHtmlRetryTemplate")
+    public RetryTemplate rawHtmlRetryTemplate(RetryListener retryListener) {
+        return getRetryTemplate(retryListener, applicationConfig.habr().backOff());
     }
 
     @NotNull public RetryTemplate getRetryTemplate(RetryListener retryListener, BackOff backOff) {
