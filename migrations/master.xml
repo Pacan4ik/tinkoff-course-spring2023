@@ -14,5 +14,6 @@
     <include file="tablesforeachdomain-git-stack.sql"/>
     <include file="only-lasteventid-git.sql"/>
     <include file="int-to-bigint-stack-fields.sql"/>
+    <include file="create-habr-table.sql"/>
 
 </databaseChangeLog>
