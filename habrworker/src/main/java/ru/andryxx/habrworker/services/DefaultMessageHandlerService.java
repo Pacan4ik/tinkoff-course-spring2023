@@ -1,6 +1,9 @@
 package ru.andryxx.habrworker.services;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,9 +17,6 @@ import ru.andryxx.habrworker.services.fetchers.HabrFetcher;
 import ru.andryxx.habrworker.services.fetchers.model.HabrDTO;
 import ru.andryxx.habrworker.services.handlers.AbstractHandler;
 import ru.andryxx.habrworker.services.handlers.exceptions.NoSuitableHandlersException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j

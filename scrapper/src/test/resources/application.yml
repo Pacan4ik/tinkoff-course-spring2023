@@ -4,20 +4,6 @@ app:
     interval: 10000
     link-checking-frequency: 3m
 
-  github:
-    base-url: http://localhost:8080/
-    back-off:
-      delay: 1s
-      policy: linear
-      max-attempts: 3
-
-  stackoverflow:
-    base-url: http://localhost:8080/
-    back-off:
-      delay: 1s
-      policy: linear
-      max-attempts: 3
-
   bot:
     base-url: http://localhost:8080/
     back-off:
@@ -25,6 +11,7 @@ app:
       policy: exponential
       max-attempts: 10
       multiplier: 2
+
   data-base-access-type: jpa
   rate-limiting:
     requests-limit: 30
@@ -33,6 +20,7 @@ app:
     bot-producer-topic: ru.andryxx.botupdates-test
     gitworker-producer-topic: ru.andryxx.gitrequests-test
     stackworker-producer-topic: ru.andryxx.stackrequests-test
+    habrworker-producer-topic: ru.andryxx.habrrequests-test
     workers-consumer-topic: ru.andryxx.workerupdates-test
   sending-method: http
 spring:

@@ -20,7 +20,7 @@ public class ContentHashHandler extends AbstractHandler {
 
     @Override
     protected boolean isSuitableEvent(HabrDTO event, HabrEntity habrEntity) {
-        return habrEntity.getContentSha1Hash() != null &&
-               !Objects.equals(event.sha1Hash(), habrEntity.getContentSha1Hash());
+        return habrEntity.getContentSha1Hash() != null
+               && !Objects.equals(event.sha1Hash(), habrEntity.getContentSha1Hash());
     }
 }

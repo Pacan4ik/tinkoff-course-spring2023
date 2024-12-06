@@ -1,11 +1,11 @@
 package ru.andryxx.habrworker.configuration;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.andryxx.habrworker.services.fetchers.HabrHtmlParser;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Configuration
 @RequiredArgsConstructor

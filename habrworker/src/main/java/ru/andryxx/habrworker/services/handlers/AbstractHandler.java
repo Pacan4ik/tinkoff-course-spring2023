@@ -1,13 +1,12 @@
 package ru.andryxx.habrworker.services.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import ru.andryxx.habrworker.domain.model.HabrEntity;
 import ru.andryxx.habrworker.services.fetchers.model.HabrDTO;
 import ru.andryxx.habrworker.services.handlers.exceptions.NoSuitableHandlersException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractHandler {
     @Setter

@@ -1,5 +1,6 @@
 package ru.andryxx.habrworker.configuration;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -16,7 +17,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.andryxx.habrworker.kafka.model.WorkerMessage;
-import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
