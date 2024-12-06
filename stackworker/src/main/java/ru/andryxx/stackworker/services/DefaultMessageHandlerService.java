@@ -43,6 +43,11 @@ public class DefaultMessageHandlerService implements MessageHandlerService {
 
         StackOverFlowResponse response = stackFetcher.fetch(stackId);
 
+        if (response.items().isEmpty()) {
+            log.warn("No items found for stack id: {}", stackId);
+            return;
+        }
+
         Optional<StackEntity> optional = stackEntityRepository.findById(request.id());
         StackEntity stackEntity;
         if (optional.isEmpty()) {
