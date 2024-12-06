@@ -3,7 +3,7 @@ package edu.java.scrapper;
 import edu.java.scrapper.clients.botClient.BotClient;
 import edu.java.scrapper.clients.botClient.BotUpdatesRequest;
 import edu.java.scrapper.configuration.ApplicationConfig;
-import edu.java.scrapper.kafka.ScrapperQueueProducer;
+import edu.java.scrapper.kafka.producers.ScrapperQueueProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

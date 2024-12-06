@@ -1,0 +1,39 @@
+app:
+  github:
+    token: ${GITHUB_TOKEN}
+    base-url: https://api.github.com/
+    back-off:
+      delay: 3s
+      policy: linear
+      max-attempts: 3
+      additional-statuses:
+        - 429
+        - 408
+  kafka:
+    consumer-topic: ru.andryxx.gitrequests
+    producer-topic: ru.andryxx.workerupdates
+
+server:
+  port: 8070
+
+spring:
+  application:
+    name: gitworker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: "instance.gitworker"
+
+logging:
+  config: classpath:log4j2-plain.xml

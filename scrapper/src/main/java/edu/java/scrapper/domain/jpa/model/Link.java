@@ -11,13 +11,9 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -39,10 +35,6 @@ public class Link {
 
     @Column(name = "checked_at", insertable = false)
     private OffsetDateTime checkedAt;
-
-    @Column(name = "additional_info")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> additionalInfo = Collections.emptyMap();
 
     @ManyToMany(mappedBy = "subscribedLinks", fetch = FetchType.LAZY)
     Set<Chat> subscribedChats;

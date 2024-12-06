@@ -51,16 +51,6 @@ public class RetryTemplatesConfig {
         };
     }
 
-    @Bean("githubRetryTemplate")
-    public RetryTemplate gitHubRetryTemplate(RetryListener retryListener) {
-        return getRetryTemplate(retryListener, applicationConfig.github().backOff());
-    }
-
-    @Bean("stackoverflowRetryTemplate")
-    public RetryTemplate stackoverflowRetryTemplate(RetryListener retryListener) {
-        return getRetryTemplate(retryListener, applicationConfig.stackoverflow().backOff());
-    }
-
     @Bean("botRetryTemplate")
     public RetryTemplate botRetryTemplate(RetryListener retryListener) {
         return getRetryTemplate(retryListener, applicationConfig.bot().backOff());

@@ -3,7 +3,6 @@ package edu.java.scrapper.domain.jpa.dao;
 import edu.java.scrapper.domain.jpa.model.Link;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,9 +27,6 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 
     @Transactional @Modifying @Query("update Link l set l.checkedAt = ?1 where l.id = ?2")
     void updateCheckedAtById(OffsetDateTime checkedAt, Long id);
-
-    @Transactional @Modifying @Query("update Link l set l.additionalInfo = ?1 where l.id = ?2")
-    void updateAdditionalInfoById(Map<String, Object> additionalInfo, Long id);
 
     @Modifying @Query(value = "select chat_id from link_chat_assignment where link_id = :id", nativeQuery = true)
     Set<Long> getChatIdsById(Long id);

@@ -13,10 +13,6 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     @NotNull
-    Client github,
-    @NotNull
-    Client stackoverflow,
-    @NotNull
     Client bot,
     @NotNull
     AccessType dataBaseAccessType,
@@ -53,13 +49,17 @@ public record ApplicationConfig(
     }
 
     public enum AccessType {
-        JDBC, JPA, JOOQ
+        JPA
     }
 
     public enum SendingMethod {
         HTTP, QUEUE
     }
 
-    public record Kafka(String producerTopic) {
+    public record Kafka(String botProducerTopic,
+                        String gitworkerProducerTopic,
+                        String stackworkerProducerTopic,
+                        String habrworkerProducerTopic,
+                        String workersConsumerTopic) {
     }
 }

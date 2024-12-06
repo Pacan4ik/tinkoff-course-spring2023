@@ -17,16 +17,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "spring.kafka.listener.auto-startup=false"
+})
+
 public class JpaLinkServiceTest extends IntegrationTest {
     private final JdbcTemplate jdbcTemplate;
     private final LinkService linkService;
     private static final String EXAMPLE_URL = "https://example.com/";
     private static final String EXAMPLE2_URL = "https://example2.com/";
+
+    @MockBean
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @Autowired
     public JpaLinkServiceTest(

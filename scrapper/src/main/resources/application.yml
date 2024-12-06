@@ -2,27 +2,7 @@ app:
   scheduler:
     enable: true
     interval: 10000
-    link-checking-frequency: 10m
-
-  github:
-    base-url: https://api.github.com/
-    back-off:
-      delay: 3s
-      policy: linear
-      max-attempts: 3
-      additional-statuses:
-        - 429
-        - 408
-
-  stackoverflow:
-    base-url: https://api.stackexchange.com/
-    back-off:
-      delay: 3s
-      policy: linear
-      max-attempts: 3
-      additional-statuses:
-        - 429
-        - 408
+    link-checking-frequency: 5m
 
   bot:
     base-url: http://localhost:8090/
@@ -40,7 +20,11 @@ app:
     time-duration: 1m
   sending-method: queue
   kafka:
-    producer-topic: edu.tinkoff.updates
+    bot-producer-topic: ru.andryxx.botupdates
+    gitworker-producer-topic: ru.andryxx.gitrequests
+    stackworker-producer-topic: ru.andryxx.stackrequests
+    habrworker-producer-topic: ru.andryxx.habrrequests
+    workers-consumer-topic: ru.andryxx.workerupdates
 spring:
   application:
     name: scrapper
@@ -57,6 +41,8 @@ spring:
       ddl-auto: none
   kafka:
     bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: "instance.scrapper"
 server:
   port: 8080
 

@@ -26,7 +26,7 @@ public class UpdatesListener {
 
     @RetryableTopic(
         attempts = "1",
-        autoCreateTopics = "false",
+        autoCreateTopics = "true",
         kafkaTemplate = "kafkaTemplate",
         dltTopicSuffix = "_dlq"
     )
